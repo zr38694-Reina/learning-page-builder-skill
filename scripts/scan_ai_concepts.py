@@ -215,6 +215,14 @@ def read_ledger(path: Path):
             if ln.strip() and not ln.strip().startswith("#")]
 
 
+def related_of(key, entries):
+    """同类别（category）的其它概念——第 ③ 层兜底的第一站：离线、有现成定义、可复现。"""
+    cat = entries.get(key, {}).get("category")
+    if not cat:
+        return []
+    return [(k, e) for k, e in entries.items() if e.get("category") == cat and k != key]
+
+
 def build_drafts(ranked, entries, excluded, slots=3):
     """按槽位拼装卡片草案：① formal+def ② confusable+diff ③ verify。
 
@@ -306,15 +314,36 @@ def render(result):
 
     L.append("── C｜建议卡片草案（固定 3 槽位，每条 1–2 句）──")
     if not C:
-        L.append("（本页与本节都没有可用的新概念，考虑整块省略概念卡并写明理由）")
+        L.append("（无）")
     for d in C:
         L.append("{}　[{}]".format(d["slot"], d["key"]))
         L.append("    {}".format(d["text"]))
-    used_now = [d["key"] for d in C if d.get("key")]
-    if result["excluded"] and len(used_now) < 3:
-        L.append("⚠️ 去重后只剩 {} 条可用：本批其它页已占 {}。".format(
-            len(used_now), "、".join(result["excluded"])))
-        L.append("   先按「宁可少一条、也不跨页重复」交付；若确要凑满 3 条，回 B 段换词。")
+    used_now = []
+    for d in C:
+        if d.get("key") and d["key"] not in used_now:   # ① 与 ③ 常是同一个概念
+            used_now.append(d["key"])
+
+    # 候选不足 → 给出第 ③ 层兜底候选（与本页主题同类的概念）
+    if len(C) < 3 or len(used_now) < 2:
+        if result["excluded"]:
+            L.append("（本批其它页已占：{}）".format("、".join(result["excluded"])))
+        if len(C) < 3:
+            L.append("⚠️ 本页 + 本课凑不出 3 条槽位，卡建不起来 —— 必须走第 ③ 层。")
+        else:
+            L.append("ℹ️ 槽位齐了，但三个槽位只用到 1 个概念（①③ 是同一个词），卡偏薄。")
+            L.append("   想更饱满，就从下面的同类里换一个更该讲的词当①（②仍是易混区分）。")
+        if result["fallback"]:
+            L.append("↳ 第 ③ 层兜底候选（与「{}」同属「{}」）：".format(
+                result["fallback_basis"], result["fallback_category"]))
+            for it in result["fallback"]:
+                L.append("  • {}　{}".format(it["formal"], it["def"]))
+            L.append("  用法：从这里挑**与本页主题强相关**的（沿用它的 def，别改写口径）；")
+            L.append("        挑中的词照常填 `data-term`，并记进批内台账。")
+        else:
+            L.append("↳ 本页主题在词典里找不到同类词 → 按 `references/03` §1.6 走：")
+            L.append("   ①联网搜「本页主题 + 相关 AI 概念」，选读者读完这页会自然想问的那个；")
+            L.append("   ②把它的 1–2 句解释按 7 字段补进 {}，再引用（词典边用边长）；".format(DICT_FILE))
+            L.append("   ③确与本页主题无关 → 整块省略概念卡，并在诊断清单写明理由。")
     L.append("")
 
     L.append("── D｜未收录概念（疑似 AI 词，词典里没有 → 提示补词典）──")
@@ -324,20 +353,53 @@ def render(result):
         L.append("• {}（出现 {} 次）→ 建议补进 {}".format(item["term"], item["n"], DICT_FILE))
     L.append("")
     L.append("提示：C 段是草案，最终选哪 3 条由你拍板；D 段的词定好 1–2 句解释后，")
-    L.append("      按 6 字段格式补进 {}，下次扫描即自动命中。".format(DICT_FILE))
+    L.append("      按 7 字段（6 字段 + category）补进 {}，下次扫描即自动命中。".format(DICT_FILE))
     return "\n".join(L)
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description="扫描 AI 概念（本页正文 + 本课大纲那一节）")
-    ap.add_argument("--page", required=True, help="学习页 .html 或 .md")
-    ap.add_argument("--outline", required=True, help="课程大纲 .md")
+    ap.add_argument("--page", help="学习页 .html 或 .md")
+    ap.add_argument("--outline", help="课程大纲 .md")
     ap.add_argument("--section", default=None, help="大纲里的本节标题（片段匹配），不给则扫全文")
     ap.add_argument("--exclude", default=None, help="本批其它页已讲过的概念，逗号分隔（词典 key 或中文词形都认）")
     ap.add_argument("--used", default=None, metavar="PATH",
                     help="批次台账：先读入其中已用概念并跳过，再把本页草案的概念追加进去（同一批逐页连用同一个文件）")
+    ap.add_argument("--related", default=None, metavar="词或类别",
+                    help="列出同类概念（第 ③ 层兜底用）。可传词典里的词，或类别名；不需要 --page/--outline")
     ap.add_argument("--json", action="store_true", dest="as_json", help="输出机器可读 JSON")
     args = ap.parse_args(argv)
+
+    dict_path = Path(__file__).resolve().parent / DICT_FILE
+    if not dict_path.exists():
+        print("找不到词典：{}".format(dict_path), file=sys.stderr)
+        return 2
+    entries = load_dict(dict_path)
+
+    # --related：单独一种用法，不需要 --page / --outline
+    if args.related:
+        raw = args.related.strip()
+        cats = sorted({e.get("category") for e in entries.values() if e.get("category")})
+        keys = [k for k in resolve_keys([raw], entries) if k in entries]
+        if keys:
+            for k in keys:
+                print("「{}」的同类概念（{}）：".format(k, entries[k].get("category")))
+                for ck, ce in related_of(k, entries):
+                    print("• {}　{}".format(ce.get("formal", ck), ce.get("def", "")))
+            return 0
+        if raw in cats:
+            print("类别「{}」下的全部概念：".format(raw))
+            for ck, ce in entries.items():
+                if ce.get("category") == raw:
+                    print("• {}　{}".format(ce.get("formal", ck), ce.get("def", "")))
+            return 0
+        print("词典里没有「{}」。可用类别：{}".format(raw, "、".join(cats)), file=sys.stderr)
+        print("也可以传一个词典里已有的词，看它同类的概念。", file=sys.stderr)
+        return 2
+
+    if not args.page or not args.outline:
+        print("需要 --page 与 --outline（或用 --related 只查同类概念）", file=sys.stderr)
+        return 2
 
     page_path = Path(args.page)
     outline_path = Path(args.outline)
@@ -346,12 +408,6 @@ def main(argv=None):
             print("找不到文件：{}".format(p), file=sys.stderr)
             return 2
 
-    dict_path = Path(__file__).resolve().parent / DICT_FILE
-    if not dict_path.exists():
-        print("找不到词典：{}".format(dict_path), file=sys.stderr)
-        return 2
-
-    entries = load_dict(dict_path)
     page_text = read_text(page_path)
     outline_text = outline_path.read_text(encoding="utf-8", errors="ignore")
 
@@ -401,6 +457,23 @@ def main(argv=None):
     B.sort(key=lambda x: (x["excluded"], -x["outline_n"]))
 
     C = build_drafts(ranked, entries, excluded)
+    picks = []
+    for d in C:
+        if d.get("key") and d["key"] not in picks:   # ① 与 ③ 常常是同一个概念，去一次即可
+            picks.append(d["key"])
+
+    # 两种「不够」要分开看：槽位填不满（卡建不起来） / 槽位满了但只讲 1 个概念（卡偏薄）
+    # → 前者必须兜底，后者给个提示即可。basis 取「本页最强命中」本身（哪怕已被别页占用）：
+    # 「与本页主题相关」看的是本页，不是本批谁先抢到；占用的那条会在列表里按 excluded 过滤掉。
+    fallback, basis, basis_cat = [], None, None
+    if len(C) < 3 or len(picks) < 2:
+        basis = ranked[0][0] if ranked else None
+        if basis:
+            basis_cat = entries[basis].get("category")
+            fallback = [
+                {"key": k, "formal": entries[k].get("formal", k), "def": entries[k].get("def", "")}
+                for k, _e in related_of(basis, entries) if k not in excluded
+            ][:8]
 
     # D：疑似 AI 词但词典没收录（词典已能匹配到的，跳过）
     covered = " \n".join(
@@ -423,6 +496,9 @@ def main(argv=None):
         "entries_in_dict": len(entries),
         "excluded": sorted(excluded),
         "used_file": str(ledger_path) if ledger_path else None,
+        "fallback_basis": basis,
+        "fallback_category": basis_cat,
+        "fallback": fallback,
         "A": A, "B": B, "C": C, "D": D,
     }
 
@@ -433,11 +509,6 @@ def main(argv=None):
 
     # 记账：把本页草案采用的概念追加进台账，供同一批的下一页 --used 读取
     if ledger_path is not None:
-        picks = []
-        for d in C:
-            k = d.get("key")
-            if k and k not in picks:      # ① 与 ③ 常常是同一个概念，去一次即可
-                picks.append(k)
         known = read_ledger(ledger_path)
         merged = known + [k for k in picks if k not in known]
         ledger_path.parent.mkdir(parents=True, exist_ok=True)

@@ -2,18 +2,20 @@
   "_meta": {
     "name": "AI 概念词典",
     "version": "1.0.0",
-    "usage": "scan_ai_concepts.py 读取本文件；每词一条，字段固定 6 个：aliases / formal / def / confusable / diff / verify。新增概念直接往后面加，别删 _meta。",
+    "usage": "scan_ai_concepts.py 读取本文件；每词一条，字段固定 6 个：aliases / formal / def / confusable / diff / verify（外加 category，供「找不到相关概念」时按同类检索，见 references/03 §1.6）。新增概念直接往后面加，别删 _meta。",
     "field_notes": {
       "aliases": "供脚本匹配用的写法（中英文 + 常见变体），全部按字面量转义成正则，大小写不敏感。",
       "formal": "正式叫法（中文名 + 英文名），写进卡片第 1 槽。",
       "def": "一句到两句人话定义，讲透但不展开。",
       "confusable": "最容易和它搞混的那个词，写进卡片第 2 槽。",
       "diff": "一句话说清两者区别，写进卡片第 2 槽。",
-      "verify": "在任意 AI 产品里 30 秒能做完、用来验证的的小动作，写进卡片第 3 槽。"
+      "verify": "在任意 AI 产品里 30 秒能做完、用来验证的的小动作，写进卡片第 3 槽。",
+      "category": "本词所属类别（模型基础 / 交互 / Agent 与工具 / 开发 / 产品），同类之间常常互为「相关概念」。"
     }
   },
 
   "大模型": {
+    "category": "模型基础",
     "aliases": ["大模型", "大语言模型", "LLM", "large language model", "大语言"],
     "formal": "大语言模型（LLM，Large Language Model）",
     "def": "用海量文本训练出来的、以「预测下一个词」为核心任务的模型；它不查资料，只是把训练时记住的语言规律续写出来。",
@@ -22,6 +24,7 @@
     "verify": "问它一个今天刚发生的新闻，看它是说「不知道」还是编出一个像模像样的答案。"
   },
   "参数": {
+    "category": "模型基础",
     "aliases": ["参数", "参数量", "parameters", "70B", "7B"],
     "formal": "参数（Parameters）",
     "def": "模型内部可调的数值，训练就是在调这些数；参数量越大，模型通常越「能装」，但也越贵越慢。",
@@ -30,6 +33,7 @@
     "verify": "搜一下你常用模型的参数量，再对比它和轻量版的回答质量差在哪。"
   },
   "Token": {
+    "category": "模型基础",
     "aliases": ["Token", "token", "词元", "token 数"],
     "formal": "词元（Token）",
     "def": "模型读写文本的最小单位，一个中文字常常是 1–2 个 Token，一个英文单词也常被切成几块；计费和「记得住多长」都按它算。",
@@ -38,6 +42,7 @@
     "verify": "把同一句中文和它的英文翻译分别粘进计费页面，看两边 Token 数差多少。"
   },
   "上下文窗口": {
+    "category": "模型基础",
     "aliases": ["上下文窗口", "上下文长度", "context window", "上下文"],
     "formal": "上下文窗口（Context Window）",
     "def": "模型一次能「看到」的文本上限，超过的部分会被截断或遗忘；它决定了模型「记不记得前文」。",
@@ -46,6 +51,7 @@
     "verify": "把同一段长文分两次提问，看第二次是否还「记得」开头那一句。"
   },
   "微调": {
+    "category": "模型基础",
     "aliases": ["微调", "fine-tune", "fine tuning", "fine-tuning"],
     "formal": "微调（Fine-tuning）",
     "def": "在已经训练好的大模型上，用你自己的少量数据再练一轮，让它更贴合某个专门任务或语气。",
@@ -54,6 +60,7 @@
     "verify": "同一个任务，一次用长提示词交代清楚，一次让模型「记住」，比较两者回答的稳定度。"
   },
   "预训练": {
+    "category": "模型基础",
     "aliases": ["预训练", "pretrain", "pre-training", "pretraining"],
     "formal": "预训练（Pre-training）",
     "def": "模型出厂前用海量通用文本做的那轮训练，目标是学会语言本身；之后才轮到微调和提示词这些「个性化」环节。",
@@ -62,6 +69,7 @@
     "verify": "问模型「你怎么学会说话的」，看它是否区分开通用训练和你给它的那些指令。"
   },
   "多模态": {
+    "category": "模型基础",
     "aliases": ["多模态", "multimodal", "多模"],
     "formal": "多模态（Multimodal）",
     "def": "一个模型同时能读文字、图片、声音、视频等多种输入，而不只是处理文本。",
@@ -70,6 +78,7 @@
     "verify": "把一张带表格的截图分别丢给纯文本和多模态模型，看谁读得出表里数字。"
   },
   "推理": {
+    "category": "模型基础",
     "aliases": ["推理", "reasoning", "推理模型", "推理能力"],
     "formal": "推理（Reasoning）",
     "def": "模型在给答案前先「想一想」——把步骤一步步写出来再下结论，用于多步计算和逻辑题。",
@@ -78,6 +87,7 @@
     "verify": "问一道需要三步计算的应用题，看它有没有把中间步骤写出来。"
   },
   "温度": {
+    "category": "模型基础",
     "aliases": ["温度", "temperature", "随机性"],
     "formal": "温度（Temperature）",
     "def": "控制模型「敢不敢冒险」的旋钮：调低更稳更保守，调高更多样也更爱跑偏。",
@@ -86,6 +96,7 @@
     "verify": "同一个问题用最低温和最高温各问一次，比较两次回答的差异。"
   },
   "缩放定律": {
+    "category": "模型基础",
     "aliases": ["缩放定律", "scaling law", "规模定律"],
     "formal": "缩放定律（Scaling Law）",
     "def": "参数、数据、算力一起变大时，模型的平均错误率会按幂律平滑下降——这是「模型越做越大」的底层依据。",
@@ -94,6 +105,7 @@
     "verify": "同一个问题分别问小模型和大模型，看差的是措辞，还是能不能做对。"
   },
   "涌现": {
+    "category": "模型基础",
     "aliases": ["涌现", "emergent", "emergence"],
     "formal": "涌现（Emergence）",
     "def": "模型规模跨过某个门槛后，某一项具体能力（比如多步计算）突然「会了」，而不是慢慢变好。",
@@ -102,6 +114,7 @@
     "verify": "找一个要绕两步的小问题，看小模型完全做不出、大模型一次做对。"
   },
   "幻觉": {
+    "category": "模型基础",
     "aliases": ["幻觉", "hallucination", "胡说", "编造"],
     "formal": "幻觉（Hallucination）",
     "def": "模型把不存在的事实讲得像真的——编出没写过的引用、没发生过的数据，语气还特别笃定。",
@@ -110,6 +123,7 @@
     "verify": "让它给一篇论文的出处，然后去搜这个标题，看能不能搜到。"
   },
   "Embedding": {
+    "category": "模型基础",
     "aliases": ["Embedding", "embedding", "嵌入", "向量化"],
     "formal": "嵌入（Embedding）",
     "def": "把一段文字变成一串数字（向量），意思相近的文字，这串数字在空间里也靠得近，方便机器做「找相似的」。",
@@ -118,6 +132,7 @@
     "verify": "在同一批资料里搜一个同义不同词的问法，看能不能召回对应的那段。"
   },
   "向量数据库": {
+    "category": "模型基础",
     "aliases": ["向量数据库", "vector database", "向量库", "vector db"],
     "formal": "向量数据库（Vector Database）",
     "def": "专门存放 Embedding 向量、并支持「按相似度快速找最接近的几条」的数据库，是知识库检索的地基。",
@@ -126,6 +141,7 @@
     "verify": "让系统用一句口语提问，看去资料库里捞回来的是不是语义相近的段落。"
   },
   "注意力机制": {
+    "category": "模型基础",
     "aliases": ["注意力机制", "attention", "自注意力", "attention mechanism"],
     "formal": "注意力机制（Attention）",
     "def": "让模型在处理每个词时，去「看」句子里其他相关词并分配权重，从而抓住词与词之间的关系。",
@@ -134,6 +150,7 @@
     "verify": "给它一句指代不清的话（「它」指哪个），看它能不能把「它」对应回正确的主语。"
   },
   "Transformer": {
+    "category": "模型基础",
     "aliases": ["Transformer", "transformer", "变换器"],
     "formal": "Transformer",
     "def": "2017 年提出的神经网络结构，靠注意力机制并行处理整段文本，是现在几乎所有大模型的底座。",
@@ -142,6 +159,7 @@
     "verify": "问模型「你的架构是什么」，看它有没有说出 Transformer 这个词。"
   },
   "提示词": {
+    "category": "交互",
     "aliases": ["提示词", "prompt", "Prompt", "指令"],
     "formal": "提示词（Prompt）",
     "def": "你发给模型的那段话——包括问题、背景和要求；它决定了模型这一轮「站在什么立场」回答。",
@@ -150,6 +168,7 @@
     "verify": "同一件事，一次只写一句、一次把背景和要求都写清，比较两次结果。"
   },
   "提示词工程": {
+    "category": "交互",
     "aliases": ["提示词工程", "prompt engineering", "prompt 工程"],
     "formal": "提示词工程（Prompt Engineering）",
     "def": "用一套可复用的写法（给角色、给例子、给步骤、给输出格式）稳定地拿到好结果的手艺。",
@@ -158,6 +177,7 @@
     "verify": "把同一个提示词发给两个不同模型，看结果是否还稳定可用。"
   },
   "系统提示词": {
+    "category": "交互",
     "aliases": ["系统提示词", "system prompt", "系统提示", "system message"],
     "formal": "系统提示词（System Prompt）",
     "def": "产品方在对话开始前就预设好的一段指令，用来定角色、边界和规矩；用户平时看不见它。",
@@ -166,6 +186,7 @@
     "verify": "问它「你的规则是谁定的」，看它是否透露存在一段你看不见的设定。"
   },
   "少样本": {
+    "category": "交互",
     "aliases": ["少样本", "few-shot", "few shot", "示例学习"],
     "formal": "少样本提示（Few-shot）",
     "def": "在提示词里先给两三个「输入 → 输出」的例子，让模型照着格式和口径来。",
@@ -174,6 +195,7 @@
     "verify": "同一个任务，一次只说要求、一次给两个示例，比较输出格式的整齐程度。"
   },
   "思维链": {
+    "category": "交互",
     "aliases": ["思维链", "chain of thought", "CoT", "一步步想"],
     "formal": "思维链（Chain of Thought）",
     "def": "让模型把推理的中间步骤一步步写出来再给答案，用于多步计算和逻辑题，正确率明显更高。",
@@ -182,6 +204,7 @@
     "verify": "同一道应用题，一次直接要答案、一次要求「先写步骤」，比较两次对不对。"
   },
   "Agent": {
+    "category": "Agent 与工具",
     "aliases": ["Agent", "智能体", "agent", "AI Agent"],
     "formal": "智能体（Agent）",
     "def": "能自己拆目标、调工具、看结果再决定下一步的 AI 程序——不再是一问一答，而是「给个任务它自己跑」。",
@@ -190,6 +213,7 @@
     "verify": "给它一个要两三个步骤才能完成的任务，看它是否会自己接着做下一步。"
   },
   "Skill": {
+    "category": "Agent 与工具",
     "aliases": ["Skill", "skill", "技能包", "技能"],
     "formal": "技能（Skill）",
     "def": "把一套固定的流程、模板和检查清单打包好，让 AI 在需要时自动照着做；相当于给 AI 装了「岗位手册」。",
@@ -198,6 +222,7 @@
     "verify": "让 AI 做一件重复性任务两次，看第二次是否自动套用了同一套做法。"
   },
   "MCP": {
+    "category": "Agent 与工具",
     "aliases": ["MCP", "Model Context Protocol", "模型上下文协议"],
     "formal": "模型上下文协议（MCP，Model Context Protocol）",
     "def": "一套让 AI 用统一方式连接外部工具和数据的开放协议——工具方按它写一次，所有支持它的 AI 都能用。",
@@ -206,6 +231,7 @@
     "verify": "数一下同一个 AI 客户端里接了几个 MCP 服务，看它们是不是都不用单独改造。"
   },
   "工作流": {
+    "category": "Agent 与工具",
     "aliases": ["工作流", "workflow", "编排", "流程编排"],
     "formal": "工作流（Workflow）",
     "def": "把多个步骤（取数据 → 模型处理 → 判断 → 输出）串成一条固定流水线，让 AI 按预设顺序自动跑完。",
@@ -214,6 +240,7 @@
     "verify": "把同一个任务跑两遍，看流程是否每次都走同一条路径。"
   },
   "插件": {
+    "category": "Agent 与工具",
     "aliases": ["插件", "plugin", "plug-in", "扩展"],
     "formal": "插件（Plugin）",
     "def": "给 AI 客户端加装的一项额外能力，装上之后它就能做原本做不到的事（联网、读文件、画图）。",
@@ -222,6 +249,7 @@
     "verify": "关掉某个插件再问同一个问题，看它是不是立刻做不到了。"
   },
   "工具调用": {
+    "category": "Agent 与工具",
     "aliases": ["工具调用", "function call", "function calling", "tool use", "调用工具"],
     "formal": "工具调用（Tool / Function Calling）",
     "def": "模型判断「这步得查/得算」，于是输出一个调用指令去跑外部程序，再把结果拿回来接着答。",
@@ -230,6 +258,7 @@
     "verify": "问一个必须实时数据的问题，看它是否调用了工具而不是直接编。"
   },
   "记忆": {
+    "category": "Agent 与工具",
     "aliases": ["记忆", "memory", "记忆功能"],
     "formal": "记忆（Memory）",
     "def": "产品把关于你的信息（偏好、事实）存下来，下次对话自动带上，不必每次重说。",
@@ -238,6 +267,7 @@
     "verify": "换个新对话提一句你上次说过的偏好，看它是否还知道。"
   },
   "长期记忆": {
+    "category": "Agent 与工具",
     "aliases": ["长期记忆", "long-term memory", "long term memory"],
     "formal": "长期记忆（Long-term Memory）",
     "def": "跨会话持久保存的信息，可能是产品自动记的，也可能是你手动写进「记忆」里的。",
@@ -246,6 +276,7 @@
     "verify": "在设置里找到「记忆」入口，看它到底替你记了什么。"
   },
   "知识库": {
+    "category": "Agent 与工具",
     "aliases": ["知识库", "knowledge base", "KB", "资料库"],
     "formal": "知识库（Knowledge Base）",
     "def": "你自己整理好的一批文档，被切成小块、编好索引，供 AI 在回答时现场查用；考的是「开卷」。",
@@ -254,6 +285,7 @@
     "verify": "往知识库加一份新文档，立刻问相关问题，看它能不能引用到。"
   },
   "RAG": {
+    "category": "Agent 与工具",
     "aliases": ["RAG", "检索增强", "检索增强生成", "retrieval augmented"],
     "formal": "检索增强生成（RAG，Retrieval-Augmented Generation）",
     "def": "先在你的资料库里检索出最相关的几段，再让模型「看着这几段」作答——考的是开卷，答案有据可查。",
@@ -262,6 +294,7 @@
     "verify": "问一个只有你资料库里才有的细节，看它是否能答出并给出处。"
   },
   "引用": {
+    "category": "Agent 与工具",
     "aliases": ["引用", "来源标注", "citation", "出处"],
     "formal": "引用（Citation）",
     "def": "模型在答案里标出这句话是从哪份资料的哪一段来的，让结论可回溯、可核对。",
@@ -270,6 +303,7 @@
     "verify": "点开答案里的引用编号，看它是否真指到了对应那一段。"
   },
   "多轮对话": {
+    "category": "Agent 与工具",
     "aliases": ["多轮对话", "多轮", "multi-turn", "对话历史"],
     "formal": "多轮对话（Multi-turn）",
     "def": "连续几轮交流里，前几轮说过的话会被一起带进这一轮的上下文，模型据此接着往下说。",
@@ -278,6 +312,7 @@
     "verify": "聊到第二十轮时提一句第一轮说过的细节，看它还接不接得住。"
   },
   "Codex": {
+    "category": "开发",
     "aliases": ["Codex", "codex", "Codex CLI", "Codex Desktop"],
     "formal": "Codex",
     "def": "OpenAI 的编程 Agent 产品，能读你的仓库、改代码、跑命令；它不只是补全，而是按任务动手做事。",
@@ -286,6 +321,7 @@
     "verify": "让它在一个真实项目里改一处小功能，看它是否自己找到相关文件并跑起来验证。"
   },
   "Plan mode": {
+    "category": "开发",
     "aliases": ["Plan mode", "plan mode", "计划模式", "规划模式"],
     "formal": "计划模式（Plan Mode）",
     "def": "让 AI 先把方案讲清楚、等你点头再动手的模式；避免它一上来就改一堆文件。",
@@ -294,6 +330,7 @@
     "verify": "让它先只讲方案不动手，确认没问题再切回执行模式做。"
   },
   "Vibe Coding": {
+    "category": "开发",
     "aliases": ["Vibe Coding", "vibe coding", "氛围编程"],
     "formal": "氛围编程（Vibe Coding）",
     "def": "用自然语言描述想要的效果、让 AI 写代码，人主要靠「跑起来看感觉」来验收的开发方式。",
@@ -302,6 +339,7 @@
     "verify": "用一句话描述一个小功能，看 AI 一次能不能跑出你想要的效果。"
   },
   "CLI": {
+    "category": "开发",
     "aliases": ["CLI", "cli", "命令行", "终端工具"],
     "formal": "命令行界面（CLI，Command Line Interface）",
     "def": "在黑色窗口里敲命令来操作程序的方式；对 AI 工具来说，CLI 往往意味着它能直接读写你本机文件。",
@@ -310,6 +348,7 @@
     "verify": "看这个 AI 工具是网页里的对话框，还是在你终端里跑起来的。"
   },
   "API": {
+    "category": "开发",
     "aliases": ["API", "api", "接口"],
     "formal": "应用程序接口（API，Application Programming Interface）",
     "def": "程序之间约定好的调用入口；AI 的 API 让你能按量把自己的程序接到模型上，而不是靠网页点。",
@@ -318,6 +357,7 @@
     "verify": "在模型平台的用量页看一次调用消耗了多少 Token、折合多少钱。"
   },
   "API Key": {
+    "category": "开发",
     "aliases": ["API Key", "api key", "密钥", "apikey"],
     "formal": "API 密钥（API Key）",
     "def": "一串证明「调用是你发的」的字符串，等于你的账号密码；泄露了别人就能用你的额度花钱。",
@@ -326,6 +366,7 @@
     "verify": "检查一下你的项目里有没有把 Key 硬写在代码里、有没有提交到仓库。"
   },
   "Diff": {
+    "category": "开发",
     "aliases": ["Diff", "diff", "差异对比", "代码差异"],
     "formal": "差异视图（Diff）",
     "def": "把「改了哪几行」逐行标出来（新增一行绿、删除一行红），让你在 AI 改完后快速核对。",
@@ -334,6 +375,7 @@
     "verify": "让 AI 改完代码后先看 Diff，再决定接不接受这次修改。"
   },
   "沙箱": {
+    "category": "开发",
     "aliases": ["沙箱", "sandbox", "隔离环境"],
     "formal": "沙箱（Sandbox）",
     "def": "给 AI 划出来的一块受限运行环境，它能在这里跑命令、改文件，但碰不到你系统其余部分。",
@@ -342,6 +384,7 @@
     "verify": "看这个工具的设置里有没有「沙箱 / 隔离」开关，默认是开还是关。"
   },
   "权限审批": {
+    "category": "开发",
     "aliases": ["权限审批", "审批", "permission", "approval", "授权确认"],
     "formal": "权限审批（Permission / Approval）",
     "def": "在 AI 执行敏感动作（删文件、装包、联网）前弹一步让你确认，避免它自作主张。",
@@ -350,6 +393,7 @@
     "verify": "故意让它做一个危险操作，看它是否会先停下来征求同意。"
   },
   "仓库": {
+    "category": "开发",
     "aliases": ["仓库", "repo", "repository", "git 仓库"],
     "formal": "代码仓库（Repository / Repo）",
     "def": "一个装项目全部文件和历史版本的目录，AI 编程工具通常以「仓库」为单位读取和修改。",
@@ -358,6 +402,7 @@
     "verify": "看 AI 工具的工作目录指向哪个仓库，改动有没有被记录成一次提交。"
   },
   "Dify": {
+    "category": "产品",
     "aliases": ["Dify", "dify"],
     "formal": "Dify",
     "def": "一个开源的 AI 应用开发平台，把知识库、工作流、对话界面这些零件拼起来，不用从零写代码。",
@@ -366,6 +411,7 @@
     "verify": "在 Dify 里搭一个只挂一个知识库的问答应用，看多久能跑起来。"
   },
   "知识库助手": {
+    "category": "产品",
     "aliases": ["知识库助手", "知识库问答", "文档助手"],
     "formal": "知识库助手（Knowledge Base Assistant）",
     "def": "挂着你那批资料、回答问题时会先检索再作答的 AI 应用；核心卖点是答案可追溯到你自己的文档。",
@@ -374,6 +420,7 @@
     "verify": "问一个完全不在资料库里的问题，看它是否老实说「资料里没有」。"
   },
   "问答助手": {
+    "category": "产品",
     "aliases": ["问答助手", "QA 助手", "客服助手", "对话助手"],
     "formal": "问答助手（Q&A Assistant）",
     "def": "面向特定问题的对话应用，一般配上限定范围的资料和话术约束，把回答框在业务能兜住的范围内。",
@@ -382,6 +429,7 @@
     "verify": "问一个跟业务无关的问题，看它是否把话题拉回本业务。"
   },
   "按 token 计费": {
+    "category": "产品",
     "aliases": ["按 token 计费", "按 Token 计费", "token 计费", "按量计费"],
     "formal": "按 Token 计费（Pay-per-Token）",
     "def": "用多少算多少：输入的 Token 和输出的 Token 分别计价，通常输出比输入贵几倍。",
@@ -390,6 +438,7 @@
     "verify": "看一次调用的账单，分别看输入和输出各花了多少、单价差几倍。"
   },
   "上下文超限": {
+    "category": "产品",
     "aliases": ["上下文超限", "上下文溢出", "超出上下文", "context limit", "token 超限"],
     "formal": "上下文超限（Context Overflow）",
     "def": "这一轮要处理的内容超过了上下文窗口，早期的内容被挤掉或直接报错——表现是「聊着聊着它忘了」。",
