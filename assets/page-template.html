@@ -282,7 +282,11 @@ button{font-family:inherit}
   </div>
   <!-- ══════════ /PATTERN SLOT ══════════ -->
 
-  <!-- 5b 小奈教练卡：贴在装置正下方 -->
+  <!-- ══════════ 5b 小奈教练卡 ══════════
+       ⚠ 条件块：**只有带互动装置的页面才用它**，贴在装置正下方。
+       本页若是纯知识页（只有阅读内容、没有可玩装置）→ 把这一整块 section.coach
+       连同脚本里的 COACH 复用段、readContext / buildPrompt / bring 及两个按钮监听
+       一起删掉。判据见 references/04-小奈教练接入.md §0。 -->
   <section class="coach" id="coach"
            data-coach-title="{{卡标题：一个动作，不是「向我提问」}}">
     <div class="coach-head">
@@ -325,8 +329,11 @@ button{font-family:inherit}
     </ul>
   </div>
 
+  <!-- 页脚：只留这一句免责声明。
+       **不要**在页脚写「内容依据《…》整理」这类来源标注 —— 内容出处不进页面。
+       数据来源 / 近似值声明照旧要写，但写在**装置下方的 .demo-note 里**（见 references/05-自检清单.md §D）。 -->
   <footer class="lesson-foot">
-    {{数据与免责声明}}｜教学示意：页面中的数值为演示用途，不对应某个产品的真实输出。
+    教学示意：页面中的数值为演示用途，不对应某个产品的真实输出。
   </footer>
 </main>
 
@@ -408,6 +415,8 @@ button{font-family:inherit}
 
   /* ════════════════════════════════════════════════════════════
      小奈教练 iframe 通信（复用段：换页时整段照搬，不要改）
+     ⚠ 纯知识页（无装置）→ 本段 + 下面的 readContext / buildPrompt / bring
+       以及 coachSubmit / coachBring 两个监听**整段删除**，页面不含任何 postMessage。
      ════════════════════════════════════════════════════════════ */
   /* ═══ 小奈教练 iframe 通信：复用代码开始 ═══
      保留 coachStatus 提示元素，调用 sendCoachPrompt(完整提问文字)。
