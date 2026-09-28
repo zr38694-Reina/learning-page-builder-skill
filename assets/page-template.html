@@ -225,6 +225,26 @@ button{font-family:inherit}
 }
 .takeaway-box li b{font-weight:800}
 
+/* ══ 9 顺带知道（AI 常识卡 · 每页都有 · 3 条） ══ */
+.ai-facts{
+  margin-top:clamp(24px,5vw,34px);
+  background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:clamp(16px,4vw,22px);
+}
+.ai-facts-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.ai-facts-head h3{font-size:14.5px;font-weight:800;margin:0}
+.ai-facts-head span{font-size:11.5px;color:var(--sub)}
+.ai-facts ul{list-style:none;padding:0;margin:10px 0 0}
+.ai-facts li{
+  position:relative;font-size:13px;line-height:1.85;color:var(--sub);
+  padding:6px 0 6px 22px;
+}
+.ai-facts li::before{
+  content:'';position:absolute;left:0;top:13px;
+  width:6px;height:6px;border-radius:50%;background:var(--accent-2);
+}
+.ai-facts li b{color:var(--text);font-weight:800}
+
 /* ══ 页脚 ══ */
 .lesson-foot{
   margin-top:26px;padding-top:16px;border-top:1px solid var(--border);
@@ -330,6 +350,22 @@ button{font-family:inherit}
       <li><b>{{我能做什么}}</b>：{{一条今天就能用的动作}}</li>
     </ul>
   </div>
+
+  <!-- 9 顺带知道：AI 常识卡（**每页都有** · 恰好 3 条 · 每条一句话）
+       位置固定在这里：正事（takeaway）说完了，再顺带补三句 AI 基础知识。
+       槽位不可换：① 本页这件事在 AI 里的正式叫法 ② 一个易混概念的区别 ③ 30 秒能验证的小动作
+       写法与四条约束见 references/03-页面骨架与文案.md §1.3。
+       只有「本页确实与 AI 毫无交集」才整块删掉，并在诊断清单里写明理由。 -->
+  <section class="ai-facts">
+    <div class="ai-facts-head">
+      <h3>顺带知道</h3><span>和这一页有关的 AI 常识</span>
+    </div>
+    <ul>
+      <li><b>{{术语名}}</b>：{{一句人话。本页里对应的就是…}}</li>
+      <li><b>{{易混概念}}</b>：{{一句话说清区别，别引第三个新词}}</li>
+      <li><b>{{可验证的小动作}}</b>：{{30 秒能做完，验证上面某一条}}</li>
+    </ul>
+  </section>
 
   <!-- 页脚：只留这一句免责声明。
        **不要**在页脚写「内容依据《…》整理」这类来源标注 —— 内容出处不进页面。
