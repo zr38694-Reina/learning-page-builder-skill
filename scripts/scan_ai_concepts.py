@@ -15,6 +15,13 @@
     python3 scan_ai_concepts.py --page 页.html --outline 大纲.md
     python3 scan_ai_concepts.py --page 页.html --outline 大纲.md --section "环节 3｜第一版 v1"
     python3 scan_ai_concepts.py --page 页.html --outline 大纲.md --json
+
+同一批多页时（红线 8：一个概念只归一页），用 --used 串一个台账，逐页连用同一个文件：
+    U=/tmp/本批概念台账.txt
+    python3 scan_ai_concepts.py --page p1.html --outline 大纲.md --section "环节 3" --used "$U"
+    python3 scan_ai_concepts.py --page p2.html --outline 大纲.md --section "环节 5" --used "$U"
+--used 会：读入台账里已用的概念 → A/B 段标 ✗、C 段草案跳过 → 跑完把本页采用的概念追加回去。
+--exclude "词A,词B" 可临时手动排除（词典 key 或中文词形都认）。
 """
 
 import argparse
@@ -159,13 +166,70 @@ def rank_page_first(page_hits, outline_hits):
     return ranked
 
 
-def build_drafts(ranked, entries, slots=3):
-    """按槽位拼装卡片草案：① formal+def ② confusable+diff ③ verify。"""
+def resolve_keys(tokens, entries):
+    """把「词典 key / 别名 / 展示名」解析成词典 key 集合。
+
+    批次台账里存的是词典 key，但人（或手写的 --exclude）更可能写中文词形，
+    两种都认；认不出来就原样收着，至少还能精确对上 key。
+    """
+    alias_map = {}
+    for key, e in entries.items():
+        alias_map[key.lower()] = key
+        for a in e.get("aliases", []):
+            alias_map[str(a).lower()] = key
+        formal = str(e.get("formal", ""))
+        if formal:
+            alias_map[formal.lower()] = key
+            base = re.sub(r"[（(][^）)]*[）)]", "", formal).strip()
+            if base:
+                alias_map.setdefault(base.lower(), key)
+
+    out = set()
+    for t in tokens:
+        t = (t or "").strip()
+        if not t:
+            continue
+        for cand in (t, re.sub(r"[（(][^）)]*[）)]", "", t).strip()):
+            if cand and cand.lower() in alias_map:
+                out.add(alias_map[cand.lower()])
+                break
+        else:
+            out.add(t)
+    return out
+
+
+def read_ledger(path: Path):
+    """读批次台账：支持 JSON 数组或「一行一个词」，# 开头的行忽略。"""
+    if not path.exists():
+        return []
+    raw = path.read_text(encoding="utf-8").strip()
+    if not raw:
+        return []
+    try:
+        data = json.loads(raw)
+        if isinstance(data, list):
+            return [str(x) for x in data]
+    except ValueError:
+        pass
+    return [ln.strip() for ln in raw.splitlines()
+            if ln.strip() and not ln.strip().startswith("#")]
+
+
+def build_drafts(ranked, entries, excluded, slots=3):
+    """按槽位拼装卡片草案：① formal+def ② confusable+diff ③ verify。
+
+    `excluded` = 本批其它页已经讲过的概念（同一批里一个词只在一页被解析），
+    槽位选词时一律跳过——候选不够就少给一条，绝不跨页重复。
+    """
     if not ranked:
         return []
 
+    usable = [(k, m) for k, m in ranked if k not in excluded]
+    if not usable:
+        return []
+
     drafts = []
-    top_key = ranked[0][0]
+    top_key = usable[0][0]
     top = entries[top_key]
 
     drafts.append({
@@ -176,7 +240,7 @@ def build_drafts(ranked, entries, slots=3):
 
     # ② 易混区分：优先用「另一个概念」，没有就用首选概念自己的易混词
     second_key, second = None, None
-    for key, _meta in ranked[1:]:
+    for key, _meta in usable[1:]:
         if entries[key].get("confusable"):
             second_key, second = key, entries[key]
             break
@@ -191,7 +255,7 @@ def build_drafts(ranked, entries, slots=3):
         })
 
     # ③ 30 秒验证
-    for key, _meta in ranked:
+    for key, _meta in usable:
         if entries[key].get("verify"):
             drafts.append({
                 "slot": "③ 花 30 秒验一下",
@@ -216,13 +280,16 @@ def render(result):
     ))
     if result["section_requested"] and not result["section_title"]:
         L.append("⚠️ 大纲里没找到本节标题「{}」，已退化为扫全文。".format(result["section_requested"]))
+    if result["excluded"]:
+        L.append("本批已用（这些词本页不再解析，标记 ✗）：{}".format("、".join(result["excluded"])))
     L.append("")
 
     L.append("── A｜本页出现且词典命中（{} 条）──".format(len(A)))
     if not A:
         L.append("（无）")
     for item in A:
-        L.append("• {}〔{}｜本页 {} 次 / 大纲 {} 次〕".format(item["key"], item["scope"], item["page_n"], item["outline_n"]))
+        L.append("• {}{}〔{}｜本页 {} 次 / 大纲 {} 次〕".format(
+            "✗ " if item["excluded"] else "", item["key"], item["scope"], item["page_n"], item["outline_n"]))
         L.append("    {}".format(item["formal"]))
         L.append("    {}".format(item["def"]))
     L.append("")
@@ -232,17 +299,22 @@ def render(result):
     if not B:
         L.append("（无）")
     for item in B:
-        L.append("• {}〔大纲 {} 次〕".format(item["key"], item["outline_n"]))
+        L.append("• {}{}〔大纲 {} 次〕".format("✗ " if item["excluded"] else "", item["key"], item["outline_n"]))
         L.append("    {}".format(item["formal"]))
         L.append("    {}".format(item["def"]))
     L.append("")
 
     L.append("── C｜建议卡片草案（固定 3 槽位，每条 1–2 句）──")
     if not C:
-        L.append("（本页与本节都没有命中，考虑整块省略概念卡并写明理由）")
+        L.append("（本页与本节都没有可用的新概念，考虑整块省略概念卡并写明理由）")
     for d in C:
         L.append("{}　[{}]".format(d["slot"], d["key"]))
         L.append("    {}".format(d["text"]))
+    used_now = [d["key"] for d in C if d.get("key")]
+    if result["excluded"] and len(used_now) < 3:
+        L.append("⚠️ 去重后只剩 {} 条可用：本批其它页已占 {}。".format(
+            len(used_now), "、".join(result["excluded"])))
+        L.append("   先按「宁可少一条、也不跨页重复」交付；若确要凑满 3 条，回 B 段换词。")
     L.append("")
 
     L.append("── D｜未收录概念（疑似 AI 词，词典里没有 → 提示补词典）──")
@@ -261,6 +333,9 @@ def main(argv=None):
     ap.add_argument("--page", required=True, help="学习页 .html 或 .md")
     ap.add_argument("--outline", required=True, help="课程大纲 .md")
     ap.add_argument("--section", default=None, help="大纲里的本节标题（片段匹配），不给则扫全文")
+    ap.add_argument("--exclude", default=None, help="本批其它页已讲过的概念，逗号分隔（词典 key 或中文词形都认）")
+    ap.add_argument("--used", default=None, metavar="PATH",
+                    help="批次台账：先读入其中已用概念并跳过，再把本页草案的概念追加进去（同一批逐页连用同一个文件）")
     ap.add_argument("--json", action="store_true", dest="as_json", help="输出机器可读 JSON")
     args = ap.parse_args(argv)
 
@@ -292,6 +367,14 @@ def main(argv=None):
     page_keys = {k for k, _c, _p in page_hits}
     outline_keys = {k for k, _c, _p in outline_hits}
 
+    # 批次去重：--exclude（手写） + --used（台账文件）合起来 = 本批其它页已讲过的概念
+    excluded = set()
+    if args.exclude:
+        excluded |= resolve_keys(args.exclude.split(","), entries)
+    ledger_path = Path(args.used) if args.used else None
+    if ledger_path is not None:
+        excluded |= resolve_keys(read_ledger(ledger_path), entries)
+
     # A 段按「本页频次 → 首现位置」排；C 段草案同样以本页概念打底
     outline_count = {k: c for k, c, _p in outline_hits}
     ranked = rank_page_first(page_hits, outline_hits)
@@ -303,6 +386,7 @@ def main(argv=None):
             "key": key, "formal": e.get("formal", key), "def": e.get("def", ""),
             "page_n": c, "outline_n": outline_count.get(key, 0),
             "scope": "两处都命中" if key in outline_keys else "仅本页",
+            "excluded": key in excluded,
         })
 
     B = []
@@ -311,11 +395,12 @@ def main(argv=None):
             e = entries[key]
             B.append({
                 "key": key, "formal": e.get("formal", key), "def": e.get("def", ""),
-                "outline_n": dict((k, c) for k, c, _ in outline_hits)[key],
+                "outline_n": outline_count.get(key, 0),
+                "excluded": key in excluded,
             })
-    B.sort(key=lambda x: -x["outline_n"])
+    B.sort(key=lambda x: (x["excluded"], -x["outline_n"]))
 
-    C = build_drafts(ranked, entries)
+    C = build_drafts(ranked, entries, excluded)
 
     # D：疑似 AI 词但词典没收录（词典已能匹配到的，跳过）
     covered = " \n".join(
@@ -336,6 +421,8 @@ def main(argv=None):
         "section_requested": args.section,
         "section_title": section_title,
         "entries_in_dict": len(entries),
+        "excluded": sorted(excluded),
+        "used_file": str(ledger_path) if ledger_path else None,
         "A": A, "B": B, "C": C, "D": D,
     }
 
@@ -343,6 +430,24 @@ def main(argv=None):
         print(json.dumps(result, ensure_ascii=False, indent=2))
     else:
         print(render(result))
+
+    # 记账：把本页草案采用的概念追加进台账，供同一批的下一页 --used 读取
+    if ledger_path is not None:
+        picks = []
+        for d in C:
+            k = d.get("key")
+            if k and k not in picks:      # ① 与 ③ 常常是同一个概念，去一次即可
+                picks.append(k)
+        known = read_ledger(ledger_path)
+        merged = known + [k for k in picks if k not in known]
+        ledger_path.parent.mkdir(parents=True, exist_ok=True)
+        ledger_path.write_text(
+            "# 本批已讲过的概念（scan_ai_concepts.py --used 维护，一行一个）\n"
+            + "\n".join(merged) + "\n",
+            encoding="utf-8",
+        )
+        if not args.as_json:
+            print("\n已记账 → {}（累计 {} 条：{}）".format(ledger_path, len(merged), "、".join(merged)))
     return 0
 
 
