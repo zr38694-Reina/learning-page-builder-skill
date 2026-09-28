@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{H1}} ｜ {{BRAND}}</title>
+<style>
+/* ══════════════════════════════════════════════════════════════
+   学习页模板 · 设计令牌
+   改这两处就够了：品牌色 --accent / 品牌名（正文与 <title>）
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --accent:#0066ff; --accent-soft:rgba(0,102,255,.06);
+  --amber:#d97706;  --amber-soft:rgba(217,119,6,.08);
+  --success:#16a34a;--success-soft:rgba(22,163,74,.07);
+  --danger:#dc2626; --danger-soft:rgba(220,38,38,.06);
+  --bg:#f7f9fc; --card:#ffffff;
+  --text:#0f172a; --sub:#64748b;
+  --border:#e2e8f0; --border-strong:#cbd5e1;
+  --radius:16px; --radius-sm:10px;
+  --shadow-card:0 1px 2px rgba(15,23,42,.05), 0 12px 32px -20px rgba(15,23,42,.28);
+  --font:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Roboto,sans-serif;
+  --mono:"SF Mono","Fira Code",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --accent:#4d94ff; --accent-soft:rgba(77,148,255,.1);
+    --amber:#fbbf24;  --amber-soft:rgba(251,191,36,.1);
+    --success:#4ade80;--success-soft:rgba(74,222,128,.1);
+    --danger:#f87171; --danger-soft:rgba(248,113,113,.1);
+    --bg:#0b1017; --card:#131a26;
+    --text:#e8edf5; --sub:#94a3b8;
+    --border:#263143; --border-strong:#334155;
+    --shadow-card:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -20px rgba(0,0,0,.7);
+  }
+}
+[data-theme="dark"]{
+  --accent:#4d94ff; --accent-soft:rgba(77,148,255,.1);
+  --amber:#fbbf24;  --amber-soft:rgba(251,191,36,.1);
+  --success:#4ade80;--success-soft:rgba(74,222,128,.1);
+  --danger:#f87171; --danger-soft:rgba(248,113,113,.1);
+  --bg:#0b1017; --card:#131a26;
+  --text:#e8edf5; --sub:#94a3b8;
+  --border:#263143; --border-strong:#334155;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);font-family:var(--font);
+  line-height:1.75;-webkit-font-smoothing:antialiased;
+}
+img,svg{max-width:100%;height:auto}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* ── 页壳：响应式靠 clamp + auto-fit，不用媒体查询 ── */
+.lesson{
+  max-width:760px;margin:0 auto;
+  padding:clamp(20px,5vw,52px) clamp(16px,4.5vw,32px) clamp(56px,10vw,96px);
+}
+
+/* ── 1 眉标 / 2 H1 / 3 副标题 ── */
+.lesson-header{margin-bottom:clamp(20px,4vw,30px)}
+.kicker{
+  display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.08em;
+  color:var(--accent);background:var(--accent-soft);
+  padding:5px 12px;border-radius:999px;margin-bottom:14px;
+}
+.lesson-header h1{
+  font-size:clamp(23px,5.2vw,33px);line-height:1.32;letter-spacing:-.015em;
+  margin:0 0 12px;font-weight:800;
+}
+.subtitle{font-size:clamp(14.5px,3.4vw,16.5px);color:var(--sub);line-height:1.85;margin:0}
+.subtitle b{color:var(--text);font-weight:700}
+
+/* ── 4 一句话回答 ── */
+.qa-answer{
+  background:linear-gradient(135deg,var(--accent-soft),rgba(0,102,255,.03));
+  border:1.5px solid rgba(0,102,255,.28);border-radius:var(--radius);
+  padding:clamp(18px,4vw,24px) clamp(18px,4.4vw,28px);margin:0 0 clamp(28px,6vw,44px);
+}
+.qa-tag{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--accent);margin-bottom:8px}
+.qa-answer p{margin:0;font-size:clamp(15.5px,3.8vw,17px);font-weight:700;line-height:1.85}
+.qa-answer p b{color:var(--accent)}
+
+/* ── 章节标签与正文 ── */
+.sec-label{
+  font-size:13px;font-weight:800;letter-spacing:.06em;color:var(--sub);
+  margin:clamp(32px,7vw,48px) 0 12px;text-transform:none;
+}
+.sec-label::before{content:'';display:inline-block;width:16px;height:2px;background:var(--accent);
+  vertical-align:middle;margin-right:8px;border-radius:2px}
+.l-p{font-size:clamp(14.5px,3.5vw,15.5px);color:var(--text);line-height:1.95;margin:0 0 16px}
+.l-p b{font-weight:700}
+.l-p a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(0,102,255,.35)}
+
+/* ── 卡片 / 双栏（auto-fit，自动响应式） ── */
+.l-cols,.pt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px}
+.l-card{
+  background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:clamp(15px,3.6vw,20px);box-shadow:var(--shadow-card);
+}
+.l-card h4{font-size:14.5px;font-weight:800;margin:0 0 6px}
+.l-card p{font-size:13px;color:var(--sub);line-height:1.85;margin:0}
+.l-card p b{color:var(--text)}
+
+/* ── 提醒 / 诚实段 ── */
+.l-callout{
+  background:var(--card);border-left:3px solid var(--amber);
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  padding:14px 18px;margin:16px 0 0;font-size:13.5px;line-height:1.85;color:var(--sub);
+}
+.l-callout b{color:var(--text)}
+.l-callout a{color:var(--accent);text-decoration:none}
+
+/* ══ 5 装置通用外壳（各题型共用） ══ */
+.demo{
+  background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow-card);padding:clamp(16px,4vw,24px);
+}
+.demo-head{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  font-size:12.5px;font-weight:800;color:var(--sub);margin-bottom:12px;flex-wrap:wrap}
+.demo-hint{font-size:13px;color:var(--sub)}
+
+/* ── 按钮 ── */
+.btn{
+  border:1.5px solid var(--border);background:var(--card);color:var(--text);
+  border-radius:999px;padding:9px 18px;font-size:13.5px;font-weight:700;
+  cursor:pointer;transition:border-color .15s,background .15s,transform .15s;
+  min-height:40px;  /* 触控友好 */
+}
+.btn:hover{border-color:rgba(0,102,255,.45)}
+.btn.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.btn-primary{
+  background:var(--accent);border-color:var(--accent);color:#fff;
+  box-shadow:0 4px 14px rgba(0,102,255,.28);
+}
+.btn-primary:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.btn-ghost{font-size:13px;padding:8px 15px;color:var(--sub)}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px}
+
+/* ══ PATTERN：点选 + 计数器（示例实现，替换为选定题型） ══ */
+.pick-list{display:grid;gap:8px;margin-bottom:16px}
+.pick{
+  border:1.5px solid var(--border);background:var(--card);color:var(--sub);
+  border-radius:var(--radius-sm);padding:10px 14px;font-size:13.5px;font-weight:700;
+  cursor:pointer;text-align:left;transition:all .15s;min-height:44px;
+}
+.pick:hover{border-color:rgba(0,102,255,.4);color:var(--text)}
+.pick.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.stage{
+  min-height:84px;padding:14px;background:rgba(0,0,0,.02);
+  border:1.5px dashed var(--border);border-radius:var(--radius-sm);
+  display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;
+}
+[data-theme="dark"] .stage{background:rgba(255,255,255,.02)}
+.unit{
+  display:inline-block;padding:4px 10px;border-radius:8px;
+  font-size:14px;font-weight:700;font-family:var(--mono);white-space:pre;
+  opacity:0;transform:scale(.6);transition:opacity .25s,transform .25s;
+}
+.unit.show{opacity:1;transform:scale(1)}
+.unit.u0{background:#dbeafe}.unit.u1{background:#dcfce7}.unit.u2{background:#fef3c7}
+.unit.u3{background:#fce7f3}.unit.u4{background:#ede9fe}
+[data-theme="dark"] .unit{color:#0b1017}
+.counters{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,120px),1fr));
+  gap:10px;margin-top:16px}
+.counter{
+  background:var(--accent-soft);border:1px solid rgba(0,102,255,.14);
+  border-radius:var(--radius-sm);padding:12px 14px;text-align:center;
+}
+.counter .n{font-size:clamp(19px,4.6vw,23px);font-weight:800;color:var(--accent);
+  font-variant-numeric:tabular-nums}
+.counter .k{font-size:11.5px;font-weight:700;color:var(--sub);margin-top:2px}
+.demo-note{margin-top:12px;font-size:12px;color:var(--sub);line-height:1.7}
+
+/* ══ 小奈教练卡 ══ */
+.coach{
+  margin-top:20px;background:var(--card);border:1.5px solid var(--border);
+  border-radius:var(--radius);box-shadow:var(--shadow-card);
+  padding:clamp(16px,4vw,22px);
+}
+.coach-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.coach-avatar{
+  flex-shrink:0;width:38px;height:38px;border-radius:12px;
+  display:grid;place-items:center;font-size:16px;font-weight:800;color:#fff;
+  background:linear-gradient(135deg,var(--accent),#7c3aed);
+}
+.coach-title{font-size:15px;font-weight:800;margin:0 0 4px}
+.coach-desc{font-size:12.5px;color:var(--sub);line-height:1.8;margin:0}
+.coach-desc b{color:var(--text)}
+.coach-label{display:block;font-size:12px;font-weight:800;color:var(--sub);margin-bottom:6px}
+.coach textarea{
+  width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--bg);color:var(--text);font-family:inherit;font-size:13.5px;
+  line-height:1.75;padding:11px 13px;resize:vertical;
+}
+.coach textarea:focus{outline:none;border-color:var(--accent)}
+.coach-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.coach-status{font-size:12.5px;color:var(--sub);margin-top:10px}
+.coach-status:empty{display:none}
+
+/* ══ 8 takeaway ══ */
+.takeaway-box{
+  background:linear-gradient(135deg,var(--accent-soft),rgba(124,58,237,.05));
+  border:1.5px solid rgba(0,102,255,.22);border-radius:var(--radius);
+  padding:clamp(18px,4.2vw,26px) clamp(18px,4.6vw,30px);margin-top:clamp(30px,6.5vw,44px);
+}
+.takeaway-box h3{font-size:16.5px;font-weight:800;margin:0 0 12px;color:var(--accent)}
+.takeaway-box ul{list-style:none;padding:0;margin:0}
+.takeaway-box li{
+  position:relative;font-size:clamp(14px,3.4vw,14.5px);line-height:1.85;
+  padding:5px 0 5px 22px;
+}
+.takeaway-box li::before{
+  content:'';position:absolute;left:0;top:14px;
+  width:8px;height:8px;border-radius:50%;background:var(--accent);
+}
+.takeaway-box li b{font-weight:800}
+
+/* ══ 页脚 ══ */
+.lesson-foot{
+  margin-top:26px;padding-top:16px;border-top:1px solid var(--border);
+  font-size:12px;color:var(--sub);line-height:1.8;
+}
+
+/* ══ 动效降级：对动效敏感的用户，一切瞬间完成 ══ */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important;
+  }
+}
+</style>
+</head>
+
+<body data-page-id="{{PAGE_ID}}">
+<main class="lesson">
+
+  <!-- 1 眉标 + 2 H1 + 3 副标题 -->
+  <header class="lesson-header">
+    <div class="kicker">{{组定位}}</div>
+    <h1>{{H1}}</h1>
+    <p class="subtitle">{{副标题：复述困惑 / 术语祛魅 / 畏难→反转→追加价值}}</p>
+  </header>
+
+  <!-- 4 一句话回答（第一屏就给结论） -->
+  <div class="qa-answer">
+    <div class="qa-tag">一句话回答</div>
+    <p>{{结论：<b>定义</b> + <b>类比</b> + <b>后果</b>}}</p>
+  </div>
+
+  <!-- 5 装置（在原理之前） -->
+  <h2 class="sec-label">{{装置的祈使句标题，如「亲手切一句话」}}</h2>
+  <p class="l-p">{{一句引导：告诉读者点什么 / 拖什么，会看到什么}}</p>
+
+  <!-- ══════════ PATTERN SLOT：把 assets/patterns/ 里选定的装置粘在这里 ══════════ -->
+  <div class="demo" id="demo">
+    <div class="demo-head">
+      <span>{{装置名}}</span>
+      <span id="demoProgress">{{进度 / 提示}}</span>
+    </div>
+
+    <!-- ↓↓↓ 本示例为「点选 + 计数器」，替换时整块换掉 ↓↓↓ -->
+    <div class="pick-list" id="pickList" role="group" aria-label="选择一句话"></div>
+    <div class="stage" id="stage"><span class="demo-hint" id="stageHint">点上面任意一句，看它被切成一颗颗单位</span></div>
+    <div class="counters">
+      <div class="counter"><div class="n" id="cA" aria-live="polite">0</div><div class="k">{{计数器 1 名称}}</div></div>
+      <div class="counter"><div class="n" id="cB" aria-live="polite">0</div><div class="k">{{计数器 2 名称}}</div></div>
+      <div class="counter"><div class="n" id="cC" aria-live="polite">0</div><div class="k">{{计数器 3 名称}}</div></div>
+    </div>
+    <p class="demo-note">{{数据来源声明 + 近似值声明。例：切分为 <b>真实数据</b>（GPT-4o 家族 o200k 词表实测）；
+      费率为<b>演示值</b>，只用来感受量级，换别的模型会不同。}}</p>
+    <!-- ↑↑↑ 示例结束 ↑↑↑ -->
+  </div>
+  <!-- ══════════ /PATTERN SLOT ══════════ -->
+
+  <!-- 5b 小奈教练卡：贴在装置正下方 -->
+  <section class="coach" id="coach"
+           data-coach-title="{{卡标题：一个动作，不是「向我提问」}}">
+    <div class="coach-head">
+      <span class="coach-avatar" aria-hidden="true">奈</span>
+      <div>
+        <h3 class="coach-title">{{卡标题}}</h3>
+        <p class="coach-desc">{{她会做什么}}。<b>{{她不会做什么}}</b></p>
+      </div>
+    </div>
+    <label class="coach-label" for="coachInput">{{输入框标签}}</label>
+    <textarea id="coachInput" rows="3" placeholder="{{填空骨架优于开放问题}}"></textarea>
+    <div class="coach-actions">
+      <button type="button" class="btn btn-ghost" id="coachBring">带入当前演示状态</button>
+      <button type="button" class="btn btn-primary" id="coachSubmit">{{动词 + 结果}}</button>
+    </div>
+    <p class="coach-status" id="coachStatus" role="status" aria-live="polite"></p>
+  </section>
+
+  <!-- 6 原理 / 清单卡 -->
+  <h2 class="sec-label">{{原理标题}}</h2>
+  <p class="l-p">{{补机制，可跳读}}</p>
+  <div class="l-cols">
+    <div class="l-card"><h4>{{卡 1}}</h4><p>{{…}}</p></div>
+    <div class="l-card"><h4>{{卡 2}}</h4><p>{{…}}</p></div>
+  </div>
+
+  <!-- 7 诚实提醒：误区 + 软肋 + 出口 -->
+  <div class="l-callout">
+    <b>{{误区或软肋}}</b>{{说明}}。{{可选：<a href="{{出口链接}}">想看深入版，这里有</a>。}}
+  </div>
+
+  <!-- 8 takeaway：恰好 4 条，顺序固定 -->
+  <div class="takeaway-box">
+    <h3>✅ 这一页想和你分享的</h3>
+    <ul>
+      <li><b>{{是什么}}</b>：{{一句人话}}</li>
+      <li><b>{{代价 / 边界}}</b>：{{…}}</li>
+      <li><b>{{常见误区}}</b>：{{…}}</li>
+      <li><b>{{我能做什么}}</b>：{{一条今天就能用的动作}}</li>
+    </ul>
+  </div>
+
+  <footer class="lesson-foot">
+    {{数据与免责声明}}｜教学示意：页面中的数值为演示用途，不对应某个产品的真实输出。
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  /* R() = 尊重 prefers-reduced-motion 的延时。
+     所有动画/入场时序都必须过这个函数：对动效敏感的用户，一切瞬间完成。 */
+  var REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function R(ms) { return REDUCED ? 0 : ms; }
+  function $(id) { return document.getElementById(id); }
+  function textOf(id) { var el = $(id); return el ? (el.textContent || '').trim() : ''; }
+
+  /* ════════════════════════════════════════════════════════════
+     装置：点选 + 计数器
+     ════════════════════════════════════════════════════════════ */
+  var RATE_PER_K = 2;   /* 演示费率：每千单位约 2 厘 */
+
+  /* 演示数据必须内联硬编码。真数据标来源，近似值标用途。 */
+  var ITEMS = [
+    { label: '中文短句',  text: '今天天气真不错',      units: ['今','天天','气','真','不错'] },
+    { label: '中文长句',  text: '麻烦帮我把这份会议纪要整理成三条重点',
+      units: ['麻','烦','帮','我','把','这','份','会议','纪','要','整理','成','三','条','重点'] },
+    { label: '英文句',    text: 'The weather is nice today',
+      units: ['The',' weather',' is',' nice',' today'] }
+  ];
+
+  var timers = [];
+  var buttons = [];
+  var currentIdx = -1;
+
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+  function fmt(n) { return '≈ ' + (n * RATE_PER_K / 1000).toFixed(3) + ' 厘'; }
+
+  function play(i) {
+    clearTimers();
+    currentIdx = i;
+    buttons.forEach(function (b, k) {
+      b.classList.toggle('on', k === i);
+      b.setAttribute('aria-pressed', k === i ? 'true' : 'false');
+    });
+
+    var it = ITEMS[i];
+    $('cA').textContent = it.text.length;
+    $('cB').textContent = '0';
+    $('cC').textContent = fmt(0);
+    $('stageHint') && ($('stageHint').hidden = true);
+
+    var stage = $('stage');
+    stage.innerHTML = it.units.map(function (u, k) {
+      return '<span class="unit u' + (k % 5) + '"></span>';
+    }).join('');
+    /* 用 textContent 填内容，避免任何注入 */
+    stage.querySelectorAll('.unit').forEach(function (el, k) {
+      el.textContent = it.units[k];
+    });
+
+    var chips = stage.querySelectorAll('.unit');
+    chips.forEach(function (chip, k) {
+      timers.push(setTimeout(function () {
+        chip.classList.add('show');
+        $('cB').textContent = k + 1;
+        $('cC').textContent = fmt(k + 1);
+      }, R(160 * (k + 1))));
+    });
+  }
+
+  ITEMS.forEach(function (it, i) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'pick';
+    b.textContent = it.label + '：' + it.text;
+    b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', function () { play(i); });
+    $('pickList').appendChild(b);
+    buttons.push(b);
+  });
+
+  /* ════════════════════════════════════════════════════════════
+     小奈教练 iframe 通信（复用段：换页时整段照搬，不要改）
+     ════════════════════════════════════════════════════════════ */
+  /* ═══ 小奈教练 iframe 通信：复用代码开始 ═══
+     保留 coachStatus 提示元素，调用 sendCoachPrompt(完整提问文字)。
+     宿主须已启用接收监听。已知宿主 origin 时可替换下方的 '*'。
+  */
+  var COACH = {
+    source: 'learning-page',
+    hostSource: 'xiaonai',
+    targetOrigin: '*',        /* 生产可收紧为宿主域名 */
+    inIframe: window.parent !== window
+  };
+
+  function sendCoachPrompt(prompt) {
+    var status = $('coachStatus');
+    if (!COACH.inIframe) {
+      status.textContent = '请在支持小奈教练的宿主页面中打开此学习页。';
+      return;
+    }
+    status.textContent = '正在交给小奈教练…';
+    try {
+      window.parent.postMessage({
+        source: COACH.source,
+        type: 'coach:send',
+        v: 1,
+        payload: { prompt: prompt }
+      }, COACH.targetOrigin);
+    } catch (e) { /* 跨域等异常忽略 */ }
+  }
+
+  /* —— 宿主 → 页面：只认 coach:ack —— */
+  window.addEventListener('message', function (ev) {
+    if (ev.source !== window.parent) return;              /* 只收父窗口 */
+    var d = ev.data;
+    if (!d || typeof d !== 'object') return;
+    if (d.source !== COACH.hostSource) return;            /* 不认的发送方一律忽略 */
+    if (d.type !== 'coach:ack' || d.v !== 1) return;
+
+    $('coachStatus').textContent = '已交给小奈教练，请查看对话。';
+  });
+  /* ═══ 小奈教练 iframe 通信：复用代码结束 ═══ */
+
+  /* —— 以下为本页业务：换页时改这几处（见 references/04 §6） —— */
+
+  /* —— 从本页装置读数：只读页面已有文本，不让学员重新打字 —— */
+  function readContext() {
+    var out = [];
+    if (currentIdx >= 0) {
+      out.push({ k: '带入的当前选项', v: ITEMS[currentIdx].label + '：' + ITEMS[currentIdx].text });
+      out.push({ k: '页面上显示的字数', v: textOf('cA') });
+      out.push({ k: '页面上显示的单位数', v: textOf('cB') });
+    } else {
+      out.push({ k: '页面当前状态', v: '学员还没选任何一项' });
+    }
+    return out;
+  }
+
+  /* —— 拼装指令：必须含硬约束（页面教什么，就防你什么） ——
+     返回值即 payload.prompt。用户要求原文发送时改成 `return text;` */
+  function buildPrompt(text) {
+    var state = readContext().map(function (c) { return c.k + '：' + c.v; }).join('；');
+    return '请用本页「{{概念名}}」的视角，帮我处理下面这件事。\n\n' +
+      '我的情况：' + (text || '（学员未填写，可先从页面状态开始）') + '\n' +
+      '页面演示状态：' + state + '\n\n' +
+      '【硬约束】{{这一页的近似值/边界声明，例如：不同模型的分词器与费率不同，' +
+      '不要声称页面上的数字适用于所有模型；精确值应以官方口径核对。}}\n\n' +
+      '先只问一个会改变结论的问题；我回答后，再按{{固定输出清单}}给出方案。';
+  }
+
+  /* —— 带入现场：一键把页面状态填进输入框 —— */
+  function bring() {
+    if (currentIdx < 0) {
+      $('coachInput').value = '我想用这个页面的方法看看我自己的情况：';
+      return;
+    }
+    $('coachInput').value = ITEMS[currentIdx].text;
+    $('coachInput').focus();
+  }
+
+  $('coachSubmit').addEventListener('click', function () {
+    var input = $('coachInput');
+    var text = (input.value || '').trim();
+    if (!text) {
+      $('coachStatus').textContent = '请先填写内容。';
+      input.focus();
+      return;
+    }
+    sendCoachPrompt(buildPrompt(text));
+  });
+  $('coachBring').addEventListener('click', bring);
+})();
+</script>
+</body>
+</html>
