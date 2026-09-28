@@ -227,6 +227,29 @@ button{font-family:inherit}
 }
 .ai-facts li b{color:var(--text);font-weight:800}
 
+/* ── 正文术语：概念卡的词，在正文**首个出现处**加下划线，悬浮/聚焦/点按看解析 ──
+   下划线由页脚那段「术语下划线（复用段）」脚本自动加，无需手写。 */
+.ai-term{
+  text-decoration:underline dotted rgba(var(--accent-rgb),.55);
+  text-decoration-thickness:1.5px;text-underline-offset:3px;
+  cursor:help;border-radius:4px;
+}
+.ai-term:hover,.ai-term:focus-visible{
+  background:var(--accent-soft);
+  text-decoration-style:solid;text-decoration-color:var(--accent);
+}
+.term-tip{
+  position:fixed;left:0;top:0;z-index:70;
+  max-width:min(330px,88vw);
+  background:var(--text);color:var(--bg);
+  font-size:12.5px;line-height:1.75;font-weight:400;
+  padding:9px 12px;border-radius:10px;
+  box-shadow:0 10px 28px rgba(0,0,0,.24);
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .14s ease;
+}
+.term-tip[data-open="1"]{opacity:1;visibility:visible}
+
 /* ══ 9 takeaway ══ */
 .takeaway-box{
   background:linear-gradient(135deg,var(--accent-soft),var(--accent-2-soft));
@@ -347,14 +370,18 @@ button{font-family:inherit}
        本页与本课都没涉及的词不进卡（词典是备选池，不是必须讲完的清单）。
        槽位不可换：① 正式叫法 ② 一个易混概念的区别 ③ 30 秒能验证的小动作
        写法与四条约束见 references/03-页面骨架与文案.md §1.3。
-       只有「本页确实与 AI 毫无交集」才整块删掉，并在诊断清单里写明理由。 -->
+       只有「本页确实与 AI 毫无交集」才整块删掉，并在诊断清单里写明理由。
+
+       ⚠ data-term：① ② 条必须填「正文里要匹配的词形」（多个别名用 | 分隔）。
+       页脚那段「术语下划线（复用段）」脚本据此在正文**第一个出现处**加下划线，
+       悬浮/聚焦/点按显示该条解析。③ 条是动作、不是概念，**不填** data-term。 -->
   <section class="ai-facts">
     <div class="ai-facts-head">
       <h3>AI 相关概念解析</h3><span>这些 AI 词，一次说清</span>
     </div>
     <ul>
-      <li><b>{{正式叫法}}</b>：{{1–2 句，一句定义 + 一句类比/边界，取自词典}}</li>
-      <li><b>{{易混概念}}</b>：{{1–2 句说清区别，别引第三个新词}}</li>
+      <li><b data-term="{{正文里的词形，如 上下文窗口；别名用 | 分隔}}">{{正式叫法}}</b>：{{1–2 句，一句定义 + 一句类比/边界，取自词典}}</li>
+      <li><b data-term="{{易混概念}}">{{易混概念}}</b>：{{1–2 句说清区别，别引第三个新词}}</li>
       <li><b>{{可验证的小动作}}</b>：{{30 秒能做完，验证上面某一条，说清该看什么}}</li>
     </ul>
   </section>
@@ -547,6 +574,142 @@ button{font-family:inherit}
     sendCoachPrompt(buildPrompt(text));
   });
   $('coachBring').addEventListener('click', bring);
+})();
+</script>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════
+   术语下划线（**复用段：整段照搬，不要改**）
+
+   做一件事：把「AI 相关概念解析」卡里的词，在**正文第一个出现的位置**加下划线，
+   悬浮 / 键盘聚焦 / 触屏点按都显示该词的解析；Esc、滚动、点空白处收起。
+
+   词表与解析**全部来自那张卡**（<b data-term="词形">＋该条 li 的文字），
+   这里不重复维护一份——卡改了，下划线自动跟着改，两边不会不同步。
+   卡片被整块删掉时（本页与 AI 无交集），本段自动不生效，无需清理。
+   不新增任何依赖、不发网络请求、不读时间。
+   ══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var card = document.querySelector('.ai-facts');
+  if (!card) return;                      /* 没概念卡 → 本段不生效 */
+
+  /* 1) 收集词与解析：词形取 <b data-term>（可多别名，| 分隔） */
+  var terms = [];
+  Array.prototype.forEach.call(card.querySelectorAll('li b'), function (b) {
+    var raw = (b.getAttribute('data-term') || '').trim();
+    if (!raw) {
+      /* 兜底：没写 data-term 时，用「去掉括号英文」的短词形，且必须不含标点（排除③的动作句） */
+      var guess = (b.textContent || '').replace(/[（(][^）)]*[）)]/g, '').trim();
+      if (guess && guess.length <= 14 && !/[，。、；：？！,.;:?!]/.test(guess)) raw = guess;
+    }
+    var li = b.parentElement;
+    var def = li ? (li.textContent || '').replace(b.textContent || '', '').replace(/^[\s：:]+/, '').trim() : '';
+    if (!raw || !def) return;
+    raw.split('|').forEach(function (t) {
+      t = t.trim();
+      if (t) terms.push({ t: t, def: def });
+    });
+  });
+  if (!terms.length) return;
+
+  /* 2) 全页共用一个提示气泡 */
+  var tip = document.createElement('div');
+  tip.className = 'term-tip';
+  tip.id = 'termTip';
+  tip.setAttribute('role', 'tooltip');
+  tip.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(tip);
+  var opener = null;
+
+  function place(el) {
+    var r = el.getBoundingClientRect();
+    var vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
+    var tw = tip.offsetWidth, th = tip.offsetHeight;
+    var x = Math.max(8, Math.min(r.left + r.width / 2 - tw / 2, vw - tw - 8));
+    var y = r.bottom + 8;
+    if (y + th > vh - 8) y = Math.max(8, r.top - th - 8);   /* 下方放不下就翻到上方 */
+    tip.style.left = Math.round(x) + 'px';
+    tip.style.top = Math.round(y) + 'px';
+  }
+  function show(el) {
+    var d = el.getAttribute('data-def') || '';
+    if (!d) return;
+    opener = el;
+    tip.textContent = d;
+    tip.setAttribute('aria-hidden', 'false');
+    place(el);                                  /* 先定位，再显示：避免在旧位置闪一帧 */
+    tip.setAttribute('data-open', '1');
+  }
+  function hide() {
+    opener = null;
+    tip.setAttribute('data-open', '0');
+    tip.setAttribute('aria-hidden', 'true');
+  }
+
+  /* 3) 每个词只在**首个出现处**包一层 .ai-term（逐词重扫，保证「第一个」始终按当前 DOM 顺序） */
+  var SKIP = 'script,style,button,input,select,textarea,a,code,pre,svg,' +
+             '.ai-facts,.demo,.coach,.term-tip,.ai-term,[data-no-term]';
+  function wrapFirst(term, def) {
+    var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentElement;
+        if (!p || !p.closest || p.closest(SKIP)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var n;
+    while ((n = w.nextNode())) {
+      var i = n.nodeValue.indexOf(term);
+      if (i < 0) continue;
+      var rest = n.splitText(i + term.length);
+      n.nodeValue = n.nodeValue.slice(0, i);
+      var s = document.createElement('span');
+      s.className = 'ai-term';
+      s.setAttribute('data-def', def);
+      s.setAttribute('tabindex', '0');
+      s.setAttribute('aria-describedby', 'termTip');
+      s.textContent = term;
+      n.parentNode.insertBefore(s, rest);
+      if (!n.nodeValue && n.parentNode) n.parentNode.removeChild(n);
+      return true;
+    }
+    return false;
+  }
+  terms.forEach(function (it) { wrapFirst(it.t, it.def); });
+
+  /* 4) 交互：鼠标悬浮 / 键盘聚焦 / 触屏点按；Esc、滚动、点空白处收起 */
+  function termOf(e) {
+    return (e.target && e.target.closest) ? e.target.closest('.ai-term') : null;
+  }
+  document.addEventListener('pointerover', function (e) {
+    if (e.pointerType && e.pointerType !== 'mouse') return;   /* 触屏交给 click，避免「显示即收起」 */
+    var el = termOf(e);
+    if (el) show(el);
+  });
+  document.addEventListener('pointerout', function (e) {
+    if (e.pointerType && e.pointerType !== 'mouse') return;
+    var el = termOf(e);
+    if (el && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('.ai-term'))) hide();
+  });
+  document.addEventListener('focusin', function (e) {
+    var el = termOf(e);
+    if (el) show(el);
+  });
+  document.addEventListener('focusout', function (e) {
+    if (termOf(e)) hide();
+  });
+  document.addEventListener('click', function (e) {
+    var el = termOf(e);
+    if (!el) { hide(); return; }
+    if (e.pointerType === 'mouse') return;                    /* 鼠标已由悬浮负责，点击不改变状态 */
+    if (opener === el) { hide(); } else { show(el); }
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+  window.addEventListener('scroll', hide, { passive: true });
+  window.addEventListener('resize', hide);
 })();
 </script>
 </body>
