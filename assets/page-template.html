@@ -19,6 +19,9 @@
   --bg:#ffffff; --card:#ffffff;
   --text:#28163f; --sub:#746287;
   --border:#eadff7; --border-strong:#d8c7ea;
+  --note-bg:#fff9e8; --note-bg-2:#fff3cf; --note-border:#ecdcae;
+  --note-text:#4a3d20; --note-sub:#7a6636; --note-line:rgba(140,110,40,.18);
+  --note-tape:rgba(var(--accent-rgb),.13);
   --radius:16px; --radius-sm:10px;
   --shadow-card:0 1px 2px rgba(56,26,88,.05), 0 12px 32px -20px rgba(56,26,88,.24);
   --font:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Roboto,sans-serif;
@@ -33,6 +36,9 @@
     --bg:#120c1c; --card:#1d132b;
     --text:#f5efff; --sub:#b7a5cc;
     --border:#38264d; --border-strong:#4c3665;
+    --note-bg:#241d12; --note-bg-2:#2c2314; --note-border:#4a3b1f;
+    --note-text:#f0e6cf; --note-sub:#c9b78f; --note-line:rgba(200,170,90,.18);
+    --note-tape:rgba(var(--accent-rgb),.22);
     --shadow-card:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -20px rgba(0,0,0,.7);
   }
 }
@@ -44,6 +50,9 @@
   --bg:#120c1c; --card:#1d132b;
   --text:#f5efff; --sub:#b7a5cc;
   --border:#38264d; --border-strong:#4c3665;
+  --note-bg:#241d12; --note-bg-2:#2c2314; --note-border:#4a3b1f;
+  --note-text:#f0e6cf; --note-sub:#c9b78f; --note-line:rgba(200,170,90,.18);
+  --note-tape:rgba(var(--accent-rgb),.22);
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -245,23 +254,36 @@ button{font-family:inherit}
 }
 .term-tip[data-open="1"]{opacity:1;visibility:visible}
 
-/* ══ 9 takeaway ══ */
+/* ══ 9 takeaway：便签（纸感 + 顶部胶带 + 虚线分隔） ══ */
 .takeaway-box{
-  background:linear-gradient(135deg,var(--accent-soft),var(--accent-2-soft));
-  border:1.5px solid rgba(var(--accent-rgb),.22);border-radius:var(--radius);
-  padding:clamp(18px,4.2vw,26px) clamp(18px,4.6vw,30px);margin-top:clamp(30px,6.5vw,44px);
+  position:relative;
+  background:linear-gradient(180deg,var(--note-bg),var(--note-bg-2));
+  border:1px solid var(--note-border);border-radius:3px;
+  padding:clamp(24px,5vw,32px) clamp(20px,5vw,34px) clamp(20px,4.4vw,28px);
+  margin-top:clamp(38px,7.5vw,56px);
+  box-shadow:0 14px 28px -22px rgba(80,60,20,.45);
 }
-.takeaway-box h3{font-size:16.5px;font-weight:800;margin:0 0 12px;color:var(--accent)}
+/* 顶部胶带 */
+.takeaway-box::before{
+  content:'';position:absolute;top:-11px;left:50%;
+  width:92px;height:22px;transform:translateX(-50%) rotate(-1.5deg);
+  background:var(--note-tape);
+  border-left:1px dashed rgba(var(--accent-rgb),.28);
+  border-right:1px dashed rgba(var(--accent-rgb),.28);
+}
+.takeaway-box h3{font-size:16.5px;font-weight:800;margin:0 0 14px;color:var(--note-text);letter-spacing:.02em}
 .takeaway-box ul{list-style:none;padding:0;margin:0}
 .takeaway-box li{
   position:relative;font-size:clamp(14px,3.4vw,14.5px);line-height:1.85;
-  padding:5px 0 5px 22px;
+  padding:9px 0 9px 24px;color:var(--note-text);
+  border-bottom:1px dashed var(--note-line);
 }
+.takeaway-box li:last-child{border-bottom:none;padding-bottom:0}
 .takeaway-box li::before{
-  content:'';position:absolute;left:0;top:14px;
-  width:8px;height:8px;border-radius:50%;background:var(--accent);
+  content:'✓';position:absolute;left:0;top:9px;
+  font-size:12px;font-weight:800;color:var(--note-sub);
 }
-.takeaway-box li b{font-weight:800}
+.takeaway-box li b{font-weight:800;color:var(--note-text)}
 
 /* ══ 页脚 ══ */
 .lesson-foot{
@@ -383,9 +405,10 @@ button{font-family:inherit}
     </ul>
   </section>
 
-  <!-- 9 takeaway：恰好 4 条，顺序固定。**收在全页最后**（知识卡片在它前面） -->
+  <!-- 9 takeaway：便签版式（纸感底色 + 顶部胶带 + 虚线分隔）
+       恰好 4 条，顺序固定。**收在全页最后**（知识卡片在它前面） -->
   <div class="takeaway-box">
-    <h3>✅ 这一页的 4 个要点</h3>
+    <h3>📌 这一页，带走 4 件事</h3>
     <ul>
       <li><b>{{是什么}}</b>：{{一句人话}}</li>
       <li><b>{{代价 / 边界}}</b>：{{…}}</li>
