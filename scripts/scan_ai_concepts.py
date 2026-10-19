@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""扫描「AI 相关概念解析」卡可用素材。
+"""扫描「知识卡片」可用素材。
 
 来源从「本页正文」放宽到「本页正文 + 本课在大纲里的那一节」，
 定义一律取自同目录的 ai_concepts.json（概念词典，随 skill 版本化）。
@@ -224,7 +224,9 @@ def related_of(key, entries):
 
 
 def build_drafts(ranked, entries, excluded, slots=3):
-    """按槽位拼装卡片草案：① formal+def ② confusable+diff ③ verify。
+    """按槽位拼装卡片草案：① 核心概念（formal+def）② 易混概念（confusable+diff）③ 关联概念（formal+def）。
+
+    三个槽位都必须是概念；③ 不再使用 verify（动作）字段。
 
     `excluded` = 本批其它页已经讲过的概念（同一批里一个词只在一页被解析），
     槽位选词时一律跳过——候选不够就少给一条，绝不跨页重复。
@@ -262,15 +264,30 @@ def build_drafts(ranked, entries, excluded, slots=3):
             "text": "别和「{}」搞混：{}".format(second.get("confusable"), second.get("diff", "")),
         })
 
-    # ③ 30 秒验证
+    # ③ 关联概念：优先从本页/本课候选中再取一个，其次从同类别里取。
+    # 三个槽位都必须是概念——这里不再使用 verify（动作）字段。
+    used_keys = {top_key}
+    if second_key:
+        used_keys.add(second_key)
+
+    third_key, third_entry = None, None
     for key, _meta in usable:
-        if entries[key].get("verify"):
-            drafts.append({
-                "slot": "③ 花 30 秒验一下",
-                "key": key,
-                "text": entries[key]["verify"],
-            })
+        if key in used_keys or key in excluded:
+            continue
+        third_key, third_entry = key, entries[key]
+        break
+    if third_entry is None:
+        for key, entry in same_category(top_key, entries):
+            if key in used_keys or key in excluded:
+                continue
+            third_key, third_entry = key, entry
             break
+    if third_entry is not None:
+        drafts.append({
+            "slot": "③ 关联概念",
+            "key": third_key,
+            "text": "{}：{}".format(third_entry.get("formal", third_key), third_entry.get("def", "")),
+        })
 
     return drafts[:slots]
 
@@ -320,7 +337,7 @@ def render(result):
         L.append("    {}".format(d["text"]))
     used_now = []
     for d in C:
-        if d.get("key") and d["key"] not in used_now:   # ① 与 ③ 常是同一个概念
+        if d.get("key") and d["key"] not in used_now:   # ① ② 可能指向同一个 key（② 借用易混词）
             used_now.append(d["key"])
 
     # 候选不足 → 给出第 ③ 层兜底候选（与本页主题同类的概念）
@@ -330,8 +347,8 @@ def render(result):
         if len(C) < 3:
             L.append("⚠️ 本页 + 本课凑不出 3 条槽位，卡建不起来 —— 必须走第 ③ 层。")
         else:
-            L.append("ℹ️ 槽位齐了，但三个槽位只用到 1 个概念（①③ 是同一个词），卡偏薄。")
-            L.append("   想更饱满，就从下面的同类里换一个更该讲的词当①（②仍是易混区分）。")
+            L.append("ℹ️ 槽位齐了，但可用概念不足 2 个，卡偏薄。")
+            L.append("   想更饱满，就从下面的同类里换一个更该讲的词当①（②仍是易混区分、③是关联概念）。")
         if result["fallback"]:
             L.append("↳ 第 ③ 层兜底候选（与「{}」同属「{}」）：".format(
                 result["fallback_basis"], result["fallback_category"]))
@@ -343,7 +360,7 @@ def render(result):
             L.append("↳ 本页主题在词典里找不到同类词 → 按 `references/03` §1.6 走：")
             L.append("   ①联网搜「本页主题 + 相关 AI 概念」，选读者读完这页会自然想问的那个；")
             L.append("   ②把它的 1–2 句解释按 7 字段补进 {}，再引用（词典边用边长）；".format(DICT_FILE))
-            L.append("   ③确与本页主题无关 → 整块省略概念卡，并在诊断清单写明理由。")
+            L.append("   ③确与本页主题无关 → 整块省略知识卡片，并在诊断清单写明理由。")
     L.append("")
 
     L.append("── D｜未收录概念（疑似 AI 词，词典里没有 → 提示补词典）──")
@@ -459,7 +476,7 @@ def main(argv=None):
     C = build_drafts(ranked, entries, excluded)
     picks = []
     for d in C:
-        if d.get("key") and d["key"] not in picks:   # ① 与 ③ 常常是同一个概念，去一次即可
+        if d.get("key") and d["key"] not in picks:   # 同一概念可能出现在多个槽位，去重即可
             picks.append(d["key"])
 
     # 两种「不够」要分开看：槽位填不满（卡建不起来） / 槽位满了但只讲 1 个概念（卡偏薄）

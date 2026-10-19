@@ -2,14 +2,14 @@
   "_meta": {
     "name": "AI 概念词典",
     "version": "1.0.0",
-    "usage": "scan_ai_concepts.py 读取本文件；每词一条，字段固定 6 个：aliases / formal / def / confusable / diff / verify（外加 category，供「找不到相关概念」时按同类检索，见 references/03 §1.6）。新增概念直接往后面加，别删 _meta。",
+    "usage": "scan_ai_concepts.py 读取本文件；每词一条，字段固定 6 个：aliases / formal / def / confusable / diff / verify（外加 category，供「找不到相关概念」时按同类检索，见 references/03 §1.6）。**知识卡片的三条 = 核心概念（formal+def）/ 易混概念（confusable+diff）/ 关联概念（同 category 的另一词，formal+def），三条都必须是概念。** verify 为旧版字段，保留兼容，不再写入卡片。新增概念直接往后面加，别删 _meta。",
     "field_notes": {
       "aliases": "供脚本匹配用的写法（中英文 + 常见变体），全部按字面量转义成正则，大小写不敏感。",
       "formal": "正式叫法（中文名 + 英文名），写进卡片第 1 槽。",
       "def": "一句到两句人话定义，讲透但不展开。",
       "confusable": "最容易和它搞混的那个词，写进卡片第 2 槽。",
       "diff": "一句话说清两者区别，写进卡片第 2 槽。",
-      "verify": "在任意 AI 产品里 30 秒能做完、用来验证的的小动作，写进卡片第 3 槽。",
+      "verify": "旧版「30 秒验证」字段，**知识卡片已不使用**（第三槽改为关联概念）；保留是为了兼容已有词条，不要写进卡片。",
       "category": "本词所属类别（模型基础 / 交互 / Agent 与工具 / 开发 / 产品），同类之间常常互为「相关概念」。"
     }
   },
