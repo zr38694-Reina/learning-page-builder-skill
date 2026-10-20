@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1050" viewBox="0 0 1400 1050">
+  <defs>
+    <pattern id="g80" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M80 0H0V80" fill="none" stroke="#e8ebf2" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1400" height="1050" fill="#f6f7f9"/>
+  <rect width="1400" height="1050" fill="url(#g80)"/>
+  <g stroke="#111" stroke-width="1.4" opacity="0.22" fill="none">
+    <path d="M101 160H119M110 151V169"/>
+    <path d="M1281 160H1299M1290 151V169"/>
+    <path d="M101 890H119M110 881V899"/>
+    <path d="M1281 890H1299M1290 881V899"/>
+  </g>
+
+  <!-- 一句话：长条被切成块 -->
+  <rect x="250" y="175" width="1000" height="96" fill="#fff" stroke="#111" stroke-width="3"/>
+  <g stroke="#111" stroke-width="2" opacity="0.35">
+    <path d="M325 176V270M400 176V270M475 176V270M550 176V270M625 176V270M700 176V270M925 176V270M1000 176V270M1075 176V270M1150 176V270"/>
+  </g>
+  <rect x="775" y="176" width="75" height="94" fill="#1a4be0"/>
+
+  <g fill="none" stroke-width="3">
+    <path d="M520 285Q500 320 525 357" stroke="#111" opacity="0.3"/>
+    <path d="M700 290Q760 325 800 360" stroke="#1a4be0" opacity="0.32" stroke-dasharray="8 10"/>
+    <path d="M950 290Q1010 325 1040 360" stroke="#1a4be0" opacity="0.3"/>
+  </g>
+
+  <!-- Token 方块行 -->
+  <g fill="#fff" stroke="#111" stroke-width="3">
+    <rect x="250" y="365" width="90" height="90"/>
+    <rect x="510" y="365" width="90" height="90"/>
+    <rect x="770" y="365" width="90" height="90" stroke="#1a4be0"/>
+    <rect x="1030" y="365" width="90" height="90"/>
+  </g>
+  <rect x="380" y="365" width="90" height="90" fill="#dde5fb"/>
+  <rect x="640" y="365" width="90" height="90" fill="#1a4be0"/>
+  <rect x="900" y="365" width="90" height="90" fill="#dde5fb"/>
+  <rect x="1160" y="365" width="90" height="90" fill="#93aaf2"/>
+
+  <g fill="none" stroke-width="3">
+    <path d="M560 480Q540 505 545 537" stroke="#111" opacity="0.3"/>
+    <path d="M790 483Q820 507 850 535" stroke="#1a4be0" opacity="0.35"/>
+    <path d="M980 483Q1010 507 1040 535" stroke="#1a4be0" opacity="0.3" stroke-dasharray="8 10"/>
+  </g>
+
+  <!-- 向量空间面板 -->
+  <rect x="250" y="545" width="1000" height="340" fill="#fff" stroke="#d5dbe6" stroke-width="2.5"/>
+  <g stroke="#e6ebf4" stroke-width="1.5" fill="none">
+    <path d="M417 545V885M584 545V885M751 545V885M918 545V885M1085 545V885"/>
+    <path d="M250 630H1250M250 715H1250M250 800H1250"/>
+  </g>
+
+  <!-- 三簇：墨色 / 主蓝 / 浅蓝 -->
+  <g transform="translate(520,700) scale(0.72) translate(-520,-1010)">
+    <circle cx="520" cy="1010" r="95" stroke="#1a4be0" opacity="0.13" fill="none"/>
+    <g fill="none" stroke="#111" stroke-width="3" opacity="0.35">
+      <path d="M490 980L598 1008M547 952L519 1054M598 1008L577 1082M519 1054L455 1070M519 1054L577 1082"/>
+    </g>
+    <g>
+      <rect x="470" y="960" width="40" height="40" fill="#fff" stroke="#111" stroke-width="3"/>
+      <rect x="530" y="935" width="34" height="34" fill="#dde5fb"/>
+      <rect x="575" y="985" width="46" height="46" fill="#fff" stroke="#111" stroke-width="3"/>
+      <rect x="500" y="1035" width="38" height="38" fill="#dde5fb"/>
+      <rect x="440" y="1055" width="30" height="30" fill="#fff" stroke="#111" stroke-width="3"/>
+      <rect x="560" y="1065" width="34" height="34" fill="#dde5fb"/>
+      <rect x="610" y="1030" width="28" height="28" fill="#fff" stroke="#111" stroke-width="3"/>
+    </g>
+  </g>
+
+  <g transform="translate(890,730) scale(0.72) translate(-890,-1075)">
+    <circle cx="890" cy="1075" r="88" stroke="#111" opacity="0.1" fill="none"/>
+    <g fill="none" stroke="#1a4be0" stroke-width="3" opacity="0.45">
+      <path d="M840 1050L952 1077M902 1027L868 1113M952 1077L930 1120M868 1113L968 1088"/>
+    </g>
+    <g>
+      <rect x="820" y="1030" width="40" height="40" fill="#1a4be0"/>
+      <rect x="885" y="1010" width="34" height="34" fill="#93aaf2"/>
+      <rect x="930" y="1055" width="44" height="44" fill="#1a4be0"/>
+      <rect x="850" y="1095" width="36" height="36" fill="#1a4be0"/>
+      <rect x="915" y="1105" width="30" height="30" fill="#dde5fb"/>
+      <rect x="955" y="1075" width="26" height="26" fill="#93aaf2"/>
+    </g>
+  </g>
+
+  <g transform="translate(1130,660) scale(0.75) translate(-1150,-950)">
+    <circle cx="1150" cy="950" r="60" stroke="#1a4be0" opacity="0.16" fill="none"/>
+    <g fill="none" stroke="#1a4be0" stroke-width="3" opacity="0.45">
+      <path d="M1127 927L1210 965M1179 909L1152 977"/>
+    </g>
+    <g>
+      <rect x="1110" y="910" width="34" height="34" fill="#1a4be0"/>
+      <rect x="1165" y="895" width="28" height="28" fill="#93aaf2"/>
+      <rect x="1195" y="950" width="30" height="30" fill="#1a4be0"/>
+      <rect x="1140" y="965" width="24" height="24" fill="#dde5fb"/>
+    </g>
+  </g>
+
+  <g>
+    <rect x="300" y="585" width="14" height="14" fill="#fff" stroke="#111" stroke-width="2"/>
+    <rect x="1200" y="820" width="12" height="12" fill="#dde5fb"/>
+    <rect x="330" y="815" width="10" height="10" fill="#93aaf2"/>
+    <rect x="1050" y="595" width="12" height="12" fill="#fff" stroke="#111" stroke-width="2"/>
+  </g>
+
+  <g fill="#111" opacity="0.15">
+    <circle cx="420" cy="315" r="1.8"/><circle cx="1080" cy="320" r="1.8"/><circle cx="360" cy="495" r="1.8"/><circle cx="1120" cy="500" r="1.8"/>
+  </g>
+</svg>

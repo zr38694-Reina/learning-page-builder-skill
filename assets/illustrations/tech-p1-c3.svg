@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="420" viewBox="0 0 560 420">
+  <defs>
+    <pattern id="g70" width="70" height="70" patternUnits="userSpaceOnUse">
+      <path d="M70 0H0V70" fill="none" stroke="#e8ebf2" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="560" height="420" fill="#f6f7f9"/>
+  <rect width="560" height="420" fill="url(#g70)"/>
+
+  <g stroke="#111" stroke-width="1.4" opacity="0.22" fill="none">
+    <path d="M35 44H53M44 35V53"/>
+    <path d="M507 376H525M516 367V385"/>
+  </g>
+
+  <g fill="none" stroke="#1a4be0" stroke-width="1.4" opacity="0.4">
+    <path d="M130 146V182M230 146V182M330 146V182M430 146V182"/>
+    <path d="M130 238V274M230 238V274M330 238V274M430 238V274"/>
+  </g>
+  <g fill="#1a4be0" opacity="0.5">
+    <path d="M126 172L130 179L134 172Z"/>
+    <path d="M226 172L230 179L234 172Z"/>
+    <path d="M326 172L330 179L334 172Z"/>
+    <path d="M426 172L430 179L434 172Z"/>
+    <path d="M126 264L130 271L134 264Z"/>
+    <path d="M226 264L230 271L234 264Z"/>
+    <path d="M326 264L330 271L334 264Z"/>
+    <path d="M426 264L430 271L434 264Z"/>
+  </g>
+
+  <g fill="#fff" stroke="#111" stroke-width="1.4">
+    <rect x="102" y="90" width="56" height="56"/>
+    <rect x="202" y="90" width="56" height="56"/>
+    <rect x="302" y="90" width="56" height="56"/>
+    <rect x="402" y="90" width="56" height="56"/>
+  </g>
+  <rect x="102" y="182" width="56" height="56" fill="#dde5fb"/>
+  <rect x="202" y="182" width="56" height="56" fill="#93aaf2"/>
+  <rect x="302" y="182" width="56" height="56" fill="#dde5fb"/>
+  <rect x="402" y="182" width="56" height="56" fill="#93aaf2"/>
+  <rect x="102" y="274" width="56" height="56" fill="#1a4be0"/>
+  <rect x="202" y="274" width="56" height="56" fill="#93aaf2"/>
+  <rect x="302" y="274" width="56" height="56" fill="#1a4be0"/>
+  <rect x="402" y="274" width="56" height="56" fill="#dde5fb"/>
+  <rect x="109" y="281" width="42" height="42" fill="none" stroke="#fff" stroke-width="1.4" opacity="0.5"/>
+  <rect x="309" y="281" width="42" height="42" fill="none" stroke="#fff" stroke-width="1.4" opacity="0.5"/>
+
+  <g fill="#111" opacity="0.16">
+    <circle cx="80" cy="210" r="1.6"/><circle cx="480" cy="210" r="1.6"/><circle cx="280" cy="368" r="1.6"/><circle cx="280" cy="60" r="1.6"/>
+  </g>
+</svg>
