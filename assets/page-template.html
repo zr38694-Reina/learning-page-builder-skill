@@ -224,6 +224,23 @@ button{font-family:inherit}
 .ai-facts li{position:relative;padding-left:22px;font-size:var(--fs-table);line-height:1.65}
 .ai-facts li::before{content:'';position:absolute;left:0;top:.55em;width:9px;height:9px;background:var(--accent)}
 .ai-facts li b{font-weight:800}
+/* 长卡（条目 ≥6 条，或单张卡高超过首屏约 60%）：切两张，横向滑动看。
+   短卡（≤5 条）不套这层、保持单张静态；骨架见本文件首屏「长卡版式」注释。 */
+.facts-nav{display:flex;gap:6px;margin-left:auto}
+.facts-tab{
+  appearance:none;border:0;border-radius:0;background:var(--hairline);color:var(--ink);
+  font:inherit;font-size:var(--fs-note);font-weight:800;letter-spacing:.06em;
+  min-width:40px;min-height:32px;padding:0 10px;cursor:pointer;
+  transition:background .18s ease,color .18s ease;
+}
+.facts-tab.on{background:var(--ink);color:var(--bg)}
+.facts-track{
+  display:grid;grid-auto-flow:column;grid-auto-columns:100%;gap:clamp(16px,2.4vw,28px);
+  overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.facts-track::-webkit-scrollbar{display:none}
+.facts-page{scroll-snap-align:start;scroll-snap-stop:always;min-width:0}
 
 /* ── takeaway：便签（恰好 4 条，收在全页最后）── */
 .take{padding:var(--gap-sec) 0 0}
@@ -305,6 +322,7 @@ button{font-family:inherit}
       右侧是「知识卡片」：把**本页出现的 AI 概念**都写上（常见 3–5 条，数量不限），
       每条「概念名：1–2 句定义 + 一句类比/边界」，定义取自 scripts/ai_concepts.json。
       排序：主题概念（H1 讲的那个）放第一条，其余按正文首现顺序；条数多时压到每条 1 句。
+      条目 ≥6 条（长卡）→ 换成下面注释里的「长卡版式」：切两张、横向滑动，首屏不被拉长。
       首屏不再配图——卡片就是首屏的视觉主体。写法见 references/03 §1.3。 -->
   <header class="hero">
     <div class="shell">
@@ -323,9 +341,36 @@ button{font-family:inherit}
             <li data-rv style="--d:80ms"><b data-term="{{概念 2 在正文里的词形}}">{{概念 2}}</b>：{{1–2 句，取自词典}}</li>
             <li data-rv style="--d:160ms"><b data-term="{{概念 3 在正文里的词形}}">{{概念 3}}</b>：{{1–2 句，取自词典}}</li>
             <!-- 本页还有概念就继续复制 <li>（4 条、5 条……数量不限，常见 3–5 条）；
-                 只收「本页出现的 AI 概念」，不塞动作、步骤、操作建议。 -->
+                 只收「本页出现的 AI 概念」，不塞动作、步骤、操作建议。
+                 条目 ≥6 条（或单张卡高超过首屏约 60%）→ 把整个 <aside> 换成下面注释里的
+                 「长卡版式」：两张卡横向滑动，首屏不会被长清单拉长。规则见 references/03 §1.3。 -->
           </ul>
         </aside>
+
+        <!-- ══ 知识卡片·长卡版式（条目 ≥6 条时用它，整块替换上面的 <aside class="ai-facts">）══
+             与短卡的区别只有三处：① 容器加 data-facts-switch；② facts-head 里加方形页码 01 / 02；
+             ③ 清单外套 .facts-track（横向滑动容器），切成两张 .facts-page，每张 3–4 条。
+             计数文字写成「N 个概念，两张卡翻看」（N 换成实际条数）。
+             每条 <li> 仍按短卡那样写（data-rv 的 --d 在每张卡里从 0 重新数）；
+             每条的 <b data-term> 一条都不能少——下划线脚本会从两张卡一起读词。
+             <aside class="ai-facts" data-facts-switch aria-labelledby="factsTitle">
+               <div class="facts-head">
+                 <h2 class="sec-h" id="factsTitle">知识卡片</h2><span>N 个概念，两张卡翻看</span>
+                 <div class="facts-nav" role="tablist" aria-label="知识卡片翻页">
+                   <button type="button" class="facts-tab on" role="tab" id="factsTab1" aria-controls="factsPage1" aria-selected="true">01</button>
+                   <button type="button" class="facts-tab" role="tab" id="factsTab2" aria-controls="factsPage2" aria-selected="false">02</button>
+                 </div>
+               </div>
+               <div class="facts-track">
+                 <div class="facts-page" id="factsPage1" role="tabpanel" aria-labelledby="factsTab1" tabindex="0">
+                   <ul>…前 3–4 条（主题词在第一条）…</ul>
+                 </div>
+                 <div class="facts-page" id="factsPage2" role="tabpanel" aria-labelledby="factsTab2" tabindex="0">
+                   <ul>…其余条目…</ul>
+                 </div>
+               </div>
+             </aside>
+             页底的「知识卡片翻页（复用段）」会自动接管滑动；短卡页里它不生效，可整段删。 ══ -->
       </div>
       <p class="hero-credit">{{配图声明（可整句删）：页内插画均为方块母题矢量，仅作教学示意}}</p>
     </div>
@@ -899,6 +944,83 @@ button{font-family:inherit}
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
   window.addEventListener('scroll', hide, { passive: true });
   window.addEventListener('resize', hide);
+})();
+</script>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════
+   知识卡片翻页（**复用段：整段照搬，不要改**；只有「长卡切两张」的页面才要它）
+
+   只服务切成两张的长卡（.ai-facts[data-facts-switch]）：
+   点方块页码 01 / 02、键盘左右方向键、或在卡上横向滑动，都能切换两张卡。
+
+   为什么安全：
+   - 词表仍从整块 .ai-facts 里读（术语下划线复用段照旧，两张卡一起算）；
+   - 短卡页（没有 data-facts-switch）自动不生效，可整段删；
+   - 对动效敏感的用户：切换是瞬间的（不播平滑滚动，不另加动画）。
+   本段不读时间、不发请求、不新增依赖。
+   ══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var card = document.querySelector('[data-facts-switch]');
+  if (!card) return;                       /* 短卡（单张）→ 本段不生效 */
+
+  var track = card.querySelector('.facts-track');
+  var nav = card.querySelector('.facts-nav');
+  var pages = Array.prototype.slice.call(card.querySelectorAll('.facts-page'));
+  var tabs = Array.prototype.slice.call(card.querySelectorAll('.facts-tab'));
+  if (!track || !nav || pages.length < 2 || tabs.length !== pages.length) return;
+
+  var reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var cur = 0, lock = 0, raf = 0;
+
+  function leftOf(p) {
+    return p.getBoundingClientRect().left - track.getBoundingClientRect().left + track.scrollLeft;
+  }
+  function select(i) {
+    cur = i;
+    tabs.forEach(function (b, k) {
+      b.classList.toggle('on', k === i);
+      b.setAttribute('aria-selected', k === i ? 'true' : 'false');
+    });
+  }
+  function go(i) {
+    select(i);
+    lock = Date.now() + (reduced ? 0 : 700);   /* 平滑滚动途中不来回翻页码 */
+    track.scrollTo({ left: leftOf(pages[i]), behavior: reduced ? 'auto' : 'smooth' });
+  }
+
+  tabs.forEach(function (b, i) { b.addEventListener('click', function () { go(i); }); });
+  nav.addEventListener('keydown', function (e) {
+    var i = tabs.indexOf(document.activeElement);
+    if (i < 0 || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
+    var j = Math.min(tabs.length - 1, Math.max(0, i + (e.key === 'ArrowRight' ? 1 : -1)));
+    if (j === i) return;
+    e.preventDefault();
+    tabs[j].focus();
+    go(j);
+  });
+
+  /* 手动横向滑动后，把页码同步到最近的那张卡 */
+  track.addEventListener('scroll', function () {
+    if (raf || Date.now() < lock) return;
+    raf = requestAnimationFrame(function () {
+      raf = 0;
+      var best = Infinity, near = 0;
+      pages.forEach(function (p, k) {
+        var d = Math.abs(leftOf(p) - track.scrollLeft);
+        if (d < best) { best = d; near = k; }
+      });
+      select(near);
+    });
+  }, { passive: true });
+
+  /* 宽度变化后重新对齐当前那张卡 */
+  window.addEventListener('resize', function () {
+    lock = Date.now() + 100;
+    track.scrollTo({ left: leftOf(pages[cur]), behavior: 'auto' });
+  });
 })();
 </script>
 </body>
