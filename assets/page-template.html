@@ -81,17 +81,18 @@ button{font-family:inherit}
 .btn.blue{background:var(--accent);color:var(--accent-ink)}
 .btn.small{font-size:var(--fs-sub);padding:11px 16px;min-height:46px}
 
-/* ── 首屏：巨型 H1 + 右侧「知识卡片」（母题第一次、最大一次）── */
+/* ── 首屏：H1 之下左栏「一句话回答」＋右栏「知识卡片」── */
 .hero{overflow:clip;padding-top:clamp(26px,4.6vw,62px)}
 .hero h1{font-size:var(--fs-hero);line-height:1.02;letter-spacing:-.025em;font-weight:800;margin:0 0 clamp(18px,2.6vw,34px);max-width:9.6em}
 .hero-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(22px,3.6vw,56px);align-items:start}
-.hero-sub{font-size:clamp(18px,1.5vw,20px);line-height:1.6;margin:0 0 clamp(18px,2.6vw,28px);max-width:26em}
+.hero-sub{font-size:clamp(18px,1.5vw,20px);line-height:1.6;margin:0 0 clamp(22px,3vw,34px);max-width:30em}
 .hero-copy{display:flex;flex-direction:column;align-items:flex-start}
-.hero-cta{margin:0}
+.hero-answer{width:100%}
+.hero-answer .statement{font-size:clamp(23px,2.2vw,30px);line-height:1.42;max-width:34em}
+.hero-copy .hero-cta{margin:clamp(20px,2.7vw,30px) 0 0}
 .hero-credit{margin:clamp(20px,3vw,34px) 0 0;font-size:var(--fs-note);line-height:1.65;color:var(--muted);max-width:32em}
 
 /* ── 一句话回答：大字陈述 + 行内小图（全页唯一一处配图位，1–3 张）── */
-.say{padding:clamp(30px,4.6vw,66px) 0 clamp(6px,1.6vw,16px)}
 .statement{font-size:var(--fs-statement);line-height:1.32;letter-spacing:-.01em;font-weight:700;margin:0;max-width:34em}
 .statement p{margin:0}
 .statement p + p{margin-top:clamp(10px,1.2vw,16px)}
@@ -318,9 +319,12 @@ button{font-family:inherit}
 <body data-page-id="{{PAGE_ID}}">
 <main>
 
-  <!-- ══ 首屏：巨型 H1 + 右侧「知识卡片」（母题第一次、最大一次）══
+  <!-- ══ 首屏：H1 之下左栏「一句话回答」＋右栏「知识卡片」══
        H1 必须是一个真问句：展示 AI 核心知识点 · 口语 · 主体 6–14 字（双问句 ≤20 字）。
        起名法见 references/03-页面骨架与文案.md §二。
+      副标题放在 H1 下方、两栏之上；一句话回答固定在左栏，右栏是同层的知识卡片。
+      一句话回答先按单段在 1280px 桌面试排：超过两行就按语义拆成 2–3 个 <p>（红线 13）。
+      行内小图 .inline-thumb 绑在词后（<span class="nb">词<svg…></svg></span>），放 1–3 张。
       右侧是「知识卡片」：把**本页出现的 AI 概念**都写上（常见 3–5 条，数量不限），
       每条「概念名：1–2 句定义 + 一句类比/边界」，定义取自 scripts/ai_concepts.json。
       排序：主题概念（H1 讲的那个）放第一条，其余按正文首现顺序；条数多时压到每条 1 句。
@@ -329,9 +333,16 @@ button{font-family:inherit}
   <header class="hero">
     <div class="shell">
       <h1>{{H1}}</h1>
+      <p class="hero-sub">{{副标题：复述困惑 / 术语祛魅 / 畏难→反转→追加价值}}</p>
       <div class="hero-row">
         <div class="hero-copy">
-          <p class="hero-sub">{{副标题：复述困惑 / 术语祛魅 / 畏难→反转→追加价值}}</p>
+          <div class="hero-answer">
+            <div class="statement" data-rv>
+              <p><b>一句话回答</b>　{{第 1 段：先用人话解释标题里的术语，再给定义。关键名词后面可以像这样嵌小图：<span class="nb">关键词<svg class="inline-thumb" viewBox="0 0 580 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意图：一个小方块连向一个大方块"><rect width="580" height="400" fill="#f6f7f9"/><rect x="90" y="150" width="100" height="100" fill="#111"/><path d="M210 200H330" stroke="#111" stroke-width="14"/><path d="M330 176L366 200L330 224Z" fill="#111"/><rect x="386" y="130" width="140" height="140" fill="#1a4be0"/></svg></span>}}</p>
+              <p>{{第 2 段：机制或类比——短答删掉本段，长答保留}}</p>
+              <p>{{第 3 段：后果或边界——短答删掉本段，长答保留}}</p>
+            </div>
+          </div>
           <p class="hero-cta"><button type="button" class="btn blue" id="goDemo">{{开始动手：装置名}}</button></p>
         </div>
         <aside class="ai-facts" aria-labelledby="factsTitle">
@@ -377,23 +388,6 @@ button{font-family:inherit}
       <p class="hero-credit">{{配图声明（可整句删）：页内插画均为方块母题矢量，仅作教学示意}}</p>
     </div>
   </header>
-
-  <!-- ══ 一句话回答：大字陈述 + 行内小图（全页唯一一处配图位，1–3 张）══
-       第一屏就给结论：H1 里有 AI 术语（Agent / RAG / MCP / Token / Skill…）时，
-       先用一句人话解释它，再给「定义 + 类比 + 后果」。
-       把整块文字按单段在 1280px 桌面试排：超过两行就按语义拆成 2–3 个 <p>（红线 13）；
-       不超过两行只留一段。不要用 <br> 硬切，也不要拆断术语、公式和行内小图。
-       行内小图 .inline-thumb 绑在词后（<span class="nb">词<svg…></svg></span>），放 1–3 张，
-       比例 580×400，画法与规范见 references/06。 -->
-  <section class="say">
-    <div class="shell">
-      <div class="statement" data-rv>
-        <p><b>一句话回答</b>　{{第 1 段：先用人话解释标题里的术语，再给定义。关键名词后面可以像这样嵌小图：<span class="nb">关键词<svg class="inline-thumb" viewBox="0 0 580 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意图：一个小方块连向一个大方块"><rect width="580" height="400" fill="#f6f7f9"/><rect x="90" y="150" width="100" height="100" fill="#111"/><path d="M210 200H330" stroke="#111" stroke-width="14"/><path d="M330 176L366 200L330 224Z" fill="#111"/><rect x="386" y="130" width="140" height="140" fill="#1a4be0"/></svg></span>}}</p>
-        <p>{{第 2 段：机制或类比——短答删掉本段，长答保留}}</p>
-        <p>{{第 3 段：后果或边界——短答删掉本段，长答保留}}</p>
-      </div>
-    </div>
-  </section>
 
   <!-- ══ 装置（在原理之前）＋ 小奈教练卡 ══
        装置实现按题型取 assets/patterns/ 里对应的那份，整块替换下面的示例。
