@@ -81,18 +81,16 @@ button{font-family:inherit}
 .btn.blue{background:var(--accent);color:var(--accent-ink)}
 .btn.small{font-size:var(--fs-sub);padding:11px 16px;min-height:46px}
 
-/* ── 首屏：巨型 H1 + 配图（母题第一次、最大一次 · 配图位 1/3）── */
+/* ── 首屏：巨型 H1 + 右侧「知识卡片」（母题第一次、最大一次）── */
 .hero{overflow:clip;padding-top:clamp(26px,4.6vw,62px)}
 .hero h1{font-size:var(--fs-hero);line-height:1.02;letter-spacing:-.025em;font-weight:800;margin:0 0 clamp(18px,2.6vw,34px);max-width:9.6em}
 .hero-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(22px,3.6vw,56px);align-items:start}
 .hero-sub{font-size:clamp(18px,1.5vw,20px);line-height:1.6;margin:0 0 clamp(18px,2.6vw,28px);max-width:26em}
-.hero-plate{margin:0;aspect-ratio:16/9;overflow:hidden;background:var(--surface)}
-.hero-plate img,.hero-plate svg{display:block;width:100%;height:100%;object-fit:cover}
-.hero-copy{align-self:stretch;display:flex;flex-direction:column;align-items:flex-start}
+.hero-copy{display:flex;flex-direction:column;align-items:flex-start}
 .hero-cta{margin:0}
-.hero-credit{margin:auto 0 0;padding-top:20px;font-size:var(--fs-note);line-height:1.65;color:var(--muted);max-width:32em}
+.hero-credit{margin:clamp(20px,3vw,34px) 0 0;font-size:var(--fs-note);line-height:1.65;color:var(--muted);max-width:32em}
 
-/* ── 一句话回答：大字陈述 + 行内小图（配图位 2/3）── */
+/* ── 一句话回答：大字陈述 + 行内小图（全页唯一一处配图位，1–3 张）── */
 .say{padding:clamp(30px,4.6vw,66px) 0 clamp(6px,1.6vw,16px)}
 .statement{font-size:var(--fs-statement);line-height:1.32;letter-spacing:-.01em;font-weight:700;margin:0;max-width:34em}
 .inline-thumb{display:inline-block;width:1.45em;height:1em;vertical-align:-.12em;object-fit:cover;margin:0 .06em;background:var(--surface);border:1px solid var(--hairline)}
@@ -217,14 +215,14 @@ button{font-family:inherit}
 .qa2 b{font-weight:800}
 @media (max-width:1000px){.qa2{columns:1}}
 
-/* ── 知识卡片：插画当项目符号（配图位 3/3）── */
-.ai-facts{padding:var(--gap-sec) 0 0}
-.facts-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:clamp(18px,2.6vw,28px)}
-.facts-head h2{margin:0}
+/* ── 知识卡片：首屏右侧的概念清单（本页 AI 概念全收，常见 3–5 条；纯文字 + 方块项目符号）── */
+.ai-facts{background:var(--surface);padding:clamp(18px,2.4vw,30px)}
+.facts-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:clamp(14px,1.8vw,22px)}
+.facts-head h2{margin:0;font-size:var(--fs-lead)}
 .facts-head span{font-size:var(--fs-sub);color:var(--muted)}
-.ai-facts ul{list-style:none;margin:0;padding:0;display:grid;gap:clamp(18px,2.6vw,28px)}
-.ai-facts li{position:relative;padding-left:clamp(78px,11.5vw,132px);min-height:88px;font-size:var(--fs-body);line-height:1.65}
-.ai-facts li img,.ai-facts li svg{position:absolute;left:0;top:0;width:clamp(64px,11.5vw,108px);aspect-ratio:4/3;height:auto;object-fit:cover}
+.ai-facts ul{list-style:none;margin:0;padding:0;display:grid;gap:clamp(12px,1.6vw,18px)}
+.ai-facts li{position:relative;padding-left:22px;font-size:var(--fs-table);line-height:1.65}
+.ai-facts li::before{content:'';position:absolute;left:0;top:.55em;width:9px;height:9px;background:var(--accent)}
 .ai-facts li b{font-weight:800}
 
 /* ── takeaway：便签（恰好 4 条，收在全页最后）── */
@@ -271,13 +269,11 @@ button{font-family:inherit}
 @media (prefers-reduced-motion: no-preference){
   html.js [data-rv]{opacity:0;transform:translateY(20px)}
   html.js [data-rv].in{opacity:1;transform:none;transition:opacity .55s ease,transform .7s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0ms)}
-  html.js .hero-plate{clip-path:inset(0 0 0 100%);animation:shutter 1.1s cubic-bezier(.2,.8,.2,1) .08s forwards}
-  html.js .hero-plate img,html.js .hero-plate svg{transform:scale(1.12);animation:settle 1.3s cubic-bezier(.2,.8,.2,1) .08s forwards}
+  html.js .ai-facts{clip-path:inset(0 0 0 100%);animation:shutter 1.1s cubic-bezier(.2,.8,.2,1) .08s forwards}
   html.js .flow rect{opacity:0;transform:translate(var(--dx,0px),var(--dy,0px));transition:opacity .5s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
   html.js .flow.in rect{opacity:1;transform:translate(0,0)}
 }
 @keyframes shutter{to{clip-path:inset(0 0 0 0)}}
-@keyframes settle{to{transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
@@ -286,14 +282,8 @@ button{font-family:inherit}
 @media (max-width:819px){
   .return-plate{margin-bottom:0}
 }
-@media (max-width:779px){
-  .hero-copy{display:contents}
-  .hero-plate{order:1;margin-bottom:0;aspect-ratio:4/3}
-  .hero-credit{order:2;margin:20px 0 0;padding-top:0}
-}
 @media (max-width:700px){
   .qa2{columns:1}
-  .hero-plate{margin-bottom:0}
   .return-plate{margin-bottom:0}
   .counters{grid-template-columns:1fr}
   .counter{display:flex;align-items:baseline;justify-content:space-between;gap:12px;text-align:left;padding:12px 14px}
@@ -301,8 +291,6 @@ button{font-family:inherit}
   .note{margin-left:-10px;margin-right:-10px;padding-left:12px;padding-right:12px}
   .note::before{left:12px}
   .note li{padding-left:16px}
-  .ai-facts li{padding-left:72px}
-  .ai-facts li img,.ai-facts li svg{width:60px}
   .ai-facts li{font-size:16px}
 }
 </style>
@@ -311,12 +299,13 @@ button{font-family:inherit}
 <body data-page-id="{{PAGE_ID}}">
 <main>
 
-  <!-- ══ 首屏：巨型 H1 + 配图（母题第一次、最大一次 · 配图位 1/3）══
+  <!-- ══ 首屏：巨型 H1 + 右侧「知识卡片」（母题第一次、最大一次）══
        H1 必须是一个真问句：展示 AI 核心知识点 · 口语 · 主体 6–14 字（双问句 ≤20 字）。
        起名法见 references/03-页面骨架与文案.md §二。
-       配图是内联 SVG「方块汇聚」示例（桌面 16:9、窄屏 4:3 自动裁切）。
-       为你的内容画新图时照 references/06 的插画规范，直接替换 <svg>…</svg>；
-       也可以换成 <img src="data:…">，CSS 对 img / svg 都支持。 -->
+      右侧是「知识卡片」：把**本页出现的 AI 概念**都写上（常见 3–5 条，数量不限），
+      每条「概念名：1–2 句定义 + 一句类比/边界」，定义取自 scripts/ai_concepts.json。
+      排序：主题概念（H1 讲的那个）放第一条，其余按正文首现顺序；条数多时压到每条 1 句。
+      首屏不再配图——卡片就是首屏的视觉主体。写法见 references/03 §1.3。 -->
   <header class="hero">
     <div class="shell">
       <h1>{{H1}}</h1>
@@ -324,50 +313,25 @@ button{font-family:inherit}
         <div class="hero-copy">
           <p class="hero-sub">{{副标题：复述困惑 / 术语祛魅 / 畏难→反转→追加价值}}</p>
           <p class="hero-cta"><button type="button" class="btn blue" id="goDemo">{{开始动手：装置名}}</button></p>
-          <p class="hero-credit">{{配图声明，如：首图为本站自制示意图，仅作教学示意。不用时整句删}}</p>
         </div>
-        <figure class="hero-plate">
-          <svg viewBox="0 0 1400 1050" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意图：四周的小方块与连线汇聚到中心一块蓝色大方块">
-            <defs>
-              <pattern id="phHero" width="80" height="80" patternUnits="userSpaceOnUse">
-                <path d="M80 0H0V80" fill="none" stroke="#e8ebf2" stroke-width="1"/>
-              </pattern>
-            </defs>
-            <rect width="1400" height="1050" fill="#f6f7f9"/>
-            <rect width="1400" height="1050" fill="url(#phHero)"/>
-            <g fill="none" stroke="#111" stroke-width="1.4" opacity="0.25">
-              <path d="M84 96H108M96 84V108"/>
-              <path d="M1292 942H1316M1304 930V954"/>
-            </g>
-            <g stroke="#111" stroke-width="6" fill="none">
-              <path d="M250 240L700 545"/>
-              <path d="M700 190L700 545"/>
-              <path d="M1150 300L700 545"/>
-              <path d="M280 810L700 545"/>
-              <path d="M720 860L700 545"/>
-              <path d="M1130 760L700 545"/>
-            </g>
-            <g fill="#111">
-              <rect x="210" y="200" width="80" height="80"/>
-              <rect x="660" y="150" width="80" height="80"/>
-              <rect x="1110" y="260" width="80" height="80"/>
-              <rect x="240" y="770" width="80" height="80"/>
-              <rect x="680" y="820" width="80" height="80"/>
-              <rect x="1090" y="720" width="80" height="80"/>
-            </g>
-            <g fill="#93aaf2">
-              <rect x="470" y="330" width="44" height="44"/>
-              <rect x="880" y="640" width="44" height="44"/>
-            </g>
-            <rect x="560" y="405" width="280" height="280" fill="#1a4be0"/>
-            <rect x="600" y="445" width="200" height="200" fill="none" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
-          </svg>
-        </figure>
+        <aside class="ai-facts" aria-labelledby="factsTitle">
+          <div class="facts-head">
+            <h2 class="sec-h" id="factsTitle">知识卡片</h2><span>{{N}} 个概念，先过一遍</span>
+          </div>
+          <ul>
+            <li data-rv><b data-term="{{概念 1 在正文里的词形，别名用 | 分隔}}">{{概念 1}}</b>：{{1–2 句：一句定义 + 一句类比/边界，取自词典}}</li>
+            <li data-rv style="--d:80ms"><b data-term="{{概念 2 在正文里的词形}}">{{概念 2}}</b>：{{1–2 句，取自词典}}</li>
+            <li data-rv style="--d:160ms"><b data-term="{{概念 3 在正文里的词形}}">{{概念 3}}</b>：{{1–2 句，取自词典}}</li>
+            <!-- 本页还有概念就继续复制 <li>（4 条、5 条……数量不限，常见 3–5 条）；
+                 只收「本页出现的 AI 概念」，不塞动作、步骤、操作建议。 -->
+          </ul>
+        </aside>
       </div>
+      <p class="hero-credit">{{配图声明（可整句删）：页内插画均为方块母题矢量，仅作教学示意}}</p>
     </div>
   </header>
 
-  <!-- ══ 一句话回答：大字陈述 + 行内小图（配图位 2/3）══
+  <!-- ══ 一句话回答：大字陈述 + 行内小图（全页唯一一处配图位，1–3 张）══
        第一屏就给结论：H1 里有 AI 术语（Agent / RAG / MCP / Token / Skill…）时，
        先用一句人话解释它，再给「定义 + 类比 + 后果」。
        行内小图 .inline-thumb 绑在词后（<span class="nb">词<svg…></svg></span>），放 1–3 张，
@@ -531,67 +495,6 @@ button{font-family:inherit}
     </div>
   </section>
 
-  <!-- ══ 知识卡片（每页都有 · 恰好 3 条概念 · 位置固定在 takeaway 之前）══
-       概念来自「本页正文 + 本课在大纲里的那一节」，定义取自 scripts/ai_concepts.json；
-       写卡前先跑 scripts/scan_ai_concepts.py 拿 A/B 候选与 C 段草案。
-       槽位固定：① 核心概念 ② 易混概念 ③ 关联概念——三条都必须是概念，
-       不能写动作、步骤、操作建议。写法见 references/03-页面骨架与文案.md §1.3。
-
-       ⚠ 每条前面是一张 4:3 插画（配图位 3/3，示例为内联 SVG，画法见 references/06）。
-       ⚠ data-term：三条都填「正文里要匹配的词形」（多个别名用 | 分隔）。
-       页脚那段「术语下划线（复用段）」脚本据此在正文第一个出现处加下划线。 -->
-  <section class="ai-facts">
-    <div class="shell">
-      <div class="facts-head">
-        <h2 class="sec-h">知识卡片</h2><span>三个概念，一次说清</span>
-      </div>
-      <ul>
-        <li data-rv>
-          <svg viewBox="0 0 560 420" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意图：三个小方块汇聚到一个蓝色大方块">
-            <rect width="560" height="420" fill="#f6f7f9"/>
-            <g stroke="#111" stroke-width="5" fill="none">
-              <path d="M120 110L370 210"/>
-              <path d="M120 210L370 210"/>
-              <path d="M120 310L370 210"/>
-            </g>
-            <g fill="#111">
-              <rect x="80" y="80" width="60" height="60"/>
-              <rect x="80" y="180" width="60" height="60"/>
-              <rect x="80" y="280" width="60" height="60"/>
-            </g>
-            <rect x="370" y="130" width="140" height="140" fill="#1a4be0"/>
-          </svg>
-          <b data-term="{{正文里的词形，如 上下文窗口；别名用 | 分隔}}">{{核心概念}}</b>：{{1–2 句，一句定义 + 一句类比/边界，取自词典}}
-        </li>
-        <li data-rv>
-          <svg viewBox="0 0 560 420" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意图：一个实心黑方块与一个蓝色描边方块并排对比">
-            <rect width="560" height="420" fill="#f6f7f9"/>
-            <rect x="90" y="120" width="160" height="160" fill="#111"/>
-            <rect x="330" y="140" width="160" height="160" fill="none" stroke="#1a4be0" stroke-width="14"/>
-            <rect x="410" y="120" width="40" height="40" fill="#93aaf2"/>
-          </svg>
-          <b data-term="{{易混概念}}">{{易混概念}}</b>：{{1–2 句说清区别，别引第四个新词}}
-        </li>
-        <li data-rv>
-          <svg viewBox="0 0 560 420" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意图：四个方块两两连线，其中一个是蓝色">
-            <rect width="560" height="420" fill="#f6f7f9"/>
-            <g stroke="#111" stroke-width="4" fill="none">
-              <path d="M170 130L390 290"/>
-              <path d="M170 290L390 130"/>
-            </g>
-            <g fill="#111">
-              <rect x="120" y="80" width="80" height="80"/>
-              <rect x="340" y="80" width="80" height="80"/>
-              <rect x="120" y="260" width="80" height="80"/>
-            </g>
-            <rect x="340" y="260" width="80" height="80" fill="#1a4be0"/>
-          </svg>
-          <b data-term="{{关联概念}}">{{关联概念}}</b>：{{1–2 句定义 + 一句类比/边界，取自词典}}
-        </li>
-      </ul>
-    </div>
-  </section>
-
   <!-- ══ takeaway：便签（恰好 4 条，顺序固定，收在全页最后）══
        是什么 → 代价/边界 → 误区 → 我能做什么；句式「加粗结论：一句人话」。 -->
   <section class="take">
@@ -645,7 +548,7 @@ button{font-family:inherit}
   function textOf(id) { var el = $(id); return el ? (el.textContent || '').trim() : ''; }
 
   /* ════════════════════════════════════════════════════════════
-     页面动效层：入场 + 首屏快门 + 方块带飞入
+     页面动效层：入场 + 首屏卡片快门 + 方块带飞入
      （只加类，不改内容；对动效敏感的用户拿到的是完整成品页）
      ════════════════════════════════════════════════════════════ */
   document.documentElement.className += ' js';

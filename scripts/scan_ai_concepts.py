@@ -2,11 +2,16 @@
 # -*- coding: utf-8 -*-
 """扫描「知识卡片」可用素材。
 
-来源从「本页正文」放宽到「本页正文 + 本课在大纲里的那一节」，
+卡 = 本页 AI 概念速览（红线 7/8）：
+① 本页正文命中的词**全收**（常见 3–5 条，不限条数；不做跨页去重——页面会被单独打开）；
+② 不足 3 条时，从「本课在大纲里的那一节」补；
+③ 还不够，从「与本页主题同类」的概念里补（兜底候选另行列出）。
+② ③ 是**补词**，同一批各页之间不要重复。
+
 定义一律取自同目录的 ai_concepts.json（概念词典，随 skill 版本化）。
 
 算法：确定性扫描 + 拼装。脚本不做判断——
-最终「选哪 3 条、未收录词的 1–2 句定义怎么写」由 Claude 拍板，
+最终条目的措辞、未收录词（D 段）的 1–2 句定义怎么写，由 Claude 拍板，
 写完顺手补进词典（词典边用边长）。
 
 仅标准库：json / re / sys / argparse / pathlib / html
@@ -16,12 +21,12 @@
     python3 scan_ai_concepts.py --page 页.html --outline 大纲.md --section "环节 3｜第一版 v1"
     python3 scan_ai_concepts.py --page 页.html --outline 大纲.md --json
 
-同一批多页时（红线 8：一个概念只归一页），用 --used 串一个台账，逐页连用同一个文件：
+同一批多页时（红线 8：补词不重复），用 --used 串一个台账，逐页连用同一个文件：
     U=/tmp/本批概念台账.txt
     python3 scan_ai_concepts.py --page p1.html --outline 大纲.md --section "环节 3" --used "$U"
     python3 scan_ai_concepts.py --page p2.html --outline 大纲.md --section "环节 5" --used "$U"
---used 会：读入台账里已用的概念 → A/B 段标 ✗、C 段草案跳过 → 跑完把本页采用的概念追加回去。
---exclude "词A,词B" 可临时手动排除（词典 key 或中文词形都认）。
+--used 会：读入台账里已进过卡的概念 → B 段补词候选标 ✗ → 跑完把本页采用的概念追加回去。
+--exclude "词A,词B" 可临时手动排除（词典 key 或中文词形都认）——同样用于避开补词撞车。
 """
 
 import argparse
@@ -223,73 +228,58 @@ def related_of(key, entries):
     return [(k, e) for k, e in entries.items() if e.get("category") == cat and k != key]
 
 
-def build_drafts(ranked, entries, excluded, slots=3):
-    """按槽位拼装卡片草案：① 核心概念（formal+def）② 易混概念（confusable+diff）③ 关联概念（formal+def）。
+def build_drafts(page_hits, outline_hits, entries, excluded, target=3):
+    """拼装卡片草案（红线 7/8 的新规则）：
 
-    三个槽位都必须是概念；③ 不再使用 verify（动作）字段。
+    ① 本页命中的概念**全量进卡**（按本页首现顺序）——不做跨页去重，页面会被单独打开；
+    ② 不足 `target` 条时，从大纲本节命中里补（跳过 `excluded` 里别页已用的词）；
+    ③ 还不够，从「与本页主题同类」的概念里补（第 ③ 层的完整候选由 render 另行列出）。
 
-    `excluded` = 本批其它页已经讲过的概念（同一批里一个词只在一页被解析），
-    槽位选词时一律跳过——候选不够就少给一条，绝不跨页重复。
+    `excluded`（本批台账 + --exclude）只约束 ② ③ 的**补词**：同一个词别页已经进过卡就不再来一遍。
     """
-    if not ranked:
-        return []
-
-    usable = [(k, m) for k, m in ranked if k not in excluded]
-    if not usable:
-        return []
-
     drafts = []
-    top_key = usable[0][0]
-    top = entries[top_key]
 
-    drafts.append({
-        "slot": "① 正式叫什么",
-        "key": top_key,
-        "text": "{}：{}".format(top.get("formal", top_key), top.get("def", "")),
-    })
-
-    # ② 易混区分：优先用「另一个概念」，没有就用首选概念自己的易混词
-    second_key, second = None, None
-    for key, _meta in usable[1:]:
-        if entries[key].get("confusable"):
-            second_key, second = key, entries[key]
-            break
-    if second is None and top.get("confusable"):
-        second_key, second = top_key, top
-    if second:
+    # ① 本页命中：全收（按首现顺序）
+    for key, _c, _pos in sorted(page_hits, key=lambda h: h[2]):
+        e = entries[key]
         drafts.append({
-            "slot": "② 别和它搞混",
-            "key": second_key,
-            "confusable": second.get("confusable"),
-            "text": "别和「{}」搞混：{}".format(second.get("confusable"), second.get("diff", "")),
+            "slot": "本页命中",
+            "key": key,
+            "text": "{}：{}".format(e.get("formal", key), e.get("def", "")),
         })
+    picked = {d["key"] for d in drafts}
 
-    # ③ 关联概念：优先从本页/本课候选中再取一个，其次从同类别里取。
-    # 三个槽位都必须是概念——这里不再使用 verify（动作）字段。
-    used_keys = {top_key}
-    if second_key:
-        used_keys.add(second_key)
-
-    third_key, third_entry = None, None
-    for key, _meta in usable:
-        if key in used_keys or key in excluded:
-            continue
-        third_key, third_entry = key, entries[key]
-        break
-    if third_entry is None:
-        for key, entry in same_category(top_key, entries):
-            if key in used_keys or key in excluded:
+    # ② 不足 target：从大纲本节补（跳过别页已用）
+    if len(drafts) < target:
+        for key, _c, _pos in sorted(outline_hits, key=lambda h: -h[1]):
+            if key in picked or key in excluded:
                 continue
-            third_key, third_entry = key, entry
-            break
-    if third_entry is not None:
-        drafts.append({
-            "slot": "③ 关联概念",
-            "key": third_key,
-            "text": "{}：{}".format(third_entry.get("formal", third_key), third_entry.get("def", "")),
-        })
+            e = entries[key]
+            drafts.append({
+                "slot": "大纲本节补",
+                "key": key,
+                "text": "{}：{}".format(e.get("formal", key), e.get("def", "")),
+            })
+            picked.add(key)
+            if len(drafts) >= target:
+                break
 
-    return drafts[:slots]
+    # ③ 还不够：与本页主题同类的概念（第 ③ 层）
+    if len(drafts) < target and page_hits:
+        basis = sorted(page_hits, key=lambda h: (-h[1], h[2]))[0][0]
+        for key, entry in related_of(basis, entries):
+            if key in picked or key in excluded:
+                continue
+            drafts.append({
+                "slot": "同类补",
+                "key": key,
+                "text": "{}：{}".format(entry.get("formal", key), entry.get("def", "")),
+            })
+            picked.add(key)
+            if len(drafts) >= target:
+                break
+
+    return drafts
 
 
 # ---------- 输出 ----------
@@ -306,21 +296,21 @@ def render(result):
     if result["section_requested"] and not result["section_title"]:
         L.append("⚠️ 大纲里没找到本节标题「{}」，已退化为扫全文。".format(result["section_requested"]))
     if result["excluded"]:
-        L.append("本批已用（这些词本页不再解析，标记 ✗）：{}".format("、".join(result["excluded"])))
+        L.append("本批台账已含（补词时避开；本页命中的词照收）：{}".format("、".join(result["excluded"])))
     L.append("")
 
-    L.append("── A｜本页出现且词典命中（{} 条）──".format(len(A)))
+    L.append("── A｜本页出现且词典命中（{} 条）──全部进卡".format(len(A)))
     if not A:
         L.append("（无）")
     for item in A:
-        L.append("• {}{}〔{}｜本页 {} 次 / 大纲 {} 次〕".format(
-            "✗ " if item["excluded"] else "", item["key"], item["scope"], item["page_n"], item["outline_n"]))
+        L.append("• {}〔{}｜本页 {} 次 / 大纲 {} 次〕".format(
+            item["key"], item["scope"], item["page_n"], item["outline_n"]))
         L.append("    {}".format(item["formal"]))
         L.append("    {}".format(item["def"]))
     L.append("")
 
-    L.append("── B｜大纲本节命中、本页没提（{} 条）──".format(len(B)))
-    L.append("（本课该讲但本页没出现的词——补卡时优先从这里挑）")
+    L.append("── B｜大纲本节命中、本页没提（{} 条）──补词候选".format(len(B)))
+    L.append("（本页命中不足 3 条时的补词候选；✗ = 本批别页已用，避开）")
     if not B:
         L.append("（无）")
     for item in B:
@@ -329,26 +319,21 @@ def render(result):
         L.append("    {}".format(item["def"]))
     L.append("")
 
-    L.append("── C｜建议卡片草案（固定 3 槽位，每条 1–2 句）──")
+    L.append("── C｜卡片草案（本页命中全收 + 不足 3 条自动补）──")
     if not C:
         L.append("（无）")
     for d in C:
         L.append("{}　[{}]".format(d["slot"], d["key"]))
         L.append("    {}".format(d["text"]))
-    used_now = []
-    for d in C:
-        if d.get("key") and d["key"] not in used_now:   # ① ② 可能指向同一个 key（② 借用易混词）
-            used_now.append(d["key"])
 
-    # 候选不足 → 给出第 ③ 层兜底候选（与本页主题同类的概念）
-    if len(C) < 3 or len(used_now) < 2:
-        if result["excluded"]:
-            L.append("（本批其它页已占：{}）".format("、".join(result["excluded"])))
-        if len(C) < 3:
-            L.append("⚠️ 本页 + 本课凑不出 3 条槽位，卡建不起来 —— 必须走第 ③ 层。")
-        else:
-            L.append("ℹ️ 槽位齐了，但可用概念不足 2 个，卡偏薄。")
-            L.append("   想更饱满，就从下面的同类里换一个更该讲的词当①（②仍是易混区分、③是关联概念）。")
+    # 本页零命中 → 警告；不足 3 条 → 提示补足路径（列同类兜底候选）
+    if not A:
+        L.append("⚠️ 本页没有命中任何词典概念 —— 卡片没有主体。若这页确实与 AI 无交集，整块省略并写明理由；否则按 `references/03` §1.6 走：")
+        L.append("   ①先看下方同类兜底候选 → ②词典没有才联网搜、按 7 字段补进词典再用。")
+    if len(C) < 3:
+        if A:
+            L.append("ℹ️ 本页命中 {} 条，加补词共 {} 条，不足 3 条——优先从下方同类候选里挑与本页主题强相关的补足。".format(
+                len(A), len(C)))
         if result["fallback"]:
             L.append("↳ 第 ③ 层兜底候选（与「{}」同属「{}」）：".format(
                 result["fallback_basis"], result["fallback_category"]))
@@ -357,7 +342,7 @@ def render(result):
             L.append("  用法：从这里挑**与本页主题强相关**的（沿用它的 def，别改写口径）；")
             L.append("        挑中的词照常填 `data-term`，并记进批内台账。")
         else:
-            L.append("↳ 本页主题在词典里找不到同类词 → 按 `references/03` §1.6 走：")
+            L.append("↳ 词典里没有与本页主题同类的词：")
             L.append("   ①联网搜「本页主题 + 相关 AI 概念」，选读者读完这页会自然想问的那个；")
             L.append("   ②把它的 1–2 句解释按 7 字段补进 {}，再引用（词典边用边长）；".format(DICT_FILE))
             L.append("   ③确与本页主题无关 → 整块省略知识卡片，并在诊断清单写明理由。")
@@ -369,8 +354,8 @@ def render(result):
     for item in D:
         L.append("• {}（出现 {} 次）→ 建议补进 {}".format(item["term"], item["n"], DICT_FILE))
     L.append("")
-    L.append("提示：C 段是草案，最终选哪 3 条由你拍板；D 段的词定好 1–2 句解释后，")
-    L.append("      按 7 字段（6 字段 + category）补进 {}，下次扫描即自动命中。".format(DICT_FILE))
+    L.append("提示：C 段是草案（本页命中已全收，不足 3 条时自动补），最终措辞由你拍板；")
+    L.append("      D 段的词定好 1–2 句解释后，按 7 字段（6 字段 + category）补进 {}，下次扫描即自动命中。".format(DICT_FILE))
     return "\n".join(L)
 
 
@@ -379,9 +364,9 @@ def main(argv=None):
     ap.add_argument("--page", help="学习页 .html 或 .md")
     ap.add_argument("--outline", help="课程大纲 .md")
     ap.add_argument("--section", default=None, help="大纲里的本节标题（片段匹配），不给则扫全文")
-    ap.add_argument("--exclude", default=None, help="本批其它页已讲过的概念，逗号分隔（词典 key 或中文词形都认）")
+    ap.add_argument("--exclude", default=None, help="补词时额外排除的概念，逗号分隔（词典 key 或中文词形都认）")
     ap.add_argument("--used", default=None, metavar="PATH",
-                    help="批次台账：先读入其中已用概念并跳过，再把本页草案的概念追加进去（同一批逐页连用同一个文件）")
+                    help="批次台账：先读入其中已进过卡的概念（B 段补词标 ✗），再把本页采用的概念追加进去（同一批逐页连用同一个文件）")
     ap.add_argument("--related", default=None, metavar="词或类别",
                     help="列出同类概念（第 ③ 层兜底用）。可传词典里的词，或类别名；不需要 --page/--outline")
     ap.add_argument("--json", action="store_true", dest="as_json", help="输出机器可读 JSON")
@@ -453,7 +438,7 @@ def main(argv=None):
     ranked = rank_page_first(page_hits, outline_hits)
 
     A = []
-    for key, c, _pos in sorted(page_hits, key=lambda h: (-h[1], h[2])):
+    for key, c, _pos in sorted(page_hits, key=lambda h: (h[2], h[0])):
         e = entries[key]
         A.append({
             "key": key, "formal": e.get("formal", key), "def": e.get("def", ""),
@@ -473,17 +458,16 @@ def main(argv=None):
             })
     B.sort(key=lambda x: (x["excluded"], -x["outline_n"]))
 
-    C = build_drafts(ranked, entries, excluded)
+    C = build_drafts(page_hits, outline_hits, entries, excluded)
     picks = []
     for d in C:
-        if d.get("key") and d["key"] not in picks:   # 同一概念可能出现在多个槽位，去重即可
+        if d.get("key") and d["key"] not in picks:   # 同一概念可能出现在多个条位，去重即可
             picks.append(d["key"])
 
-    # 两种「不够」要分开看：槽位填不满（卡建不起来） / 槽位满了但只讲 1 个概念（卡偏薄）
-    # → 前者必须兜底，后者给个提示即可。basis 取「本页最强命中」本身（哪怕已被别页占用）：
-    # 「与本页主题相关」看的是本页，不是本批谁先抢到；占用的那条会在列表里按 excluded 过滤掉。
+    # 草案不足 3 条 → 列第 ③ 层兜底候选（与本页主题同类的概念）。
+    # basis 取「本页最强命中」本身（哪怕已被别页占用）：「与本页主题相关」看的是本页，不是本批谁先抢到。
     fallback, basis, basis_cat = [], None, None
-    if len(C) < 3 or len(picks) < 2:
+    if len(C) < 3:
         basis = ranked[0][0] if ranked else None
         if basis:
             basis_cat = entries[basis].get("category")
