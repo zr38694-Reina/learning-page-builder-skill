@@ -93,6 +93,8 @@ button{font-family:inherit}
 /* ── 一句话回答：大字陈述 + 行内小图（全页唯一一处配图位，1–3 张）── */
 .say{padding:clamp(30px,4.6vw,66px) 0 clamp(6px,1.6vw,16px)}
 .statement{font-size:var(--fs-statement);line-height:1.32;letter-spacing:-.01em;font-weight:700;margin:0;max-width:34em}
+.statement p{margin:0}
+.statement p + p{margin-top:clamp(10px,1.2vw,16px)}
 .inline-thumb{display:inline-block;width:1.45em;height:1em;vertical-align:-.12em;object-fit:cover;margin:0 .06em;background:var(--surface);border:1px solid var(--hairline)}
 @media (max-width:400px){:root{--fs-statement:21px}}
 .nb{white-space:nowrap}
@@ -379,11 +381,17 @@ button{font-family:inherit}
   <!-- ══ 一句话回答：大字陈述 + 行内小图（全页唯一一处配图位，1–3 张）══
        第一屏就给结论：H1 里有 AI 术语（Agent / RAG / MCP / Token / Skill…）时，
        先用一句人话解释它，再给「定义 + 类比 + 后果」。
+       把整块文字按单段在 1280px 桌面试排：超过两行就按语义拆成 2–3 个 <p>（红线 13）；
+       不超过两行只留一段。不要用 <br> 硬切，也不要拆断术语、公式和行内小图。
        行内小图 .inline-thumb 绑在词后（<span class="nb">词<svg…></svg></span>），放 1–3 张，
        比例 580×400，画法与规范见 references/06。 -->
   <section class="say">
     <div class="shell">
-      <p class="statement" data-rv><b>一句话回答</b>　{{先用人话解释标题里的术语，再给结论（定义 + 类比 + 后果）。关键名词后面可以像这样嵌小图：<span class="nb">关键词<svg class="inline-thumb" viewBox="0 0 580 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意图：一个小方块连向一个大方块"><rect width="580" height="400" fill="#f6f7f9"/><rect x="90" y="150" width="100" height="100" fill="#111"/><path d="M210 200H330" stroke="#111" stroke-width="14"/><path d="M330 176L366 200L330 224Z" fill="#111"/><rect x="386" y="130" width="140" height="140" fill="#1a4be0"/></svg></span>，小图放 1–3 张，位置跟着词走。}}</p>
+      <div class="statement" data-rv>
+        <p><b>一句话回答</b>　{{第 1 段：先用人话解释标题里的术语，再给定义。关键名词后面可以像这样嵌小图：<span class="nb">关键词<svg class="inline-thumb" viewBox="0 0 580 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意图：一个小方块连向一个大方块"><rect width="580" height="400" fill="#f6f7f9"/><rect x="90" y="150" width="100" height="100" fill="#111"/><path d="M210 200H330" stroke="#111" stroke-width="14"/><path d="M330 176L366 200L330 224Z" fill="#111"/><rect x="386" y="130" width="140" height="140" fill="#1a4be0"/></svg></span>}}</p>
+        <p>{{第 2 段：机制或类比——短答删掉本段，长答保留}}</p>
+        <p>{{第 3 段：后果或边界——短答删掉本段，长答保留}}</p>
+      </div>
     </div>
   </section>
 
