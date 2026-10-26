@@ -13,10 +13,15 @@
       "category": "本词所属类别（模型基础 / 交互 / Agent 与工具 / 开发 / 产品），同类之间常常互为「相关概念」。"
     }
   },
-
   "大模型": {
     "category": "模型基础",
-    "aliases": ["大模型", "大语言模型", "LLM", "large language model", "大语言"],
+    "aliases": [
+      "大模型",
+      "大语言模型",
+      "LLM",
+      "large language model",
+      "大语言"
+    ],
     "formal": "大语言模型（LLM，Large Language Model）",
     "def": "用海量文本训练出来的、以「预测下一个词」为核心任务的模型；它不查资料，只是把训练时记住的语言规律续写出来。",
     "confusable": "搜索引擎",
@@ -25,7 +30,13 @@
   },
   "参数": {
     "category": "模型基础",
-    "aliases": ["参数", "参数量", "parameters", "70B", "7B"],
+    "aliases": [
+      "参数",
+      "参数量",
+      "parameters",
+      "70B",
+      "7B"
+    ],
     "formal": "参数（Parameters）",
     "def": "模型内部可调的数值，训练就是在调这些数；参数量越大，模型通常越「能装」，但也越贵越慢。",
     "confusable": "参数（可调项）",
@@ -34,7 +45,12 @@
   },
   "Token": {
     "category": "模型基础",
-    "aliases": ["Token", "token", "词元", "token 数"],
+    "aliases": [
+      "Token",
+      "token",
+      "词元",
+      "token 数"
+    ],
     "formal": "词元（Token）",
     "def": "模型读写文本的最小单位，一个中文字常常是 1–2 个 Token，一个英文单词也常被切成几块；计费和「记得住多长」都按它算。",
     "confusable": "字数",
@@ -43,7 +59,12 @@
   },
   "上下文窗口": {
     "category": "模型基础",
-    "aliases": ["上下文窗口", "上下文长度", "context window", "上下文"],
+    "aliases": [
+      "上下文窗口",
+      "上下文长度",
+      "context window",
+      "上下文"
+    ],
     "formal": "上下文窗口（Context Window）",
     "def": "模型一次能「看到」的文本上限，超过的部分会被截断或遗忘；它决定了模型「记不记得前文」。",
     "confusable": "长期记忆",
@@ -52,7 +73,12 @@
   },
   "微调": {
     "category": "模型基础",
-    "aliases": ["微调", "fine-tune", "fine tuning", "fine-tuning"],
+    "aliases": [
+      "微调",
+      "fine-tune",
+      "fine tuning",
+      "fine-tuning"
+    ],
     "formal": "微调（Fine-tuning）",
     "def": "在已经训练好的大模型上，用你自己的少量数据再练一轮，让它更贴合某个专门任务或语气。",
     "confusable": "提示词",
@@ -61,7 +87,12 @@
   },
   "预训练": {
     "category": "模型基础",
-    "aliases": ["预训练", "pretrain", "pre-training", "pretraining"],
+    "aliases": [
+      "预训练",
+      "pretrain",
+      "pre-training",
+      "pretraining"
+    ],
     "formal": "预训练（Pre-training）",
     "def": "模型出厂前用海量通用文本做的那轮训练，目标是学会语言本身；之后才轮到微调和提示词这些「个性化」环节。",
     "confusable": "微调",
@@ -70,7 +101,11 @@
   },
   "多模态": {
     "category": "模型基础",
-    "aliases": ["多模态", "multimodal", "多模"],
+    "aliases": [
+      "多模态",
+      "multimodal",
+      "多模"
+    ],
     "formal": "多模态（Multimodal）",
     "def": "一个模型同时能读文字、图片、声音、视频等多种输入，而不只是处理文本。",
     "confusable": "纯文本模型",
@@ -79,7 +114,12 @@
   },
   "推理": {
     "category": "模型基础",
-    "aliases": ["推理", "reasoning", "推理模型", "推理能力"],
+    "aliases": [
+      "推理",
+      "reasoning",
+      "推理模型",
+      "推理能力"
+    ],
     "formal": "推理（Inference / Reasoning）",
     "def": "让训练好的模型回答问题——每轮对话都在发生，和「训练」相对；特指「推理模型」时，还指它先写步骤、再作答的本事。",
     "confusable": "训练",
@@ -88,7 +128,11 @@
   },
   "温度": {
     "category": "模型基础",
-    "aliases": ["温度", "temperature", "随机性"],
+    "aliases": [
+      "温度",
+      "temperature",
+      "随机性"
+    ],
     "formal": "温度（Temperature）",
     "def": "控制模型「敢不敢冒险」的旋钮：调低更稳更保守，调高更多样也更爱跑偏。",
     "confusable": "创造力",
@@ -97,7 +141,11 @@
   },
   "缩放定律": {
     "category": "模型基础",
-    "aliases": ["缩放定律", "scaling law", "规模定律"],
+    "aliases": [
+      "缩放定律",
+      "scaling law",
+      "规模定律"
+    ],
     "formal": "缩放定律（Scaling Law）",
     "def": "参数、数据、算力一起变大时，模型的平均错误率会按幂律平滑下降——这是「模型越做越大」的底层依据。",
     "confusable": "涌现",
@@ -106,7 +154,11 @@
   },
   "涌现": {
     "category": "模型基础",
-    "aliases": ["涌现", "emergent", "emergence"],
+    "aliases": [
+      "涌现",
+      "emergent",
+      "emergence"
+    ],
     "formal": "涌现（Emergence）",
     "def": "模型规模跨过某个门槛后，某一项具体能力（比如多步计算）突然「会了」，而不是慢慢变好。",
     "confusable": "缩放定律",
@@ -115,7 +167,12 @@
   },
   "幻觉": {
     "category": "模型基础",
-    "aliases": ["幻觉", "hallucination", "胡说", "编造"],
+    "aliases": [
+      "幻觉",
+      "hallucination",
+      "胡说",
+      "编造"
+    ],
     "formal": "幻觉（Hallucination）",
     "def": "模型把不存在的事实讲得像真的——编出没写过的引用、没发生过的数据，语气还特别笃定。",
     "confusable": "错误",
@@ -124,7 +181,13 @@
   },
   "Embedding": {
     "category": "模型基础",
-    "aliases": ["Embedding", "embedding", "嵌入", "向量化", "向量"],
+    "aliases": [
+      "Embedding",
+      "embedding",
+      "嵌入",
+      "向量化",
+      "向量"
+    ],
     "formal": "嵌入（Embedding）",
     "def": "把一段文字变成一串数字（向量），意思相近的文字，这串数字在空间里也靠得近，方便机器做「找相似的」。",
     "confusable": "关键词匹配",
@@ -133,7 +196,12 @@
   },
   "向量数据库": {
     "category": "模型基础",
-    "aliases": ["向量数据库", "vector database", "向量库", "vector db"],
+    "aliases": [
+      "向量数据库",
+      "vector database",
+      "向量库",
+      "vector db"
+    ],
     "formal": "向量数据库（Vector Database）",
     "def": "专门存放 Embedding 向量、并支持「按相似度快速找最接近的几条」的数据库，是知识库检索的地基。",
     "confusable": "普通数据库",
@@ -142,7 +210,12 @@
   },
   "注意力机制": {
     "category": "模型基础",
-    "aliases": ["注意力机制", "attention", "自注意力", "attention mechanism"],
+    "aliases": [
+      "注意力机制",
+      "attention",
+      "自注意力",
+      "attention mechanism"
+    ],
     "formal": "注意力机制（Attention）",
     "def": "让模型在处理每个词时，去「看」句子里其他相关词并分配权重，从而抓住词与词之间的关系。",
     "confusable": "关键词",
@@ -151,7 +224,11 @@
   },
   "Transformer": {
     "category": "模型基础",
-    "aliases": ["Transformer", "transformer", "变换器"],
+    "aliases": [
+      "Transformer",
+      "transformer",
+      "变换器"
+    ],
     "formal": "Transformer",
     "def": "2017 年提出的神经网络结构，靠注意力机制并行处理整段文本，是现在几乎所有大模型的底座。",
     "confusable": "RNN",
@@ -160,7 +237,12 @@
   },
   "RNN": {
     "category": "模型基础",
-    "aliases": ["RNN", "循环神经网络", "rnn", "循环网络"],
+    "aliases": [
+      "RNN",
+      "循环神经网络",
+      "rnn",
+      "循环网络"
+    ],
     "formal": "循环神经网络（RNN）",
     "def": "按顺序读取 Token 的神经网络，每一步把上一步的隐藏状态带进来更新；像逐字读书时随身改的一张小抄，早先内容会随步骤传递而变淡。",
     "confusable": "LSTM",
@@ -169,7 +251,12 @@
   },
   "LSTM": {
     "category": "模型基础",
-    "aliases": ["LSTM", "长短期记忆网络", "长短期记忆", "lstm"],
+    "aliases": [
+      "LSTM",
+      "长短期记忆网络",
+      "长短期记忆",
+      "lstm"
+    ],
     "formal": "长短期记忆网络（LSTM）",
     "def": "在 RNN 上加入输入门、遗忘门、输出门三道开关的网络，分别控制小抄何时写入、保留、带出，更擅长保存长期信息。",
     "confusable": "RNN",
@@ -178,7 +265,11 @@
   },
   "GRU": {
     "category": "模型基础",
-    "aliases": ["GRU", "门控循环单元", "gru"],
+    "aliases": [
+      "GRU",
+      "门控循环单元",
+      "gru"
+    ],
     "formal": "门控循环单元（GRU）",
     "def": "把 LSTM 的三道门简化成更新门和重置门的循环网络，参数更少、训练更快，仍然按顺序处理序列。",
     "confusable": "LSTM",
@@ -187,7 +278,12 @@
   },
   "提示词": {
     "category": "交互",
-    "aliases": ["提示词", "prompt", "Prompt", "指令"],
+    "aliases": [
+      "提示词",
+      "prompt",
+      "Prompt",
+      "指令"
+    ],
     "formal": "提示词（Prompt）",
     "def": "你发给模型的那段话——包括问题、背景和要求；它决定了模型这一轮「站在什么立场」回答。",
     "confusable": "微调",
@@ -196,7 +292,11 @@
   },
   "提示词工程": {
     "category": "交互",
-    "aliases": ["提示词工程", "prompt engineering", "prompt 工程"],
+    "aliases": [
+      "提示词工程",
+      "prompt engineering",
+      "prompt 工程"
+    ],
     "formal": "提示词工程（Prompt Engineering）",
     "def": "用一套可复用的写法（给角色、给例子、给步骤、给输出格式）稳定地拿到好结果的手艺。",
     "confusable": "会提问",
@@ -205,7 +305,12 @@
   },
   "系统提示词": {
     "category": "交互",
-    "aliases": ["系统提示词", "system prompt", "系统提示", "system message"],
+    "aliases": [
+      "系统提示词",
+      "system prompt",
+      "系统提示",
+      "system message"
+    ],
     "formal": "系统提示词（System Prompt）",
     "def": "产品方在对话开始前就预设好的一段指令，用来定角色、边界和规矩；用户平时看不见它。",
     "confusable": "用户提示词",
@@ -214,7 +319,12 @@
   },
   "少样本": {
     "category": "交互",
-    "aliases": ["少样本", "few-shot", "few shot", "示例学习"],
+    "aliases": [
+      "少样本",
+      "few-shot",
+      "few shot",
+      "示例学习"
+    ],
     "formal": "少样本提示（Few-shot）",
     "def": "在提示词里先给两三个「输入 → 输出」的例子，让模型照着格式和口径来。",
     "confusable": "零样本",
@@ -223,7 +333,12 @@
   },
   "思维链": {
     "category": "交互",
-    "aliases": ["思维链", "chain of thought", "CoT", "一步步想"],
+    "aliases": [
+      "思维链",
+      "chain of thought",
+      "CoT",
+      "一步步想"
+    ],
     "formal": "思维链（Chain of Thought）",
     "def": "让模型把推理的中间步骤一步步写出来再给答案，用于多步计算和逻辑题，正确率明显更高。",
     "confusable": "分步作答",
@@ -232,7 +347,12 @@
   },
   "Agent": {
     "category": "Agent 与工具",
-    "aliases": ["Agent", "智能体", "agent", "AI Agent"],
+    "aliases": [
+      "Agent",
+      "智能体",
+      "agent",
+      "AI Agent"
+    ],
     "formal": "智能体（Agent）",
     "def": "能自己拆目标、调工具、看结果再决定下一步的 AI 程序——不再是一问一答，而是「给个任务它自己跑」。",
     "confusable": "聊天机器人",
@@ -241,7 +361,12 @@
   },
   "Skill": {
     "category": "Agent 与工具",
-    "aliases": ["Skill", "skill", "技能包", "技能"],
+    "aliases": [
+      "Skill",
+      "skill",
+      "技能包",
+      "技能"
+    ],
     "formal": "技能（Skill）",
     "def": "把一套固定的流程、模板和检查清单打包好，让 AI 在需要时自动照着做；相当于给 AI 装了「岗位手册」。",
     "confusable": "提示词",
@@ -250,7 +375,11 @@
   },
   "MCP": {
     "category": "Agent 与工具",
-    "aliases": ["MCP", "Model Context Protocol", "模型上下文协议"],
+    "aliases": [
+      "MCP",
+      "Model Context Protocol",
+      "模型上下文协议"
+    ],
     "formal": "模型上下文协议（MCP，Model Context Protocol）",
     "def": "一套让 AI 用统一方式连接外部工具和数据的开放协议——工具方按它写一次，所有支持它的 AI 都能用。",
     "confusable": "插件",
@@ -259,7 +388,12 @@
   },
   "工作流": {
     "category": "Agent 与工具",
-    "aliases": ["工作流", "workflow", "编排", "流程编排"],
+    "aliases": [
+      "工作流",
+      "workflow",
+      "编排",
+      "流程编排"
+    ],
     "formal": "工作流（Workflow）",
     "def": "把多个步骤（取数据 → 模型处理 → 判断 → 输出）串成一条固定流水线，让 AI 按预设顺序自动跑完。",
     "confusable": "Agent",
@@ -268,7 +402,12 @@
   },
   "插件": {
     "category": "Agent 与工具",
-    "aliases": ["插件", "plugin", "plug-in", "扩展"],
+    "aliases": [
+      "插件",
+      "plugin",
+      "plug-in",
+      "扩展"
+    ],
     "formal": "插件（Plugin）",
     "def": "给 AI 客户端加装的一项额外能力，装上之后它就能做原本做不到的事（联网、读文件、画图）。",
     "confusable": "MCP",
@@ -277,7 +416,13 @@
   },
   "工具调用": {
     "category": "Agent 与工具",
-    "aliases": ["工具调用", "function call", "function calling", "tool use", "调用工具"],
+    "aliases": [
+      "工具调用",
+      "function call",
+      "function calling",
+      "tool use",
+      "调用工具"
+    ],
     "formal": "工具调用（Tool / Function Calling）",
     "def": "模型判断「这步得查/得算」，于是输出一个调用指令去跑外部程序，再把结果拿回来接着答。",
     "confusable": "联网搜索",
@@ -286,7 +431,11 @@
   },
   "记忆": {
     "category": "Agent 与工具",
-    "aliases": ["记忆", "memory", "记忆功能"],
+    "aliases": [
+      "记忆",
+      "memory",
+      "记忆功能"
+    ],
     "formal": "记忆（Memory）",
     "def": "产品把关于你的信息（偏好、事实）存下来，下次对话自动带上，不必每次重说。",
     "confusable": "上下文窗口",
@@ -295,7 +444,11 @@
   },
   "长期记忆": {
     "category": "Agent 与工具",
-    "aliases": ["长期记忆", "long-term memory", "long term memory"],
+    "aliases": [
+      "长期记忆",
+      "long-term memory",
+      "long term memory"
+    ],
     "formal": "长期记忆（Long-term Memory）",
     "def": "跨会话持久保存的信息，可能是产品自动记的，也可能是你手动写进「记忆」里的。",
     "confusable": "上下文窗口",
@@ -304,7 +457,12 @@
   },
   "知识库": {
     "category": "Agent 与工具",
-    "aliases": ["知识库", "knowledge base", "KB", "资料库"],
+    "aliases": [
+      "知识库",
+      "knowledge base",
+      "KB",
+      "资料库"
+    ],
     "formal": "知识库（Knowledge Base）",
     "def": "你自己整理好的一批文档，被切成小块、编好索引，供 AI 在回答时现场查用；考的是「开卷」。",
     "confusable": "训练数据",
@@ -313,7 +471,12 @@
   },
   "RAG": {
     "category": "Agent 与工具",
-    "aliases": ["RAG", "检索增强", "检索增强生成", "retrieval augmented"],
+    "aliases": [
+      "RAG",
+      "检索增强",
+      "检索增强生成",
+      "retrieval augmented"
+    ],
     "formal": "检索增强生成（RAG，Retrieval-Augmented Generation）",
     "def": "先在你的资料库里检索出最相关的几段，再让模型「看着这几段」作答——考的是开卷，答案有据可查。",
     "confusable": "微调",
@@ -322,7 +485,12 @@
   },
   "引用": {
     "category": "Agent 与工具",
-    "aliases": ["引用", "来源标注", "citation", "出处"],
+    "aliases": [
+      "引用",
+      "来源标注",
+      "citation",
+      "出处"
+    ],
     "formal": "引用（Citation）",
     "def": "模型在答案里标出这句话是从哪份资料的哪一段来的，让结论可回溯、可核对。",
     "confusable": "参考链接",
@@ -331,7 +499,12 @@
   },
   "多轮对话": {
     "category": "Agent 与工具",
-    "aliases": ["多轮对话", "多轮", "multi-turn", "对话历史"],
+    "aliases": [
+      "多轮对话",
+      "多轮",
+      "multi-turn",
+      "对话历史"
+    ],
     "formal": "多轮对话（Multi-turn）",
     "def": "连续几轮交流里，前几轮说过的话会被一起带进这一轮的上下文，模型据此接着往下说。",
     "confusable": "长期记忆",
@@ -340,7 +513,12 @@
   },
   "Codex": {
     "category": "开发",
-    "aliases": ["Codex", "codex", "Codex CLI", "Codex Desktop"],
+    "aliases": [
+      "Codex",
+      "codex",
+      "Codex CLI",
+      "Codex Desktop"
+    ],
     "formal": "Codex",
     "def": "OpenAI 的编程 Agent 产品，能读你的仓库、改代码、跑命令；它不只是补全，而是按任务动手做事。",
     "confusable": "代码补全",
@@ -349,7 +527,12 @@
   },
   "Plan mode": {
     "category": "开发",
-    "aliases": ["Plan mode", "plan mode", "计划模式", "规划模式"],
+    "aliases": [
+      "Plan mode",
+      "plan mode",
+      "计划模式",
+      "规划模式"
+    ],
     "formal": "计划模式（Plan Mode）",
     "def": "让 AI 先把方案讲清楚、等你点头再动手的模式；避免它一上来就改一堆文件。",
     "confusable": "直接执行",
@@ -358,7 +541,11 @@
   },
   "Vibe Coding": {
     "category": "开发",
-    "aliases": ["Vibe Coding", "vibe coding", "氛围编程"],
+    "aliases": [
+      "Vibe Coding",
+      "vibe coding",
+      "氛围编程"
+    ],
     "formal": "氛围编程（Vibe Coding）",
     "def": "用自然语言描述想要的效果、让 AI 写代码，人主要靠「跑起来看感觉」来验收的开发方式。",
     "confusable": "结对编程",
@@ -367,7 +554,12 @@
   },
   "CLI": {
     "category": "开发",
-    "aliases": ["CLI", "cli", "命令行", "终端工具"],
+    "aliases": [
+      "CLI",
+      "cli",
+      "命令行",
+      "终端工具"
+    ],
     "formal": "命令行界面（CLI，Command Line Interface）",
     "def": "在黑色窗口里敲命令来操作程序的方式；对 AI 工具来说，CLI 往往意味着它能直接读写你本机文件。",
     "confusable": "GUI",
@@ -376,7 +568,11 @@
   },
   "API": {
     "category": "开发",
-    "aliases": ["API", "api", "接口"],
+    "aliases": [
+      "API",
+      "api",
+      "接口"
+    ],
     "formal": "应用程序接口（API，Application Programming Interface）",
     "def": "程序之间约定好的调用入口；AI 的 API 让你能按量把自己的程序接到模型上，而不是靠网页点。",
     "confusable": "会员订阅",
@@ -385,7 +581,12 @@
   },
   "API Key": {
     "category": "开发",
-    "aliases": ["API Key", "api key", "密钥", "apikey"],
+    "aliases": [
+      "API Key",
+      "api key",
+      "密钥",
+      "apikey"
+    ],
     "formal": "API 密钥（API Key）",
     "def": "一串证明「调用是你发的」的字符串，等于你的账号密码；泄露了别人就能用你的额度花钱。",
     "confusable": "登录密码",
@@ -394,7 +595,12 @@
   },
   "Diff": {
     "category": "开发",
-    "aliases": ["Diff", "diff", "差异对比", "代码差异"],
+    "aliases": [
+      "Diff",
+      "diff",
+      "差异对比",
+      "代码差异"
+    ],
     "formal": "差异视图（Diff）",
     "def": "把「改了哪几行」逐行标出来（新增一行绿、删除一行红），让你在 AI 改完后快速核对。",
     "confusable": "最终文件",
@@ -403,7 +609,11 @@
   },
   "沙箱": {
     "category": "开发",
-    "aliases": ["沙箱", "sandbox", "隔离环境"],
+    "aliases": [
+      "沙箱",
+      "sandbox",
+      "隔离环境"
+    ],
     "formal": "沙箱（Sandbox）",
     "def": "给 AI 划出来的一块受限运行环境，它能在这里跑命令、改文件，但碰不到你系统其余部分。",
     "confusable": "本机直连",
@@ -412,7 +622,13 @@
   },
   "权限审批": {
     "category": "开发",
-    "aliases": ["权限审批", "审批", "permission", "approval", "授权确认"],
+    "aliases": [
+      "权限审批",
+      "审批",
+      "permission",
+      "approval",
+      "授权确认"
+    ],
     "formal": "权限审批（Permission / Approval）",
     "def": "在 AI 执行敏感动作（删文件、装包、联网）前弹一步让你确认，避免它自作主张。",
     "confusable": "沙箱",
@@ -421,7 +637,12 @@
   },
   "仓库": {
     "category": "开发",
-    "aliases": ["仓库", "repo", "repository", "git 仓库"],
+    "aliases": [
+      "仓库",
+      "repo",
+      "repository",
+      "git 仓库"
+    ],
     "formal": "代码仓库（Repository / Repo）",
     "def": "一个装项目全部文件和历史版本的目录，AI 编程工具通常以「仓库」为单位读取和修改。",
     "confusable": "文件夹",
@@ -430,7 +651,10 @@
   },
   "Dify": {
     "category": "产品",
-    "aliases": ["Dify", "dify"],
+    "aliases": [
+      "Dify",
+      "dify"
+    ],
     "formal": "Dify",
     "def": "一个开源的 AI 应用开发平台，把知识库、工作流、对话界面这些零件拼起来，不用从零写代码。",
     "confusable": "直接用模型 API",
@@ -439,7 +663,11 @@
   },
   "知识库助手": {
     "category": "产品",
-    "aliases": ["知识库助手", "知识库问答", "文档助手"],
+    "aliases": [
+      "知识库助手",
+      "知识库问答",
+      "文档助手"
+    ],
     "formal": "知识库助手（Knowledge Base Assistant）",
     "def": "挂着你那批资料、回答问题时会先检索再作答的 AI 应用；核心卖点是答案可追溯到你自己的文档。",
     "confusable": "通用聊天助手",
@@ -448,7 +676,12 @@
   },
   "问答助手": {
     "category": "产品",
-    "aliases": ["问答助手", "QA 助手", "客服助手", "对话助手"],
+    "aliases": [
+      "问答助手",
+      "QA 助手",
+      "客服助手",
+      "对话助手"
+    ],
     "formal": "问答助手（Q&A Assistant）",
     "def": "面向特定问题的对话应用，一般配上限定范围的资料和话术约束，把回答框在业务能兜住的范围内。",
     "confusable": "通用聊天机器人",
@@ -457,7 +690,12 @@
   },
   "按 token 计费": {
     "category": "产品",
-    "aliases": ["按 token 计费", "按 Token 计费", "token 计费", "按量计费"],
+    "aliases": [
+      "按 token 计费",
+      "按 Token 计费",
+      "token 计费",
+      "按量计费"
+    ],
     "formal": "按 Token 计费（Pay-per-Token）",
     "def": "用多少算多少：输入的 Token 和输出的 Token 分别计价，通常输出比输入贵几倍。",
     "confusable": "包月订阅",
@@ -466,17 +704,27 @@
   },
   "上下文超限": {
     "category": "产品",
-    "aliases": ["上下文超限", "上下文溢出", "超出上下文", "context limit", "token 超限"],
+    "aliases": [
+      "上下文超限",
+      "上下文溢出",
+      "超出上下文",
+      "context limit",
+      "token 超限"
+    ],
     "formal": "上下文超限（Context Overflow）",
     "def": "这一轮要处理的内容超过了上下文窗口，早期的内容被挤掉或直接报错——表现是「聊着聊着它忘了」。",
     "confusable": "模型变笨",
     "diff": "不是模型变笨，是前面的话已经不在它眼前了；同一个问题缩短对话重问一次，通常就恢复了。",
     "verify": "在一个很长的对话里提第一轮说过的细节，看它是否还记得。"
-  }
-  ,
+  },
   "BERT": {
     "category": "模型基础",
-    "aliases": ["BERT", "Bert", "bert", "双向编码器"],
+    "aliases": [
+      "BERT",
+      "Bert",
+      "bert",
+      "双向编码器"
+    ],
     "formal": "双向编码器（BERT）",
     "def": "一种只做「读懂」的模型：把整句话一起读进来，左右两边都能看，输出理解结果；分类、抽取、判断都是它的主场。",
     "confusable": "GPT",
@@ -485,7 +733,12 @@
   },
   "GPT": {
     "category": "模型基础",
-    "aliases": ["GPT", "Gpt", "gpt", "生成式预训练 Transformer"],
+    "aliases": [
+      "GPT",
+      "Gpt",
+      "gpt",
+      "生成式预训练 Transformer"
+    ],
     "formal": "生成式预训练 Transformer（GPT）",
     "def": "一种只做「写出」的模型：根据前面已经出现的内容，一步步预测下一个词；对话、写作、代码都是它续写出来的。",
     "confusable": "BERT",
@@ -494,7 +747,11 @@
   },
   "编码器": {
     "category": "模型基础",
-    "aliases": ["编码器", "Encoder", "encoder"],
+    "aliases": [
+      "编码器",
+      "Encoder",
+      "encoder"
+    ],
     "formal": "编码器（Encoder）",
     "def": "先把整段输入一起读完、形成「读懂」结果的部件；左右文都能看，分类、抽取都靠它。",
     "confusable": "解码器",
@@ -503,7 +760,11 @@
   },
   "解码器": {
     "category": "模型基础",
-    "aliases": ["解码器", "Decoder", "decoder"],
+    "aliases": [
+      "解码器",
+      "Decoder",
+      "decoder"
+    ],
     "formal": "解码器（Decoder）",
     "def": "只根据前面已经出现的内容，一步步写出下一个词的部件；看不到后文，生成、续写都靠它。",
     "confusable": "编码器",
@@ -512,7 +773,12 @@
   },
   "自回归": {
     "category": "模型基础",
-    "aliases": ["自回归", "Autoregressive", "autoregressive", "自回归生成"],
+    "aliases": [
+      "自回归",
+      "Autoregressive",
+      "autoregressive",
+      "自回归生成"
+    ],
     "formal": "自回归（Autoregressive）",
     "def": "生成时只往回看：每一步根据已经写出的内容预测下一个词，再把新词接上去，像接力一样一棒接一棒。",
     "confusable": "编码器",
@@ -521,7 +787,11 @@
   },
   "长文本": {
     "category": "模型基础",
-    "aliases": ["长文本", "长文档", "超长文本"],
+    "aliases": [
+      "长文本",
+      "长文档",
+      "超长文本"
+    ],
     "formal": "长文本（Long Text）",
     "def": "几百字往上、一口气读不完的输入，比如长报告、整本书、一场会议记录；模型一次能读多长由上下文窗口决定，超出的部分要截断或先检索。",
     "confusable": "上下文窗口",
@@ -530,7 +800,11 @@
   },
   "召回": {
     "category": "Agent 与工具",
-    "aliases": ["召回", "recall", "检索召回"],
+    "aliases": [
+      "召回",
+      "recall",
+      "检索召回"
+    ],
     "formal": "召回（Recall）",
     "def": "检索时把「可能相关的片段」先捞回来的那一步——捞得够不够全，直接决定后面答得对不对。",
     "confusable": "生成",
@@ -539,7 +813,12 @@
   },
   "结构化输出": {
     "category": "开发",
-    "aliases": ["结构化输出", "structured output", "json 输出", "json mode"],
+    "aliases": [
+      "结构化输出",
+      "structured output",
+      "json 输出",
+      "json mode"
+    ],
     "formal": "结构化输出（Structured Output）",
     "def": "让模型按固定格式（比如 JSON）返回结果，字段名和层级事先约定好，程序可以直接读取，不用再猜。",
     "confusable": "内容正确",
@@ -548,7 +827,11 @@
   },
   "机器学习": {
     "category": "模型基础",
-    "aliases": ["机器学习", "machine learning", "ML"],
+    "aliases": [
+      "机器学习",
+      "machine learning",
+      "ML"
+    ],
     "formal": "机器学习（Machine Learning）",
     "def": "让程序从大量例子里自己找规律，而不是靠人一条条写死规则；找完规律之后，遇到例子外的情况就按规律猜。",
     "confusable": "人写规则",
@@ -557,7 +840,10 @@
   },
   "深度学习": {
     "category": "模型基础",
-    "aliases": ["深度学习", "deep learning"],
+    "aliases": [
+      "深度学习",
+      "deep learning"
+    ],
     "formal": "深度学习（Deep Learning）",
     "def": "用多层神经网络自动从数据里学规律的机器学习方法；现在的大模型都是它练出来的。",
     "confusable": "机器学习",
@@ -566,7 +852,12 @@
   },
   "训练数据": {
     "category": "模型基础",
-    "aliases": ["训练数据", "训练语料", "语料", "数据集"],
+    "aliases": [
+      "训练数据",
+      "训练语料",
+      "语料",
+      "数据集"
+    ],
     "formal": "训练数据（Training Data）",
     "def": "出厂前喂给模型学习的文本总集；模型只会它「见过」的东西，数据里没有的，它就容易接错、编错。",
     "confusable": "提示词",
@@ -575,11 +866,104 @@
   },
   "分词": {
     "category": "模型基础",
-    "aliases": ["分词", "分词器", "tokenizer"],
+    "aliases": [
+      "分词",
+      "分词器",
+      "tokenizer"
+    ],
     "formal": "分词（Tokenizer）",
     "def": "把一句话切成一颗颗 Token 的工序，负责切的那件工具叫分词器；不同模型的切法不一样，同一句话可能切出不同数量的 Token。",
     "confusable": "分句",
     "diff": "分词按词表把文本切成 Token 片，和「按标点断句」不是一回事——一句话切几颗，由分词器的词表决定。",
     "verify": "把一句话粘进公开的 Tokenizer 小工具，看它被切成几颗、哪几个字被拼在一起。"
+  },
+  "上下文工程": {
+    "category": "交互",
+    "aliases": [
+      "上下文工程",
+      "context engineering"
+    ],
+    "formal": "上下文工程（Context Engineering）",
+    "def": "在每次调用模型前，从规则、历史、资料和工具结果里挑出这一轮真正该看的信息，装进有限窗口的工程方法。",
+    "confusable": "提示词工程",
+    "diff": "提示词工程管「怎么把要求说清楚」，上下文工程管「这一轮它到底能看到哪些信息、各占多少」。",
+    "verify": "同一个提示词，换一份上下文重跑，看答案是否变化。"
+  },
+  "Lost in the Middle": {
+    "category": "模型基础",
+    "aliases": [
+      "Lost in the Middle",
+      "中间遗忘",
+      "lost in the middle"
+    ],
+    "formal": "中间遗忘（Lost in the Middle）",
+    "def": "长上下文里，模型对中间位置信息的利用率往往低于开头和结尾。",
+    "confusable": "上下文超限",
+    "diff": "超限是信息被截掉了；中间遗忘是信息还在窗口里，但用得不好。",
+    "verify": "把同一个关键条件分别放在长文开头、中间、结尾各问一次，比较命中率。"
+  },
+  "短期记忆": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "短期记忆",
+      "short-term memory",
+      "short term memory"
+    ],
+    "formal": "短期记忆（Short-term Memory）",
+    "def": "只服务当前会话的信息：最近几轮对话、当前任务状态、刚返回的工具结果。",
+    "confusable": "长期记忆",
+    "diff": "短期记忆关掉会话就没了；长期记忆跨会话保存，下次还能取回。",
+    "verify": "开一个新会话，问上一通对话里的临时细节，看它是否还知道。"
+  },
+  "滑动窗口": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "滑动窗口",
+      "sliding window"
+    ],
+    "formal": "滑动窗口（Sliding Window）",
+    "def": "只保留最近 N 轮对话，更早的内容整段移出上下文。",
+    "confusable": "摘要压缩",
+    "diff": "滑动窗口是整段扔掉；摘要压缩是压成要点继续留着。",
+    "verify": "把保留轮数从 8 调到 2，看早期约定是否消失。"
+  },
+  "摘要压缩": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "摘要压缩",
+      "摘要",
+      "summarization",
+      "summary"
+    ],
+    "formal": "摘要压缩（Summarization）",
+    "def": "把较早的对话压成一小段要点，替代原文继续放在上下文里。",
+    "confusable": "滑动窗口",
+    "diff": "摘要保留了要点但会丢细节；滑动窗口保留原文，但更早的整段消失。",
+    "verify": "让系统摘要后追问一个早期细节，看摘要里有没有留下。"
+  },
+  "结构化记忆": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "结构化记忆",
+      "structured memory"
+    ],
+    "formal": "结构化记忆（Structured Memory）",
+    "def": "把记忆存成带字段的记录（值、状态、更新时间、来源），而不是一段自由文本。",
+    "confusable": "摘要压缩",
+    "diff": "摘要读起来顺但难核对；结构化记录能逐字段更新、判断是否确认、标记过期。",
+    "verify": "找一条记忆，看它有没有「已确认」「更新时间」「来源」三个字段。"
+  },
+  "过期分支": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "过期分支",
+      "superseded",
+      "过期方案"
+    ],
+    "formal": "过期分支（Superseded Branch）",
+    "def": "用户已经放弃或替换掉的旧方案；必须标记失效，不能再当成有效约束。",
+    "confusable": "幻觉",
+    "diff": "过期分支是真实发生过、但已经不用了；幻觉是根本没发生过。",
+    "verify": "用户改主意后问当前方案，看旧方案是否还被同时推荐。"
   }
 }
