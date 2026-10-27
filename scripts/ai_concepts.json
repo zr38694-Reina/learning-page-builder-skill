@@ -1934,5 +1934,175 @@
     "confusable": "多 Agent",
     "diff": "单 Agent 没有跨 Agent 通信和状态同步；多 Agent 用这些开销换角色隔离和并行。",
     "verify": "看任务是否一个工作流就能跑完；能，就先别拆。"
+  },
+  "基础模型": {
+    "category": "模型基础",
+    "aliases": [
+      "基础模型",
+      "基座模型",
+      "base model",
+      "foundation model"
+    ],
+    "formal": "基础模型（Base Model）",
+    "def": "已经用海量通用数据预训练好、还没针对具体任务定制的模型；微调从它开始，不从零训练。",
+    "confusable": "定制模型",
+    "diff": "基础模型是通用底子；微调后的定制模型才带你的任务倾向。",
+    "verify": "看模型卡或平台页面：这个模型是通用基础版，还是已经微调过的行业版。"
+  },
+  "测试数据": {
+    "category": "模型基础",
+    "aliases": [
+      "测试数据",
+      "test data"
+    ],
+    "formal": "测试数据（Test Data）",
+    "def": "用来检验模型效果的数据；它不能和训练数据重复，否则分数会虚高。",
+    "confusable": "训练数据",
+    "diff": "训练数据用来学，测试数据用来考；考卷不能提前发给学生。",
+    "verify": "检查测试集是否真的没参与过训练和调参。"
+  },
+  "监督微调": {
+    "category": "模型基础",
+    "aliases": [
+      "SFT",
+      "监督微调",
+      "supervised fine-tuning",
+      "supervised fine tuning"
+    ],
+    "formal": "监督微调（SFT，Supervised Fine-Tuning）",
+    "def": "给模型大量「输入 + 理想输出」的成对样例，让它学会在类似输入下给出接近标准的回答。像老师给范文，学生照着仿写。",
+    "confusable": "RLHF",
+    "diff": "SFT 给的是标准答案；RLHF 给的是「两个答案里哪个更好」的比较信号。",
+    "verify": "准备 20 条同格式问答，看微调后模型是否稳定按样例的格式回答。"
+  },
+  "人类反馈强化学习": {
+    "category": "模型基础",
+    "aliases": [
+      "RLHF",
+      "人类反馈强化学习",
+      "reinforcement learning from human feedback"
+    ],
+    "formal": "人类反馈强化学习（RLHF，Reinforcement Learning from Human Feedback）",
+    "def": "让模型对同一问题生成多个回答，由人比较哪个更好，再用这些偏好去调整模型，让它更倾向人类喜欢的那类回答。",
+    "confusable": "SFT",
+    "diff": "SFT 直接给标准答案；RLHF 只给「A 比 B 好」的比较，不要求唯一答案。",
+    "verify": "同一问题让模型答两版，请同事选更好的那版，看选择理由是否一致。"
+  },
+  "低秩适配": {
+    "category": "模型基础",
+    "aliases": [
+      "LoRA",
+      "低秩适配",
+      "low-rank adaptation"
+    ],
+    "formal": "低秩适配（LoRA，Low-Rank Adaptation）",
+    "def": "一种省成本的微调方法：冻结基础模型的大部分参数，只训练少量新加的适配参数。像教材不重印，只夹一本补充页。",
+    "confusable": "全量微调",
+    "diff": "全量微调改大部分参数、贵；LoRA 只训练少量适配参数，省显存和存储，但效果不保证更强。",
+    "verify": "问平台「这个 LoRA 适配器对应哪个基础模型版本」，看是否要求版本配套。"
+  },
+  "全量微调": {
+    "category": "模型基础",
+    "aliases": [
+      "全量微调",
+      "full fine-tuning",
+      "full fine tuning"
+    ],
+    "formal": "全量微调（Full Fine-Tuning）",
+    "def": "更新基础模型的大部分或全部参数。调整能力强，但训练、显存和存储成本都高。",
+    "confusable": "LoRA",
+    "diff": "全量微调动全身；LoRA 只动一小块适配参数，成本低但控制力不一定更强。",
+    "verify": "看平台的训练报价单，对比全量微调和 LoRA 的显存与时长。"
+  },
+  "过拟合": {
+    "category": "模型基础",
+    "aliases": [
+      "过拟合",
+      "overfitting",
+      "overfit"
+    ],
+    "formal": "过拟合（Overfitting）",
+    "def": "模型把训练样例背得太死，训练集上分数很高，换一种说法或遇到新问题就明显变差。",
+    "confusable": "数据泄漏",
+    "diff": "过拟合是「背答案」，数据泄漏是「提前看过考卷」；两者都会让分数虚高，但原因不同。",
+    "verify": "看训练集和验证集曲线：训练继续升、验证开始降，就是过拟合的信号。"
+  },
+  "训练集": {
+    "category": "模型基础",
+    "aliases": [
+      "训练集",
+      "training set"
+    ],
+    "formal": "训练集（Training Set）",
+    "def": "真正用来更新模型参数的那部分数据；模型从它里面学规律。",
+    "confusable": "验证集",
+    "diff": "训练集改参数；验证集不参与训练，只用来观察过拟合和选配置。",
+    "verify": "问数据是怎么分的：训练集里有没有混进测试集的样例。"
+  },
+  "验证集": {
+    "category": "模型基础",
+    "aliases": [
+      "验证集",
+      "validation set",
+      "dev set"
+    ],
+    "formal": "验证集（Validation Set）",
+    "def": "训练过程中用来观察模型有没有过拟合、帮助选择配置的数据；它不直接更新参数。",
+    "confusable": "测试集",
+    "diff": "验证集可以在训练中反复看；测试集只在最后用一次，用来给最终效果打分。",
+    "verify": "看训练日志：验证集分数是否被用来调过超参数。"
+  },
+  "测试集": {
+    "category": "模型基础",
+    "aliases": [
+      "测试集",
+      "test set"
+    ],
+    "formal": "测试集（Test Set）",
+    "def": "训练完成后才使用、用来独立评价最终效果的数据；调参时不该看它。",
+    "confusable": "验证集",
+    "diff": "验证集参与选配置；测试集只在最后开一次，提前看就算泄漏。",
+    "verify": "问一句：测试集有没有被用来改过模型或提示词？"
+  },
+  "数据泄漏": {
+    "category": "模型基础",
+    "aliases": [
+      "数据泄漏",
+      "数据泄露",
+      "data leakage",
+      "leakage"
+    ],
+    "formal": "数据泄漏（Data Leakage）",
+    "def": "同一条或高度相似的数据同时出现在训练集和测试集里，模型等于提前见过答案，评测分数会虚高。",
+    "confusable": "过拟合",
+    "diff": "数据泄漏是数据划分出错；过拟合是模型背得太死。泄漏会让过拟合看起来「效果很好」。",
+    "verify": "按文本相似度查一遍训练集和测试集，看有没有重复或近重复。"
+  },
+  "JSONL": {
+    "category": "开发",
+    "aliases": [
+      "JSONL",
+      "JSON Lines",
+      "jsonl",
+      "json lines"
+    ],
+    "formal": "JSONL（JSON Lines）",
+    "def": "一种文本格式：文件里每一行都是一个完整、独立的 JSON 对象，不是外层一个大数组。",
+    "confusable": "JSON",
+    "diff": "普通 JSON 可以是一整个数组；JSONL 要求一行一个对象，方便逐行读取和流式处理。",
+    "verify": "打开文件看第一行：能不能单独解析成一个完整对象；能，才是 JSONL。"
+  },
+  "AI反馈强化学习": {
+    "category": "模型基础",
+    "aliases": [
+      "RLAIF",
+      "AI反馈强化学习",
+      "reinforcement learning from ai feedback"
+    ],
+    "formal": "AI反馈强化学习（RLAIF，Reinforcement Learning from AI Feedback）",
+    "def": "把 RLHF 里的「由人比较两个回答」换成「由 AI 比较」，流程相同，判断者不同。它降低标注成本，也继承判断者的偏好和盲点。",
+    "confusable": "RLHF",
+    "diff": "RLHF 让人做偏好判断；RLAIF 让 AI 做偏好判断，成本低，但会放大判断者的偏见。",
+    "verify": "看标注说明：偏好标签是人给的，还是模型给的。"
   }
 }
