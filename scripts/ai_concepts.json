@@ -1610,5 +1610,329 @@
     "confusable": "工具误选",
     "diff": "参数缺失是「参数不全」；工具误选是「工具不对」。前者补参数，后者换工具。",
     "verify": "让它查订单但不给订单号，看它是追问还是瞎填。"
+  },
+  "多 Agent": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "多 Agent",
+      "多智能体",
+      "多代理",
+      "multi-agent",
+      "Multi-Agent",
+      "多Agent系统",
+      "多 Agent 系统"
+    ],
+    "formal": "多 Agent 系统（Multi-Agent System）",
+    "def": "把一个任务分给多个有不同职责、权限或资料范围的 Agent，让它们通过消息或共享状态协作；不等于多个模型。",
+    "confusable": "多模型",
+    "diff": "多 Agent 可以共用同一个底层模型，差别在角色和控制边界；多模型只是换了一台发动机，解决不了分工和责任。",
+    "verify": "看每个 Agent 的职责、权限或资料范围是否真的不同，而不是只换了模型名。"
+  },
+  "群聊模式": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "群聊模式",
+      "群聊",
+      "group chat",
+      "多 Agent 群聊"
+    ],
+    "formal": "群聊模式（Group Chat）",
+    "def": "多个 Agent 在同一个会话里讨论，谁都可以发言；灵活，适合头脑风暴。",
+    "confusable": "Supervisor-Worker",
+    "diff": "群聊没有固定指挥链，发言顺序、重复讨论和最终责任都难控；Supervisor-Worker 有明确的主管和验收口。",
+    "verify": "一次协作结束后，看能不能指出谁对最终结果负责。"
+  },
+  "Supervisor-Worker": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "Supervisor-Worker",
+      "Supervisor Worker",
+      "主管-工人",
+      "主管工人模式",
+      "主从模式",
+      "supervisor worker"
+    ],
+    "formal": "主管-工人模式（Supervisor-Worker）",
+    "def": "一个 Supervisor 负责理解目标、拆任务、派活、验收和决定重试，多个 Worker 只做自己被分到的那一段。",
+    "confusable": "群聊模式",
+    "diff": "群聊是平铺讨论，Supervisor-Worker 有明确的指挥链和验收口；前者适合探索，后者适合严格流程。",
+    "verify": "让 Supervisor 不在场，看 Worker 还能不能自己决定下一步；不能，说明它是被指挥的 Worker。"
+  },
+  "Handoff": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "Handoff",
+      "handoff",
+      "交接",
+      "任务交接",
+      "结构化交接"
+    ],
+    "formal": "结构化交接（Handoff）",
+    "def": "把任务交给另一个 Agent 时，写清任务 ID、目标、输入产物、期望输出、权限和状态，而不是只说「你继续」。",
+    "confusable": "聊天记录",
+    "diff": "聊天记录是过程，Handoff 是交接契约；没有字段，接的人只能猜。",
+    "verify": "把交接单给一个没参加过讨论的人，看他能不能独立开始。"
+  },
+  "产物": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "产物",
+      "Artifact",
+      "artifact",
+      "结构化产物",
+      "中间产物"
+    ],
+    "formal": "产物（Artifact）",
+    "def": "Agent 之间传递的结构化结果，带类型、内容、生产者和版本；不是一段自由文本。",
+    "confusable": "聊天消息",
+    "diff": "聊天消息谁都能改、没有版本；产物有类型和版本，能被程序验收。",
+    "verify": "看下游能不能不读聊天记录、只读产物就把活干完。"
+  },
+  "共享状态": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "共享状态",
+      "Shared State",
+      "shared state",
+      "共享 State",
+      "共享状态表"
+    ],
+    "formal": "共享状态（Shared State）",
+    "def": "所有 Agent 都能读写的结构化交接台，保存原始目标、当前状态、任务 ID、产物、版本、生产者、来源、错误和更新时间。",
+    "confusable": "聊天记录",
+    "diff": "聊天记录是不断增长的文本，字段和版本都说不清；共享状态是结构化的、可验收的。",
+    "verify": "让两个 Agent 先后写同一份状态，看能不能看出谁写了哪一版。"
+  },
+  "版本": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "版本",
+      "version",
+      "版本号",
+      "产物版本",
+      "Artifact 版本"
+    ],
+    "formal": "版本（Version）",
+    "def": "给每次产物变更编一个号，下游能确认自己读的是不是最新版，也能回滚。",
+    "confusable": "文件名",
+    "diff": "文件名改来改去不可靠；版本号是结构化的，程序能比较。",
+    "verify": "让上游改一版，看下游是否知道版本变了。"
+  },
+  "重试": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "重试",
+      "retry",
+      "重跑",
+      "再次执行"
+    ],
+    "formal": "重试（Retry）",
+    "def": "一个步骤失败后再执行一次；重试前要确认操作幂等，否则可能重复写入。",
+    "confusable": "幂等",
+    "diff": "重试是动作，幂等是保证重试不出重复结果的属性。",
+    "verify": "把失败步骤重跑两次，看结果是否只产生一条记录。"
+  },
+  "幂等": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "幂等",
+      "idempotent",
+      "idempotency",
+      "重复执行"
+    ],
+    "formal": "幂等（Idempotency）",
+    "def": "同一个操作执行一次和执行多次，结果一样；重试时不会重复下单、重复写入。",
+    "confusable": "重试",
+    "diff": "重试是再试一次，幂等是保证再试不会多写一份。",
+    "verify": "把同一个请求发两次，看数据库里是不是只多了一条。"
+  },
+  "乐观锁": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "乐观锁",
+      "optimistic lock",
+      "版本锁"
+    ],
+    "formal": "乐观锁（Optimistic Lock）",
+    "def": "更新前先检查版本号有没有变；变了就拒绝写入，避免两个人同时改同一份状态互相覆盖。",
+    "confusable": "悲观锁",
+    "diff": "悲观锁先锁住再改；乐观锁先改再检查版本，冲突就重来。",
+    "verify": "两个 Agent 同时改同一份产物，看是否有一个被拒绝并重试。"
+  },
+  "审计": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "审计",
+      "audit",
+      "审计事件",
+      "审计日志"
+    ],
+    "formal": "审计（Audit）",
+    "def": "记录谁在什么时候改了什么、依据是什么；出问题时能回溯，不靠回忆。",
+    "confusable": "普通日志",
+    "diff": "普通日志给调试看；审计事件要能回答责任和来源。",
+    "verify": "随便挑一个最终结论，看能不能追到它的生产者和输入。"
+  },
+  "权限": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "权限",
+      "permission",
+      "访问权限",
+      "工具权限"
+    ],
+    "formal": "权限（Permission）",
+    "def": "规定某个 Agent 能调用哪些工具、能读写哪些资料；按角色给，不按「同一个系统」给。",
+    "confusable": "权限审批",
+    "diff": "权限是「能不能用」，审批是「这次用要不要人点头」。",
+    "verify": "看每个 Agent 的工具清单，是否只包含它完成本职所需的那几项。"
+  },
+  "最小权限": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "最小权限",
+      "least privilege",
+      "最小权限原则"
+    ],
+    "formal": "最小权限原则（Least Privilege）",
+    "def": "只给 Agent 完成当前任务必需的那几项权限；多给一项，就多一个出事入口。",
+    "confusable": "权限",
+    "diff": "权限是具体的开关；最小权限是分配开关的原则。",
+    "verify": "让每个 Agent 只拿一个角色所需的最小工具集，看任务是否仍能完成。"
+  },
+  "状态同步": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "状态同步",
+      "state sync",
+      "同步状态"
+    ],
+    "formal": "状态同步（State Sync）",
+    "def": "多个 Agent 对「现在做到哪、哪些已完成、哪些失败」保持一致；不同步就会重复做或漏做。",
+    "confusable": "共享状态",
+    "diff": "共享状态是放数据的地方；状态同步是让各方看到同一版数据的过程。",
+    "verify": "让两个 Agent 同时开工，看它们是否知道对方已经做了什么。"
+  },
+  "错误传播": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "错误传播",
+      "error propagation",
+      "错误扩散"
+    ],
+    "formal": "错误传播（Error Propagation）",
+    "def": "一个环节的错没有被拦住，顺着流水线传到下游，最后变成一个看起来正常的错误结果。",
+    "confusable": "重试",
+    "diff": "重试是处理错误；错误传播是错误没被处理就往下走。",
+    "verify": "在上游故意返回空结果，看下游是停下来还是继续编。"
+  },
+  "任务委派": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "任务委派",
+      "delegation",
+      "委派",
+      "派活"
+    ],
+    "formal": "任务委派（Task Delegation）",
+    "def": "把一个大目标拆成子任务，连同输入、期望输出、权限和截止时间交给另一个 Agent；不是只说「你继续」。",
+    "confusable": "Handoff",
+    "diff": "任务委派是动作，Handoff 是承载这个动作的结构化契约。",
+    "verify": "看被委派的人能不能只凭这张单开始干活。"
+  },
+  "并行": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "并行",
+      "parallel",
+      "并行执行"
+    ],
+    "formal": "并行（Parallel Execution）",
+    "def": "多个互不依赖的子任务同时跑，缩短总时长；前提是它们不抢同一份写入。",
+    "confusable": "串行",
+    "diff": "并行是同时做，串行是排队做；有依赖的步骤不能并行。",
+    "verify": "把两个互不依赖的搜索同时发出去，看总时长是否接近较慢的那个。"
+  },
+  "串行": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "串行",
+      "serial",
+      "顺序执行"
+    ],
+    "formal": "串行（Serial Execution）",
+    "def": "后一步依赖前一步的结果，只能排队做；比如写完报告才能审、审完才能发布。",
+    "confusable": "并行",
+    "diff": "串行有先后依赖，并行没有；把有依赖的步骤并行，会拿到旧结果。",
+    "verify": "看流水线里有没有「后一步需要前一步的 ID」的步骤，有就必须串行。"
+  },
+  "Skill 组合": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "Skill 组合",
+      "技能组合",
+      "skill composition",
+      "能力组合"
+    ],
+    "formal": "Skill 组合（Skill Composition）",
+    "def": "让前一个 Skill 的输出成为后一个 Skill 的输入，串成一条能力流水线。",
+    "confusable": "工作流",
+    "diff": "工作流偏流程编排，Skill 组合偏能力接口的拼接；两者常一起用。",
+    "verify": "把上游输出直接喂给下游，看类型和字段是否对得上。"
+  },
+  "契约": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "契约",
+      "contract",
+      "接口契约",
+      "输入输出契约"
+    ],
+    "formal": "接口契约（Contract）",
+    "def": "上下游事先约定好的输入字段、输出字段、类型和失败状态；对不上就不能接。",
+    "confusable": "提示词",
+    "diff": "提示词是自然语言要求，契约是程序能检查的字段和类型。",
+    "verify": "让下游只按契约读字段，看能不能不猜就接上。"
+  },
+  "版本兼容": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "版本兼容",
+      "version compatibility",
+      "向后兼容",
+      "兼容性"
+    ],
+    "formal": "版本兼容（Version Compatibility）",
+    "def": "上游升级后，下游还能不能读；字段名没变，结构也可能变，所以要有版本号和适配器。",
+    "confusable": "版本号",
+    "diff": "版本号是标记，兼容性是实际能不能接上。",
+    "verify": "把上游升一个小版本，跑一遍下游，看是否还通。"
+  },
+  "适配器": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "适配器",
+      "adapter",
+      "适配层",
+      "转换层"
+    ],
+    "formal": "适配器（Adapter）",
+    "def": "两个 Skill 的接口对不上时，中间加一层做字段转换；不要让模型在提示词里临时猜映射。",
+    "confusable": "中间件",
+    "diff": "适配器只做接口转换；中间件还可能做鉴权、日志、限流。",
+    "verify": "看两个接口的字段名或类型不一致时，代码里有没有一个明确的转换层。"
+  },
+  "单 Agent": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "单 Agent",
+      "单智能体",
+      "single agent"
+    ],
+    "formal": "单 Agent（Single Agent）",
+    "def": "一个 Agent 从头到尾完成任务；步骤固定、目标单一、权限不需要拆分时，它通常更稳更便宜。",
+    "confusable": "多 Agent",
+    "diff": "单 Agent 没有跨 Agent 通信和状态同步；多 Agent 用这些开销换角色隔离和并行。",
+    "verify": "看任务是否一个工作流就能跑完；能，就先别拆。"
   }
 }
