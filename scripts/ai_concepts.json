@@ -965,5 +965,158 @@
     "confusable": "幻觉",
     "diff": "过期分支是真实发生过、但已经不用了；幻觉是根本没发生过。",
     "verify": "用户改主意后问当前方案，看旧方案是否还被同时推荐。"
+  },
+  "预填充": {
+    "category": "模型基础",
+    "aliases": [
+      "预填充",
+      "Prefill",
+      "prefill",
+      "预填充阶段"
+    ],
+    "formal": "预填充（Prefill）",
+    "def": "模型先把整段输入一次读完、算好内部状态的阶段；输入越长，这一步通常越慢。",
+    "confusable": "解码（Decode）",
+    "diff": "预填充处理的是输入，解码是一个 Token 一个 Token 地生成输出；两段都花时间和算力。",
+    "verify": "把同一段问题加长一倍，观察首字出现的时间有没有变长。"
+  },
+  "解码": {
+    "category": "模型基础",
+    "aliases": [
+      "解码",
+      "Decode",
+      "decode",
+      "解码阶段"
+    ],
+    "formal": "解码（Decode）",
+    "def": "模型在预填充之后，一个 Token 一个 Token 写出输出的阶段；输出越长，步数越多，通常越慢。",
+    "confusable": "预填充（Prefill）",
+    "diff": "预填充一次处理输入，解码逐 Token 生成输出；看到字一个个蹦出来，通常是在解码。",
+    "verify": "让模型输出 50 字和 500 字，比较总耗时差多少。"
+  },
+  "Top-P": {
+    "category": "模型基础",
+    "aliases": [
+      "Top-P",
+      "top_p",
+      "TopP",
+      "核采样",
+      "核采样（Top-P）"
+    ],
+    "formal": "核采样（Top-P）",
+    "def": "按概率从高到低累加，只保留累计概率达到 P 的候选词再抽样；P 越小，候选越窄、输出越稳。",
+    "confusable": "Top-K",
+    "diff": "Top-P 的候选数量会随概率分布变化，Top-K 固定只留前 K 个；两者都是收窄选词范围。",
+    "verify": "把 top_p 从 0.9 调到 0.1，看同一句子的用词是不是明显变窄。"
+  },
+  "Top-K": {
+    "category": "模型基础",
+    "aliases": [
+      "Top-K",
+      "top_k",
+      "TopK",
+      "Top-K 采样"
+    ],
+    "formal": "Top-K 采样（Top-K Sampling）",
+    "def": "只保留概率最高的 K 个候选词再抽样；K 越小越保守，K 越大越多样。",
+    "confusable": "Top-P",
+    "diff": "Top-K 的候选数量固定为 K，Top-P 的候选数量按累计概率浮动；不是所有 API 都开放 Top-K。",
+    "verify": "把 top_k 从 5 调到 50，看同一句话的用词是不是更散。"
+  },
+  "Max Tokens": {
+    "category": "模型基础",
+    "aliases": [
+      "Max Tokens",
+      "max_tokens",
+      "max_output_tokens",
+      "最大输出 Token",
+      "最大输出Token"
+    ],
+    "formal": "最大输出 Token 数（Max Tokens）",
+    "def": "限制一次回答最多生成多少 Token；设太小会截断答案或 JSON，设太大增加延迟和费用。",
+    "confusable": "上下文窗口",
+    "diff": "Max Tokens 管的是输出上限，不是模型一次能读入的总窗口；输入加输出仍要受上下文窗口约束。",
+    "verify": "把上限设得很小，看 JSON 是不是断在半个字段上。"
+  },
+  "频率惩罚": {
+    "category": "模型基础",
+    "aliases": [
+      "频率惩罚",
+      "Frequency Penalty",
+      "frequency_penalty"
+    ],
+    "formal": "频率惩罚（Frequency Penalty）",
+    "def": "按某个词已经出现的次数扣分，出现越多越不容易再出现；用来减少重复。",
+    "confusable": "存在惩罚",
+    "diff": "频率惩罚看「出现了几次」，存在惩罚只看「有没有出现过」。",
+    "verify": "让模型写一段长文，分别开 0 和 1.5，看重复句是不是变少。"
+  },
+  "存在惩罚": {
+    "category": "模型基础",
+    "aliases": [
+      "存在惩罚",
+      "Presence Penalty",
+      "presence_penalty"
+    ],
+    "formal": "存在惩罚（Presence Penalty）",
+    "def": "只要某个词已经出现过，就扣一次分；用来鼓励引入新词。",
+    "confusable": "频率惩罚",
+    "diff": "存在惩罚只扣一次，频率惩罚按出现次数累加；设置过高都会伤到术语和字段名。",
+    "verify": "让模型反复描述同一张图，开高存在惩罚，看它是不是开始换同义词。"
+  },
+  "停止序列": {
+    "category": "模型基础",
+    "aliases": [
+      "停止序列",
+      "Stop",
+      "stop",
+      "stop sequence"
+    ],
+    "formal": "停止序列（Stop）",
+    "def": "遇到指定字符串就停止生成；适合分隔固定格式，但不保证 JSON 自动补全。",
+    "confusable": "最大输出 Token 数（Max Tokens）",
+    "diff": "停止序列是「碰到某个词就停」，Max Tokens 是「写到一定长度就停」；两种停法都可能留下半截 JSON。",
+    "verify": "设一个 stop 字符串，看输出是不是正好停在它前面。"
+  },
+  "随机种子": {
+    "category": "模型基础",
+    "aliases": [
+      "随机种子",
+      "Seed",
+      "seed"
+    ],
+    "formal": "随机种子（Seed）",
+    "def": "给随机采样一个起点，方便复现；但模型版本、服务端实现和并行计算变化后，结果仍可能不同。",
+    "confusable": "温度",
+    "diff": "温度控制随机性大小，种子控制随机序列的起点；种子不能把随机性变成零。",
+    "verify": "固定 seed 连跑三次，看结果是不是完全一样。"
+  },
+  "HTTP 状态码": {
+    "category": "开发",
+    "aliases": [
+      "HTTP 状态码",
+      "状态码",
+      "status code",
+      "HTTP status"
+    ],
+    "formal": "HTTP 状态码（HTTP Status Code）",
+    "def": "服务器用三位数字告诉你这次请求的结果：2xx 成功、4xx 请求或权限有问题、5xx 服务端临时故障。",
+    "confusable": "错误信息",
+    "diff": "状态码是分层定位的第一线索，错误信息是补充说明；先看状态码第一位，再看 message。",
+    "verify": "下次报错先看状态码第一位，再决定改请求还是等一会。"
+  },
+  "Agent Harness": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "Agent Harness",
+      "agent harness",
+      "Harness 工程师",
+      "Agent 评测"
+    ],
+    "formal": "Agent Harness 工程师",
+    "def": "给 Agent 搭测试场和监控的人：设计评测集、跑回归、看 tracing，判断它有没有选对工具、完成任务。",
+    "confusable": "Agent 工程师",
+    "diff": "Agent 工程师把 Agent 做出来，Harness 工程师负责把它测明白、看住它；一个造，一个验。",
+    "verify": "看一份 JD 里有没有 eval pipeline、tracing、regression 这些词。"
   }
 }
