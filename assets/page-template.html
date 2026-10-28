@@ -422,7 +422,15 @@ button{font-family:inherit}
            ⚠ 只有带互动装置的页面才用它，贴在装置正下方。
            本页若是纯知识页（只有阅读内容、没有可玩装置）→ 把这一整块 section.coach
            连同脚本里的 COACH 复用段、readContext / buildPrompt / bring 及两个按钮监听
-           一起删掉。判据见 references/04-小奈教练接入.md §0。 -->
+           一起删掉。判据见 references/04-小奈教练接入.md §0。
+
+           写卡 4 步（完整例子见同文件开篇）：
+           ① 标题：把这页的「概念」换成你的「场景」
+           ② 说明：她先看什么 + 她不会做什么
+           ③ 占位：我的情况【】；已确定【】；卡在【】
+           ④ readContext() 读页面真实值；buildPrompt() 拼
+              「我的情况 + 页面状态 + 硬约束 + 固定输出清单」
+           通信段不要改。 -->
       <section class="coach" id="coach"
                data-coach-title="{{卡标题：一个动作，不是「向我提问」}}">
         <div class="coach-head">
