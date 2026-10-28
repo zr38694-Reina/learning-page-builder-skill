@@ -2104,5 +2104,48 @@
     "confusable": "RLHF",
     "diff": "RLHF 让人做偏好判断；RLAIF 让 AI 做偏好判断，成本低，但会放大判断者的偏见。",
     "verify": "看标注说明：偏好标签是人给的，还是模型给的。"
+  },
+  "渐进式披露": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "渐进式披露",
+      "Progressive Disclosure",
+      "progressive disclosure",
+      "按需加载",
+      "分层加载"
+    ],
+    "formal": "渐进式披露（Progressive Disclosure）",
+    "def": "把说明分层放好：AI 先只看一行摘要，任务对上了才读正文，正文点名了才翻附录——用到哪一层，才读哪一层。",
+    "confusable": "一次性塞满提示词",
+    "diff": "一次性塞满会让每次对话都背着全部内容；渐进式披露只在触发时加载，平时只占一行摘要。",
+    "verify": "装十几个 Skill 后打开 /context，看技能这一项占了多少。"
+  },
+  "自定义指令": {
+    "category": "交互",
+    "aliases": [
+      "自定义指令",
+      "custom instructions",
+      "自定义说明",
+      "个性化指令"
+    ],
+    "formal": "自定义指令（Custom Instructions）",
+    "def": "你提前交给 AI 的长期偏好和背景，每次对话自动带上，不必重说；它一直生效，不分场合。",
+    "confusable": "Skill",
+    "diff": "自定义指令一直带着、问什么都生效；Skill 是任务对上了才被调用，只在那件事上生效。",
+    "verify": "在设置里写一条只针对某类任务的偏好，再问一个不相干的问题，看它是不是也被带上了。"
+  },
+  "技能描述": {
+    "category": "Agent 与工具",
+    "aliases": [
+      "技能描述",
+      "Skill 描述",
+      "description",
+      "技能说明"
+    ],
+    "formal": "技能描述（Skill Description）",
+    "def": "写在 Skill 文件头的一两句话，告诉 AI 这个技能做什么、什么时候该用；AI 只凭它决定要不要翻开这本手册。",
+    "confusable": "正文",
+    "diff": "描述是书脊上的一行简介，一直在 AI 眼前；正文要等描述对上之后才被读取。",
+    "verify": "把描述改得含糊，再问一个本该触发它的任务，看 AI 还找不找得到。"
   }
 }
