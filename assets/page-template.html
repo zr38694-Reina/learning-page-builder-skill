@@ -432,7 +432,12 @@ button{font-family:inherit}
               素材从页面当前状态取，无待填空，学员打开即可一键发送
            ④ readContext() 读页面真实值；buildPrompt() 按三行拼：
               「学哪个点 + 页面素材 / 当前状态 + 别扩展 / 反馈 + 兜底」
-           通信段不要改。 -->
+           通信段不要改。
+
+           另一种形态：开放提问卡（三问卡）。当本页目标是让读者继续追问、
+           不考对错时，用三个 .coach-ask 按钮替换本卡，点哪道发哪道；
+           没有选项、没有标准答案、没有提示词预览框。骨架与脚本见
+           references/04-小奈教练接入.md §6.7、references/07 §十。 -->
       <section class="coach" id="coach"
                data-coach-title="{{卡标题：一个动作，不是「向我提问」}}">
         <div class="coach-head">
