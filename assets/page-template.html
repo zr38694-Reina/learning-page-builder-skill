@@ -426,12 +426,12 @@ button{font-family:inherit}
            及两个按钮监听一起删掉。判据见 references/04-小奈教练接入.md §0。
 
            写卡 4 步（完整例子见同文件开篇）：
-           ① 标题：把这页的「概念」换成你的「场景」
-           ② 说明：她先看什么 + 给出什么
-           ③ 提示词框：页面加载时由 buildPrompt() 自动写好 3 行完整指令；
+           ① 标题：先圈本页一个知识点，标题直接写它（例「考我：75% 该不该压缩」）
+           ② 说明：她拿页面上的什么考、只考哪一点
+           ③ 提示词框：页面加载时由 buildPrompt() 自动写好 3 行大白话；
               素材从页面当前状态取，无待填空，学员打开即可一键发送
            ④ readContext() 读页面真实值；buildPrompt() 按三行拼：
-              「任务 + 页面素材 / 页面状态 + 硬约束 / 交付物 + 固定字段」
+              「学哪个点 + 页面素材 / 当前状态 + 别扩展 / 三句反馈」
            通信段不要改。 -->
       <section class="coach" id="coach"
                data-coach-title="{{卡标题：一个动作，不是「向我提问」}}">
@@ -443,7 +443,7 @@ button{font-family:inherit}
           </div>
         </div>
         <label class="coach-label" for="coachInput">{{提示词框标签：发给小奈的提示词（可直接修改）}}</label>
-        <p class="coach-hint" id="coachHint">已按当前页面状态写好 3 行完整版，可直接发送；想换成自己的素材再改。</p>
+        <p class="coach-hint" id="coachHint">已按当前页面状态写好 3 行，可直接发送；想换成自己的素材再改。</p>
         <textarea id="coachInput" rows="5" aria-describedby="coachHint"
                   placeholder="页面打开后这里会自动生成可直接发送的完整提示词"></textarea>
         <div class="coach-actions">
@@ -792,19 +792,19 @@ button{font-family:inherit}
     return out;
   }
 
-  /* —— 拼装指令：固定 3 行（任务 + 页面素材 / 状态 + 边界 / 交付物 + 字段）——
-     返回值即 payload.prompt；素材从 readContext() 取，不留【】待填空。 */
+  /* —— 拼装指令：固定 3 行大白话（学哪个点 + 页面素材 / 当前状态 / 三句反馈）——
+     返回值即 payload.prompt；只练一个知识点，素材从 readContext() 取，不留【】待填空。 */
   function buildPrompt() {
     var c = readContext();
     var first = c.length ? c[0].v : '页面当前状态';
     var rest = c.slice(1).map(function (x) { return x.k + '：' + x.v; }).join('；');
     var state = rest || c.map(function (x) { return x.k + '：' + x.v; }).join('；');
-    return '请用「{{概念名}}」的视角，围绕页面上的「' + first + '」，{{用这个素材做什么}}。\n' +
-      '页面状态：' + state + '；{{1–2 条边界声明，用分号隔开}}。\n' +
-      '先只问一个会改变结论的问题；我回答后，再按「{{交付物名}}：{{字段 1}}｜{{字段 2}}｜{{字段 3}}」给出。';
+    return '我在学这个页面的「{{知识点}}」。请拿页面上的「' + first + '」出一道小题，只考这一点。\n' +
+      '当前' + state + '；{{1 条边界，用大白话}}，也别直接给答案。\n' +
+      '我回答后，用「{{三句话，按原型选}}」回我。';
   }
 
-  /* —— 写好提示词：页面加载 / 装置状态稳定时，把 3 行完整版填进框里 ——
+  /* —— 写好提示词：页面加载 / 装置状态稳定时，把 3 行大白话填进框里 ——
      素材全部来自页面，学员打开即可发送；想改再改。 */
   var promptDirty = false;   /* 学员改过提示词后，装置变化不再覆盖 */
 
@@ -836,7 +836,7 @@ button{font-family:inherit}
 
   $('coachReset').addEventListener('click', resetPrompt);
 
-  /* 页面加载即写好：学员打开卡片时就看到 3 行完整提示词 */
+  /* 页面加载即写好：学员打开卡片时就看到 3 行大白话 */
   refreshPrompt();
 })();
 </script>
