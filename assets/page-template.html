@@ -147,14 +147,17 @@ button{font-family:inherit}
 .coach-title{font-size:var(--fs-lead);font-weight:800;margin:0 0 6px}
 .coach-desc{font-size:var(--fs-sub);line-height:1.7;margin:0;color:var(--muted)}
 .coach-desc b{color:var(--ink)}
-.coach-label{display:block;font-size:var(--fs-note);font-weight:700;color:var(--muted);margin:0 0 8px}
-.coach-hint{font-size:var(--fs-note);color:var(--muted);line-height:1.6;margin:0 0 10px}
-.coach textarea{
-  width:100%;background:var(--card);border:2px solid var(--ink);border-radius:0;color:var(--ink);
-  font:inherit;font-size:var(--fs-body);line-height:1.7;padding:12px 14px;resize:vertical;
+.coach-asks{display:grid;gap:8px;margin:0 0 4px}
+.coach-ask{
+  appearance:none;border:2px solid var(--hairline);border-radius:0;
+  background:var(--card);color:var(--ink);text-align:left;
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;
+  width:100%;font:inherit;padding:14px 16px;cursor:pointer;
+  transition:border-color .18s ease,background .18s ease,transform .18s ease;
 }
-.coach textarea:focus{outline:none;border-color:var(--accent)}
-.coach-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.coach-ask:hover{border-color:var(--accent);background:rgba(var(--accent-rgb),.06);transform:translateY(-2px)}
+.coach-ask .ask-q{font-size:var(--fs-body);font-weight:700;line-height:1.55}
+.coach-ask .ask-hint{font-size:var(--fs-note);color:var(--muted);margin-left:auto}
 .coach-status{font-size:var(--fs-note);color:var(--muted);margin:12px 0 0}
 .coach-status:empty{display:none}
 
@@ -419,42 +422,31 @@ button{font-family:inherit}
       </div>
       <!-- ══════════ /PATTERN SLOT ══════════ -->
 
-      <!-- ══════════ 小奈教练卡（条件块）══════════
+      <!-- ══════════ 小奈三问卡（条件块）══════════
            ⚠ 只有带互动装置的页面才用它，贴在装置正下方。
            本页若是纯知识页（只有阅读内容、没有可玩装置）→ 把这一整块 section.coach
-           连同脚本里的 COACH 复用段、readContext / buildPrompt / refreshPrompt
-           及两个按钮监听一起删掉。判据见 references/04-小奈教练接入.md §0。
+           连同脚本里的 COACH 复用段、buildPrompt 及三个问题按钮监听一起删掉。
+           判据见 references/04-小奈三问卡接入.md §0。
 
-           写卡 4 步（完整例子见同文件开篇）：
-           ① 标题：先圈本页一个知识点，标题直接写它（例「考我：75% 该不该压缩」）
-           ② 说明：她拿页面上的什么考、只考哪一点
-           ③ 提示词框：页面加载时由 buildPrompt() 自动写好 3 行大白话；
-              素材从页面当前状态取，无待填空，学员打开即可一键发送
-           ④ readContext() 读页面真实值；buildPrompt() 按三行拼：
-              「学哪个点 + 页面素材 / 当前状态 + 别扩展 / 反馈 + 兜底」
-           通信段不要改。
-
-           另一种形态：开放提问卡（三问卡）。当本页目标是让读者继续追问、
-           不考对错时，用三个 .coach-ask 按钮替换本卡，点哪道发哪道；
-           没有选项、没有标准答案、没有提示词预览框。骨架与脚本见
-           references/04-小奈教练接入.md §6.7、references/07 §十。 -->
-      <section class="coach" id="coach"
-               data-coach-title="{{卡标题：一个动作，不是「向我提问」}}">
+           写卡 3 步：
+           ① 三道开放问题：机制 / 一个关键细节 / 能力边界各一题（见 references/07）
+           ② 点哪道发哪道：没有选项、没有标准答案、没有提示词预览框
+           ③ 只改 ASKS 与 TOPIC；通信段不要改 -->
+      <section class="coach" id="coach" data-rv style="--d:120ms"
+               data-coach-title="跟小奈聊：挑一个问题问她">
         <div class="coach-head">
           <span class="coach-avatar" aria-hidden="true">奈</span>
           <div>
-            <h3 class="coach-title">{{卡标题}}</h3>
-            <p class="coach-desc">{{她会做什么}}</p>
+            <h3 class="coach-title">跟小奈聊：挑一个问题问她</h3>
+            <p class="coach-desc">点一个发给她，她会用大白话接着你的问题讲。</p>
           </div>
         </div>
-        <label class="coach-label" for="coachInput">{{提示词框标签：发给小奈的提示词（可直接修改）}}</label>
-        <p class="coach-hint" id="coachHint">已按当前页面状态写好 3 行，可直接发送；想换成自己的素材再改。</p>
-        <textarea id="coachInput" rows="5" aria-describedby="coachHint"
-                  placeholder="页面打开后这里会自动生成可直接发送的完整提示词"></textarea>
-        <div class="coach-actions">
-          <button type="button" class="btn ghost small" id="coachReset">重置提示词</button>
-          <button type="button" class="btn blue small" id="coachSubmit">发送给小奈教练</button>
+        <div class="coach-asks">
+          <button type="button" class="coach-ask" data-q="0"><span class="ask-q">{{问题一}}</span><span class="ask-hint">{{线索一}}</span></button>
+          <button type="button" class="coach-ask" data-q="1"><span class="ask-q">{{问题二}}</span><span class="ask-hint">{{线索二}}</span></button>
+          <button type="button" class="coach-ask" data-q="2"><span class="ask-q">{{问题三}}</span><span class="ask-hint">{{线索三}}</span></button>
         </div>
+        <textarea id="coachInput" hidden aria-hidden="true"></textarea>
         <p class="coach-status" id="coachStatus" role="status" aria-live="polite"></p>
       </section>
     </div>
@@ -610,7 +602,6 @@ button{font-family:inherit}
   var REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   function R(ms) { return REDUCED ? 0 : ms; }
   function $(id) { return document.getElementById(id); }
-  function textOf(id) { var el = $(id); return el ? (el.textContent || '').trim() : ''; }
 
   /* ════════════════════════════════════════════════════════════
      页面动效层：入场 + 首屏卡片快门 + 方块带飞入
@@ -720,8 +711,6 @@ button{font-family:inherit}
         chip.classList.add('show');
         $('cB').textContent = k + 1;
         $('cC').textContent = fmt(k + 1);
-        /* 装置状态稳定后，若学员还没改过提示词，自动同步一次 */
-        if (k === chips.length - 1 && typeof refreshPrompt === 'function' && !promptDirty) refreshPrompt();
       }, R(160 * (k + 1))));
     });
   }
@@ -739,8 +728,8 @@ button{font-family:inherit}
 
   /* ════════════════════════════════════════════════════════════
      小奈教练 iframe 通信（复用段：换页时整段照搬，不要改）
-     ⚠ 纯知识页（无装置）→ 本段 + 下面的 readContext / buildPrompt / refreshPrompt
-       以及 coachSubmit / coachReset 两个监听**整段删除**，页面不含任何 postMessage。
+     ⚠ 纯知识页（无装置）→ 本段 + 下面的 buildPrompt
+       以及三个问题按钮的监听**整段删除**，页面不含任何 postMessage。
      ════════════════════════════════════════════════════════════ */
   /* ═══ 小奈教练 iframe 通信：复用代码开始 ═══
      保留 coachStatus 提示元素，调用 sendCoachPrompt(完整提问文字)。
@@ -782,66 +771,32 @@ button{font-family:inherit}
   });
   /* ═══ 小奈教练 iframe 通信：复用代码结束 ═══ */
 
-  /* —— 以下为本页业务：换页时改这几处（见 references/04 §6） —— */
+  /* —— 以下为本页业务：换页时改这三处（见 references/04 §3） —— */
 
-  /* —— 从本页装置读数：只读页面已有文本，不让学员重新打字 —— */
-  function readContext() {
-    var out = [];
-    if (currentIdx >= 0) {
-      out.push({ k: '当前选项', v: ITEMS[currentIdx].label + '：' + ITEMS[currentIdx].text });
-      out.push({ k: '页面上显示的字数', v: textOf('cA') });
-      out.push({ k: '页面上显示的单位数', v: textOf('cB') });
-    } else {
-      out.push({ k: '页面当前状态', v: '学员还没选任何一项' });
-    }
-    return out;
+  /* 三道开放问题：机制 / 一个关键细节 / 能力边界 */
+  var ASKS = [
+    '{{问题一}}',
+    '{{问题二}}',
+    '{{问题三}}'
+  ];
+  var TOPIC = '{{本页学习主题}}';
+
+  /* 只拼「主题 + 问题 + 回答方式」；不塞页面摘要、不判对错 */
+  function buildPrompt(q) {
+    return '我在学「' + TOPIC + '」。\n\n' +
+      '我想问：' + q + '\n\n' +
+      '请用大白话回答：先给一句结论，再举一个例子，别展开成长篇。';
   }
 
-  /* —— 拼装指令：固定 3 行大白话（学哪个点 + 状态 + 素材 + 题面 + 边界 / 反馈 / 兜底）——
-     返回值即 payload.prompt；只练一个知识点，素材从 readContext() 取，不留【】待填空。 */
-  function buildPrompt() {
-    var c = readContext();
-    var first = c.length ? c[0].v : '页面当前状态';
-    var state = c[1] ? c[1].k + '：' + c[1].v : '';
-    return '我在学「{{知识点}}」。' + (state ? state + '，' : '') + '请拿「' + first + '」出一道{{题面}}，先别解释；{{1 条边界，用大白话}}。\n' +
-      '我回答后，你先说我哪里对、哪里偏，再给一句正确说法。\n' +
-      '如果我没答上来，就直接告诉我答案，不要继续追问。';
-  }
-
-  /* —— 写好提示词：页面加载 / 装置状态稳定时，把 3 行大白话填进框里 ——
-     素材全部来自页面，学员打开即可发送；想改再改。 */
-  var promptDirty = false;   /* 学员改过提示词后，装置变化不再覆盖 */
-
-  function refreshPrompt() {
-    $('coachInput').value = buildPrompt();
-    promptDirty = false;
-  }
-
-  function resetPrompt() {
-    refreshPrompt();
-    $('coachInput').focus();
-  }
-
-  $('coachInput').addEventListener('input', function () {
-    promptDirty = true;
+  Array.prototype.forEach.call(document.querySelectorAll('.coach-ask'), function (btn) {
+    btn.addEventListener('click', function () {
+      var q = ASKS[parseInt(btn.getAttribute('data-q'), 10)];
+      if (!q) return;
+      var prompt = buildPrompt(q);
+      $('coachInput').value = prompt;   /* 方便调试；发送不依赖它 */
+      sendCoachPrompt(prompt);
+    });
   });
-
-  $('coachSubmit').addEventListener('click', function () {
-    var input = $('coachInput');
-    var prompt = (input.value || '').trim();
-    if (!prompt) {
-      $('coachStatus').textContent = '提示词为空，请先点「重置提示词」。';
-      input.focus();
-      return;
-    }
-    /* 框里已经是完整提示词：直接发送，不再二次拼装 */
-    sendCoachPrompt(prompt);
-  });
-
-  $('coachReset').addEventListener('click', resetPrompt);
-
-  /* 页面加载即写好：学员打开卡片时就看到 3 行大白话 */
-  refreshPrompt();
 })();
 </script>
 
