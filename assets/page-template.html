@@ -148,6 +148,7 @@ button{font-family:inherit}
 .coach-desc{font-size:var(--fs-sub);line-height:1.7;margin:0;color:var(--muted)}
 .coach-desc b{color:var(--ink)}
 .coach-label{display:block;font-size:var(--fs-note);font-weight:700;color:var(--muted);margin:0 0 8px}
+.coach-hint{font-size:var(--fs-note);color:var(--muted);line-height:1.6;margin:0 0 10px}
 .coach textarea{
   width:100%;background:var(--card);border:2px solid var(--ink);border-radius:0;color:var(--ink);
   font:inherit;font-size:var(--fs-body);line-height:1.7;padding:12px 14px;resize:vertical;
@@ -421,13 +422,14 @@ button{font-family:inherit}
       <!-- ══════════ 小奈教练卡（条件块）══════════
            ⚠ 只有带互动装置的页面才用它，贴在装置正下方。
            本页若是纯知识页（只有阅读内容、没有可玩装置）→ 把这一整块 section.coach
-           连同脚本里的 COACH 复用段、readContext / buildPrompt / bring 及两个按钮监听
-           一起删掉。判据见 references/04-小奈教练接入.md §0。
+           连同脚本里的 COACH 复用段、readContext / buildPrompt / refreshPrompt
+           及两个按钮监听一起删掉。判据见 references/04-小奈教练接入.md §0。
 
            写卡 4 步（完整例子见同文件开篇）：
            ① 标题：把这页的「概念」换成你的「场景」
            ② 说明：她先看什么 + 她不会做什么
-           ③ 占位：我的情况【】；已确定【】；卡在【】
+           ③ 提示词框：页面加载时由 buildPrompt() 自动预填完整指令；
+              学员只需把「我的情况」改成自己的，再一键发送
            ④ readContext() 读页面真实值；buildPrompt() 拼
               「我的情况 + 页面状态 + 硬约束 + 固定输出清单」
            通信段不要改。 -->
@@ -440,11 +442,13 @@ button{font-family:inherit}
             <p class="coach-desc">{{她会做什么}}。<b>{{她不会做什么}}</b></p>
           </div>
         </div>
-        <label class="coach-label" for="coachInput">{{输入框标签}}</label>
-        <textarea id="coachInput" rows="3" placeholder="{{填空骨架优于开放问题}}"></textarea>
+        <label class="coach-label" for="coachInput">{{提示词框标签：发给小奈的提示词（可直接修改）}}</label>
+        <p class="coach-hint" id="coachHint">已按当前页面状态填好；把「我的情况」改成你的，直接发送。</p>
+        <textarea id="coachInput" rows="8" aria-describedby="coachHint"
+                  placeholder="{{无 JS 时的兜底：提示词会在这里自动生成}}"></textarea>
         <div class="coach-actions">
-          <button type="button" class="btn ghost small" id="coachBring">带入当前演示状态</button>
-          <button type="button" class="btn blue small" id="coachSubmit">{{动词 + 结果}}</button>
+          <button type="button" class="btn ghost small" id="coachReset">重置提示词</button>
+          <button type="button" class="btn blue small" id="coachSubmit">发送给小奈教练</button>
         </div>
         <p class="coach-status" id="coachStatus" role="status" aria-live="polite"></p>
       </section>
@@ -711,6 +715,8 @@ button{font-family:inherit}
         chip.classList.add('show');
         $('cB').textContent = k + 1;
         $('cC').textContent = fmt(k + 1);
+        /* 装置状态稳定后，若学员还没改过提示词，自动同步一次 */
+        if (k === chips.length - 1 && typeof refreshPrompt === 'function' && !promptDirty) refreshPrompt();
       }, R(160 * (k + 1))));
     });
   }
@@ -728,8 +734,8 @@ button{font-family:inherit}
 
   /* ════════════════════════════════════════════════════════════
      小奈教练 iframe 通信（复用段：换页时整段照搬，不要改）
-     ⚠ 纯知识页（无装置）→ 本段 + 下面的 readContext / buildPrompt / bring
-       以及 coachSubmit / coachBring 两个监听**整段删除**，页面不含任何 postMessage。
+     ⚠ 纯知识页（无装置）→ 本段 + 下面的 readContext / buildPrompt / refreshPrompt
+       以及 coachSubmit / coachReset 两个监听**整段删除**，页面不含任何 postMessage。
      ════════════════════════════════════════════════════════════ */
   /* ═══ 小奈教练 iframe 通信：复用代码开始 ═══
      保留 coachStatus 提示元素，调用 sendCoachPrompt(完整提问文字)。
@@ -777,7 +783,7 @@ button{font-family:inherit}
   function readContext() {
     var out = [];
     if (currentIdx >= 0) {
-      out.push({ k: '带入的当前选项', v: ITEMS[currentIdx].label + '：' + ITEMS[currentIdx].text });
+      out.push({ k: '当前选项', v: ITEMS[currentIdx].label + '：' + ITEMS[currentIdx].text });
       out.push({ k: '页面上显示的字数', v: textOf('cA') });
       out.push({ k: '页面上显示的单位数', v: textOf('cB') });
     } else {
@@ -791,34 +797,47 @@ button{font-family:inherit}
   function buildPrompt(text) {
     var state = readContext().map(function (c) { return c.k + '：' + c.v; }).join('；');
     return '请用本页「{{概念名}}」的视角，帮我处理下面这件事。\n\n' +
-      '我的情况：' + (text || '（学员未填写，可先从页面状态开始）') + '\n' +
+      '我的情况：' + (text || '【在这里补一句你的情况；不填也可以直接发送】') + '\n' +
       '页面演示状态：' + state + '\n\n' +
       '【硬约束】{{这一页的近似值/边界声明，例如：不同模型的分词器与费率不同，' +
       '不要声称页面上的数字适用于所有模型；精确值应以官方口径核对。}}\n\n' +
       '先只问一个会改变结论的问题；我回答后，再按{{固定输出清单}}给出方案。';
   }
 
-  /* —— 带入现场：一键把页面状态填进输入框 —— */
-  function bring() {
-    if (currentIdx < 0) {
-      $('coachInput').value = '我想用这个页面的方法看看我自己的情况：';
-      return;
-    }
-    $('coachInput').value = ITEMS[currentIdx].text;
+  /* —— 预填提示词：页面加载 / 装置状态稳定时，把完整提问填进框里 ——
+     学员只需要改「我的情况」，然后一键发送。 */
+  var promptDirty = false;   /* 学员改过提示词后，装置变化不再覆盖 */
+
+  function refreshPrompt() {
+    $('coachInput').value = buildPrompt('');
+    promptDirty = false;
+  }
+
+  function resetPrompt() {
+    refreshPrompt();
     $('coachInput').focus();
   }
 
+  $('coachInput').addEventListener('input', function () {
+    promptDirty = true;
+  });
+
   $('coachSubmit').addEventListener('click', function () {
     var input = $('coachInput');
-    var text = (input.value || '').trim();
-    if (!text) {
-      $('coachStatus').textContent = '请先填写内容。';
+    var prompt = (input.value || '').trim();
+    if (!prompt) {
+      $('coachStatus').textContent = '提示词为空，请先补一句你的情况。';
       input.focus();
       return;
     }
-    sendCoachPrompt(buildPrompt(text));
+    /* 框里已经是完整提示词：直接发送，不再二次拼装 */
+    sendCoachPrompt(prompt);
   });
-  $('coachBring').addEventListener('click', bring);
+
+  $('coachReset').addEventListener('click', resetPrompt);
+
+  /* 页面加载即预填：学员打开卡片时就看到完整提示词 */
+  refreshPrompt();
 })();
 </script>
 
