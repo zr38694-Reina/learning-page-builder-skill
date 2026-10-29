@@ -431,7 +431,7 @@ button{font-family:inherit}
            ③ 提示词框：页面加载时由 buildPrompt() 自动写好 3 行大白话；
               素材从页面当前状态取，无待填空，学员打开即可一键发送
            ④ readContext() 读页面真实值；buildPrompt() 按三行拼：
-              「学哪个点 + 页面素材 / 当前状态 + 别扩展 / 三句反馈」
+              「学哪个点 + 页面素材 / 当前状态 + 别扩展 / 反馈 + 兜底」
            通信段不要改。 -->
       <section class="coach" id="coach"
                data-coach-title="{{卡标题：一个动作，不是「向我提问」}}">
@@ -792,16 +792,15 @@ button{font-family:inherit}
     return out;
   }
 
-  /* —— 拼装指令：固定 3 行大白话（学哪个点 + 页面素材 / 当前状态 / 三句反馈）——
+  /* —— 拼装指令：固定 3 行大白话（学哪个点 + 状态 + 素材 + 题面 + 边界 / 反馈 / 兜底）——
      返回值即 payload.prompt；只练一个知识点，素材从 readContext() 取，不留【】待填空。 */
   function buildPrompt() {
     var c = readContext();
     var first = c.length ? c[0].v : '页面当前状态';
-    var rest = c.slice(1).map(function (x) { return x.k + '：' + x.v; }).join('；');
-    var state = rest || c.map(function (x) { return x.k + '：' + x.v; }).join('；');
-    return '我在学这个页面的「{{知识点}}」。请拿页面上的「' + first + '」出一道小题，只考这一点。\n' +
-      '当前' + state + '；{{1 条边界，用大白话}}，也别直接给答案。\n' +
-      '我回答后，用「{{三句话，按原型选}}」回我。';
+    var state = c[1] ? c[1].k + '：' + c[1].v : '';
+    return '我在学「{{知识点}}」。' + (state ? state + '，' : '') + '请拿「' + first + '」出一道{{题面}}，先别解释；{{1 条边界，用大白话}}。\n' +
+      '我回答后，你先说我哪里对、哪里偏，再给一句正确说法。\n' +
+      '如果我没答上来，就直接告诉我答案，不要继续追问。';
   }
 
   /* —— 写好提示词：页面加载 / 装置状态稳定时，把 3 行大白话填进框里 ——
