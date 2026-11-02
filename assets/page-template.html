@@ -88,7 +88,47 @@ button{font-family:inherit}
 .hero-sub{font-size:clamp(18px,1.5vw,20px);line-height:1.6;margin:0 0 clamp(22px,3vw,34px);max-width:30em}
 .hero-copy{display:flex;flex-direction:column;align-items:flex-start}
 .hero-answer{width:100%}
-.hero-answer .statement{font-size:clamp(19px,1.65vw,23px);line-height:1.55;max-width:34em}
+/* ── 一句话回答：三层递进（结论 → 原因 → 出路）──
+   三层不是三段排版，是三种内容：第 1 层给结论，第 2 层讲为什么会这样，
+   第 3 层给出路。每层一条竖线 + 一枚圆角标签，字号 / 竖线色 / 标签色逐层递减，
+   错峰入场 0 / 90 / 180ms。第 3 层默认做成「两栏对照」：左边是常见做法，
+   右边是本页主张的做法（右栏薄荷底）。内容只有一条出路时，
+   去掉 .fix-cmp / .fix-col，直接放一个 <p> 即可。 ── */
+.hero-answer .statement{
+  --f-wash:#f7fbf9; --f-line:#d7e6e0; --f-line-soft:#e6f1ec;
+  --f-ink:#22403a; --f-muted:#7d918b; --f-teal:#2fae95; --f-sky:#4b9fe3;
+  --f-tint-teal:#eaf8f4; --f-tint-sky:#eef6fd; --f-note:#f2f6f4;
+  font-size:var(--fs-body);line-height:1.65;max-width:36em;font-weight:500 }
+@media (prefers-color-scheme:dark){
+  html:not([data-theme="light"]) .hero-answer .statement{
+    --f-wash:#151d25; --f-line:#2e3d47; --f-line-soft:#23303a;
+    --f-ink:#e7f0ed; --f-muted:#96a8a3; --f-teal:#5fd0b6; --f-sky:#7cb8ee;
+    --f-tint-teal:#15302a; --f-tint-sky:#17283a; --f-note:#1d252e;
+  }
+}
+[data-theme="dark"] .hero-answer .statement{
+  --f-wash:#151d25; --f-line:#2e3d47; --f-line-soft:#23303a;
+  --f-ink:#e7f0ed; --f-muted:#96a8a3; --f-teal:#5fd0b6; --f-sky:#7cb8ee;
+  --f-tint-teal:#15302a; --f-tint-sky:#17283a; --f-note:#1d252e;
+}
+.ans-stack{ display:flex;flex-direction:column;gap:clamp(15px,1.8vw,22px) }
+.ans-layer{ padding-left:clamp(13px,1.3vw,17px);border-left:3px solid var(--f-line) }
+.ans-tag{ display:inline-block;font-size:var(--fs-note);font-weight:700;letter-spacing:.02em;
+  border-radius:999px;padding:3px 10px;margin:0 0 7px;border:1px solid var(--f-line-soft) }
+.ans-layer p{ margin:0 }
+.ans-lead{ border-left-color:var(--f-teal) }
+.ans-lead .ans-tag{ color:var(--f-teal);background:var(--f-tint-teal) }
+.ans-lead p{ font-size:clamp(20px,1.8vw,26px);line-height:1.5;font-weight:700;letter-spacing:-.01em;color:var(--ink) }
+.ans-why{ border-left-color:var(--f-sky) }
+.ans-why .ans-tag{ color:var(--f-sky);background:var(--f-tint-sky) }
+.ans-why p{ font-size:var(--fs-body);line-height:1.72;color:var(--ink) }
+.ans-fix .ans-tag{ color:var(--f-muted);background:var(--f-note) }
+.fix-cmp{ display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:10px }
+.fix-col{ background:var(--f-wash);border:1px solid var(--f-line-soft);border-radius:14px;padding:11px 13px }
+.fix-hd{ display:block;font-size:var(--fs-note);font-weight:700;margin-bottom:4px;color:var(--f-muted) }
+.fix-col p{ font-size:var(--fs-sub);line-height:1.62;color:var(--f-ink) }
+.fix-skill{ background:var(--f-tint-teal);border-color:var(--f-line) }
+.fix-skill .fix-hd{ color:var(--f-teal) }
 .hero-copy .hero-cta{margin:clamp(20px,2.7vw,30px) 0 0}
 .hero-credit{margin:clamp(20px,3vw,34px) 0 0;font-size:var(--fs-note);line-height:1.65;color:var(--muted);max-width:32em}
 
@@ -182,14 +222,6 @@ html.js .anim-verdict[hidden]{display:none}
 }
 .coach-copy:hover{border-color:var(--accent);background:rgba(var(--accent-rgb),.06)}
 
-/* ── 诚实提醒：两栏连续阅读 ── */
-.edge{padding:var(--gap-sec) 0 0}
-.edge-grid{display:grid;grid-template-columns:1fr;gap:clamp(20px,3.4vw,48px);align-items:start}
-.qa2{columns:2;column-gap:clamp(24px,3.4vw,48px);font-size:var(--fs-body);line-height:1.65}
-.qa2 p{margin:0 0 18px;break-inside:avoid}
-.qa2 b{font-weight:800}
-@media (max-width:1000px){.qa2{columns:1}}
-
 /* ── 知识卡片：首屏右侧的概念清单（本页 AI 概念全收，常见 3–5 条；纯文字 + 方块项目符号）── */
 .ai-facts{background:var(--surface);padding:clamp(18px,2.4vw,30px)}
 .facts-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:clamp(14px,1.8vw,22px)}
@@ -227,10 +259,21 @@ html.js .anim-verdict[hidden]{display:none}
 .note li:last-child{border-bottom:0;padding-bottom:0}
 .note li::before{content:'';position:absolute;left:0;top:20px;width:9px;height:9px;background:var(--ink)}
 .note li b{font-weight:800}
+/* ── 知识总结：先划清边界（提醒段）→ 再带走 4 句 ──
+   提醒段用灰色字 + 空心方块，带走段保持黑字 + 实心方块，
+   两段之间用一行 .note-next 小标题隔开（前缀短横线）。 ── */
+.note .note-edge{margin:0}
+.note .note-edge li{color:var(--muted)}
+.note .note-edge li::before{background:transparent;box-shadow:inset 0 0 0 2px var(--ink)}
+.note-next{margin:20px 0 4px;font-size:var(--fs-note);font-weight:800;letter-spacing:.02em;color:var(--ink)}
+.note-next::before{content:'';display:inline-block;width:16px;height:3px;background:var(--ink);margin-right:8px;vertical-align:middle}
 .nw{white-space:nowrap}
 @media (min-width:900px){
   .note ul{display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(24px,3vw,44px)}
-  .note li:nth-last-child(-n+2){border-bottom:0;padding-bottom:0}
+  /* 带走段两列并排省一屏；提醒段保持单列顺读——3 条挤两列会剩一条孤行 */
+  .note .note-edge{grid-template-columns:1fr}
+  .note ul:not(.note-edge) li:nth-last-child(-n+2){border-bottom:0;padding-bottom:0}
+  .note .note-edge li:last-child{border-bottom:0;padding-bottom:0}
 }
 
 /* ── 页脚：奈势 AI 品牌标识 + 唯一一句声明 ── */
@@ -273,7 +316,6 @@ html.js .anim-verdict[hidden]{display:none}
   .return-plate{margin-bottom:0}
 }
 @media (max-width:700px){
-  .qa2{columns:1}
   .return-plate{margin-bottom:0}
   .counters{grid-template-columns:1fr}
   .counter{display:flex;align-items:baseline;justify-content:space-between;gap:12px;text-align:left;padding:12px 14px}
@@ -295,7 +337,10 @@ html.js .anim-verdict[hidden]{display:none}
        H1 必须是一个真问句：展示 AI 核心知识点 · 口语 · 主体 6–14 字（双问句 ≤20 字）。
        起名法见 references/03-页面骨架与文案.md §二。
       副标题放在 H1 下方、两栏之上；一句话回答固定在左栏，右栏是同层的知识卡片。
-      一句话回答先按单段在 1280px 桌面试排：超过两行就按语义拆成 2–3 个 <p>（红线 13）。
+      一句话回答固定做成**三层递进**：① 结论（一句话回答）② 原因（为什么会这样）
+      ③ 出路（两栏对照：常见做法 vs 本页主张的做法）。三层各带一枚圆角标签，
+      错峰入场 0 / 90 / 180ms；标签文案可自拟，但第 1 层固定写「一句话回答」。
+      每层的正文仍守「平均 ≤25 字、超 35 字就拆」与「一段 ≤3 句」（红线 13）。
       行内小图 .inline-thumb 绑在词后（<span class="nb">词<svg…></svg></span>），放 1–3 张。
       右侧是「知识卡片」：把**本页出现的 AI 概念**都写上（常见 3–5 条，数量不限），
       每条「概念名：1–2 句定义 + 一句类比/边界」，定义取自 scripts/ai_concepts.json。
@@ -309,10 +354,32 @@ html.js .anim-verdict[hidden]{display:none}
       <div class="hero-row">
         <div class="hero-copy">
           <div class="hero-answer">
-            <div class="statement" data-rv>
-              <p><b>一句话回答</b>　{{第 1 段：先用人话解释标题里的术语，再给定义。关键名词后面可以像这样嵌小图：<span class="nb">关键词<svg class="inline-thumb" viewBox="0 0 580 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意图：一个小方块连向一个大方块"><rect width="580" height="400" fill="#f6f7f9"/><rect x="90" y="150" width="100" height="100" fill="#111"/><path d="M210 200H330" stroke="#111" stroke-width="14"/><path d="M330 176L366 200L330 224Z" fill="#111"/><rect x="386" y="130" width="140" height="140" fill="#1a4be0"/></svg></span>}}</p>
-              <p>{{第 2 段：机制或类比——短答删掉本段，长答保留}}</p>
-              <p>{{第 3 段：后果或边界——短答删掉本段，长答保留}}</p>
+            <div class="statement ans-stack" data-rv>
+              <!-- 第 1 层 · 结论：定义 + 类比 + 后果，加粗 3 处。
+                   标题里带 AI 术语时，第一句先用人话解释它（§4.1）。 -->
+              <div class="ans-layer ans-lead" data-rv style="--d:0ms">
+                <span class="ans-tag">一句话回答</span>
+                <p><b>{{结论：定义 + 类比 + 后果}}。关键名词后面可以像这样嵌小图：<span class="nb">关键词<svg class="inline-thumb" viewBox="0 0 580 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意图：一个小方块连向一个大方块"><rect width="580" height="400" fill="#f6f7f9"/><rect x="90" y="150" width="100" height="100" fill="#111"/><path d="M210 200H330" stroke="#111" stroke-width="14"/><path d="M330 176L366 200L330 224Z" fill="#111"/><rect x="386" y="130" width="140" height="140" fill="#1a4be0"/></svg></span></b></p>
+              </div>
+              <!-- 第 2 层 · 原因：为什么会这样，一段讲完 -->
+              <div class="ans-layer ans-why" data-rv style="--d:90ms">
+                <span class="ans-tag">{{第 2 层标签：它为什么… · 6–10 字}}</span>
+                <p>{{原因：机制或类比，讲清「为什么会这样」}}</p>
+              </div>
+              <!-- 第 3 层 · 出路：默认两栏对照，右栏是本页主张的做法 -->
+              <div class="ans-layer ans-fix" data-rv style="--d:180ms">
+                <span class="ans-tag">{{第 3 层标签：想留住，就两条路 · 6–10 字}}</span>
+                <div class="fix-cmp">
+                  <div class="fix-col fix-mem">
+                    <span class="fix-hd">{{对照 A 小标题：常见做法}}</span>
+                    <p>{{对照 A：多数人怎么做，代价是什么}}</p>
+                  </div>
+                  <div class="fix-col fix-skill">
+                    <span class="fix-hd">{{对照 B 小标题：本页主张的做法}}</span>
+                    <p>{{对照 B：它好在哪，落到什么具体动作}}</p>
+                </div>
+                </div>
+              </div>
             </div>
           </div>
           <p class="hero-cta"><button type="button" class="btn blue" id="goDemo">{{开始播放：动画名}}</button></p>
@@ -437,25 +504,23 @@ html.js .anim-verdict[hidden]{display:none}
     </div>
   </section>
 
-  <!-- ══ 诚实提醒：误区 + 软肋，两栏连续阅读 ══
+  <!-- ══ 知识总结：先划清边界，再带走 4 句（收在全页最后）══
+       两块内容合在一张便签里：上半段是「诚实提醒」3 条（灰字 + 空心方块，
+       见 §六），下半段是 takeaway 恰好 4 条（黑字 + 实心方块，见 §五），
+       中间用一行 .note-next 小标题隔开。
+       为什么不拆成两块：读者走到这里已经读完，再开一块新模块会打断收尾节奏；
+       而且两块都是「临走前的话」，拆开就变成两个尾部了。
        不放链接、不写「下一站」（红线 9 / references/01 §2.3）。 -->
-  <section class="edge">
-    <div class="shell edge-grid">
-      <h2 class="sec-h" data-rv>{{诚实提醒标题}}</h2>
-      <div class="qa2" data-rv style="--d:80ms">
-        <p><b>{{误区澄清}}</b>{{说明}}</p>
-        <p><b>{{主动给软肋}}</b>{{说明}}</p>
-        <p><b>{{给使用边界（不下链接）}}</b>{{说明}}</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ takeaway：便签（恰好 4 条，顺序固定，收在全页最后）══
-       是什么 → 代价/边界 → 误区 → 我能做什么；句式「加粗结论：一句人话」。 -->
   <section class="take">
     <div class="shell">
       <div class="note" data-rv>
-        <h2 class="sec-h">这一页，带走 4 件事</h2>
+        <h2 class="sec-h">知识总结</h2>
+        <ul class="note-edge">
+          <li><b>{{误区澄清}}</b>{{说明}}</li>
+          <li><b>{{主动给软肋}}</b>{{说明}}</li>
+          <li><b>{{给使用边界（不下链接）}}</b>{{说明}}</li>
+        </ul>
+        <p class="note-next">{{中间小标题：这四句记下来就行}}</p>
         <ul>
           <li><b>{{是什么}}</b>：{{一句人话}}</li>
           <li><b>{{代价 / 边界}}</b>：{{…}}</li>
