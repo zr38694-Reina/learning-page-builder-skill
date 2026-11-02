@@ -160,6 +160,12 @@ button{font-family:inherit}
 .coach-ask .ask-hint{font-size:var(--fs-note);color:var(--muted);margin-left:auto}
 .coach-status{font-size:var(--fs-note);color:var(--muted);margin:12px 0 0}
 .coach-status:empty{display:none}
+.coach-copy{
+  appearance:none;border:2px solid var(--hairline);border-radius:0;background:var(--card);
+  color:var(--ink);font:inherit;font-size:var(--fs-note);padding:8px 12px;margin-top:8px;cursor:pointer;
+  transition:border-color .18s ease,background .18s ease;
+}
+.coach-copy:hover{border-color:var(--accent);background:rgba(var(--accent-rgb),.06)}
 
 /* ── 原理：一条方块带（散 → 收 → 齐）＋ 三栏说明 ── */
 .how{padding:var(--gap-sec) 0 0}
@@ -320,7 +326,9 @@ button{font-family:inherit}
 </style>
 </head>
 
-<body data-page-id="{{PAGE_ID}}">
+<!-- data-coach-origin 可选：填宿主 origin（如 https://host.example）可收紧 postMessage；
+     留空则退回 '*'，只适合本地预览。详见 references/04 §2.5。 -->
+<body data-page-id="{{PAGE_ID}}" data-coach-origin="">
 <main>
 
   <!-- ══ 首屏：H1 之下左栏「一句话回答」＋右栏「知识卡片」══
@@ -428,10 +436,12 @@ button{font-family:inherit}
            连同脚本里的 COACH 复用段、buildPrompt 及三个问题按钮监听一起删掉。
            判据见 references/04-小奈三问卡接入.md §0。
 
-           写卡 3 步：
+           写卡 4 步：
            ① 三道开放问题：机制 / 一个关键细节 / 能力边界各一题（见 references/07）
            ② 点哪道发哪道：没有选项、没有标准答案、没有提示词预览框
-           ③ 只改 ASKS 与 TOPIC；通信段不要改 -->
+           ③ 只改 ASKS 与 TOPIC；通信段不要改
+           ④ 生产环境在 <body data-coach-origin="..."> 指定宿主 origin；留空退回 '*'，只适合本地预览
+              （也可用 ?hostOrigin=https://host.example 覆盖） -->
       <section class="coach" id="coach" data-rv style="--d:120ms"
                data-coach-title="跟小奈聊：挑一个问题问她">
         <div class="coach-head">
@@ -733,42 +743,146 @@ button{font-family:inherit}
      ════════════════════════════════════════════════════════════ */
   /* ═══ 小奈教练 iframe 通信：复用代码开始 ═══
      保留 coachStatus 提示元素，调用 sendCoachPrompt(完整提问文字)。
-     宿主须已启用接收监听。已知宿主 origin 时可替换下方的 '*'。
+     生产环境在 <body data-coach-origin="https://宿主域名"> 或 ?hostOrigin=... 指定宿主；
+     不指定时退回 '*'，只适合本地预览。发送带 requestId；8 秒无 ack 时给「复制问题」兜底。
+     可选握手：页面发 coach:hello，宿主回 coach:ready；不回也不阻塞发送。
   */
   var COACH = {
     source: 'learning-page',
     hostSource: 'xiaonai',
-    targetOrigin: '*',        /* 生产可收紧为宿主域名 */
-    inIframe: window.parent !== window
+    hostOrigin: (function () {
+      var fromQuery = '';
+      try {
+        fromQuery = new URLSearchParams(window.location.search).get('hostOrigin') || '';
+      } catch (e) { /* 老浏览器忽略 */ }
+      return document.body.getAttribute('data-coach-origin') || fromQuery || '';
+    })(),
+    targetOrigin: '*',
+    inIframe: window.parent !== window,
+    seq: 0,
+    pending: null,
+    ready: false,
+    timeoutMs: 8000
   };
+  COACH.targetOrigin = COACH.hostOrigin || '*';
+
+  function setCoachStatus(text) {
+    var el = $('coachStatus');
+    if (el) el.textContent = text;
+  }
+
+  function clearCopyFallback() {
+    var old = document.getElementById('coachCopy');
+    if (old && old.parentNode) old.parentNode.removeChild(old);
+  }
+
+  function copyCoachPrompt(prompt) {
+    function fallbackCopy() {
+      var ok = false;
+      var ta = document.createElement('textarea');
+      ta.value = prompt;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      setCoachStatus(ok ? '问题已复制。可以到小奈对话里粘贴。' : '复制失败，请手动选中问题复制。');
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(prompt).then(function () {
+        setCoachStatus('问题已复制。可以到小奈对话里粘贴。');
+      }, fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
+  }
+
+  function showCopyFallback(prompt) {
+    clearCopyFallback();
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.id = 'coachCopy';
+    btn.className = 'coach-copy';
+    btn.textContent = '复制问题';
+    btn.addEventListener('click', function () { copyCoachPrompt(prompt); });
+    var status = $('coachStatus');
+    if (status && status.parentNode) status.parentNode.insertBefore(btn, status.nextSibling);
+  }
 
   function sendCoachPrompt(prompt) {
-    var status = $('coachStatus');
+    clearCopyFallback();
     if (!COACH.inIframe) {
-      status.textContent = '请在支持小奈教练的宿主页面中打开此学习页。';
+      setCoachStatus('请在支持小奈教练的宿主页面中打开此学习页。');
+      showCopyFallback(prompt);
       return;
     }
-    status.textContent = '正在交给小奈教练…';
+    if (COACH.pending) {
+      clearTimeout(COACH.pending.timer);
+      COACH.pending = null;
+    }
+    var requestId = 'coach-' + (++COACH.seq);
+    COACH.pending = { id: requestId, timer: null };
+    setCoachStatus('正在交给小奈教练…');
     try {
       window.parent.postMessage({
         source: COACH.source,
         type: 'coach:send',
         v: 1,
+        requestId: requestId,
         payload: { prompt: prompt }
       }, COACH.targetOrigin);
-    } catch (e) { /* 跨域等异常忽略 */ }
+    } catch (e) {
+      COACH.pending = null;
+      setCoachStatus('发送失败。可以复制问题，到小奈对话里粘贴。');
+      showCopyFallback(prompt);
+      return;
+    }
+    COACH.pending.timer = setTimeout(function () {
+      if (!COACH.pending || COACH.pending.id !== requestId) return;
+      setCoachStatus('宿主 8 秒内没有响应。可以复制问题，到小奈对话里粘贴。');
+      showCopyFallback(prompt);
+    }, COACH.timeoutMs);
   }
 
-  /* —— 宿主 → 页面：只认 coach:ack —— */
+  function acceptCoachAck(d) {
+    var pending = COACH.pending;
+    if (!pending) return;
+    if (d.requestId && d.requestId !== pending.id) return;  /* 回执对不上，忽略 */
+    clearTimeout(pending.timer);
+    COACH.pending = null;
+    clearCopyFallback();
+    setCoachStatus('已交给小奈教练，请查看对话。');
+  }
+
+  /* —— 宿主 → 页面：只认 coach:ack / coach:ready —— */
   window.addEventListener('message', function (ev) {
     if (ev.source !== window.parent) return;              /* 只收父窗口 */
+    if (COACH.hostOrigin && ev.origin !== COACH.hostOrigin) return; /* 配置了 origin 就收紧 */
     var d = ev.data;
     if (!d || typeof d !== 'object') return;
     if (d.source !== COACH.hostSource) return;            /* 不认的发送方一律忽略 */
-    if (d.type !== 'coach:ack' || d.v !== 1) return;
+    if (d.v !== 1) return;
 
-    $('coachStatus').textContent = '已交给小奈教练，请查看对话。';
+    if (d.type === 'coach:ready') {
+      COACH.ready = true;
+      setCoachStatus('已连接小奈教练。');
+      return;
+    }
+    if (d.type === 'coach:ack') acceptCoachAck(d);
   });
+
+  /* 可选握手：宿主实现 coach:ready 时提前确认；不实现也不阻塞发送。 */
+  if (COACH.inIframe) {
+    try {
+      window.parent.postMessage({
+        source: COACH.source,
+        type: 'coach:hello',
+        v: 1
+      }, COACH.targetOrigin);
+    } catch (e) { /* 忽略 */ }
+  }
   /* ═══ 小奈教练 iframe 通信：复用代码结束 ═══ */
 
   /* —— 以下为本页业务：换页时改这三处（见 references/04 §3） —— */
