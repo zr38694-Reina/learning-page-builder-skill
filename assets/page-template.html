@@ -102,7 +102,7 @@ button{font-family:inherit}
 @media (max-width:600px){.nb{white-space:normal}}
 @media (min-width:601px){.statement{text-wrap:balance}}
 
-/* ── 装置外壳（各题型共用）── */
+/* ── 可播放动画流程外壳 ── */
 .demo-sec{padding:var(--gap-sec) 0 0}
 .demo{background:var(--surface);padding:clamp(18px,2.6vw,32px)}
 .demo-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;font-size:var(--fs-sub);font-weight:800;margin-bottom:clamp(12px,2vw,20px)}
@@ -137,7 +137,22 @@ button{font-family:inherit}
 .counter .k{font-size:var(--fs-note);color:var(--muted);margin-top:6px}
 .demo-note{margin:16px 0 0;font-size:var(--fs-note);color:var(--muted);line-height:1.7;max-width:52em}
 
-/* ── 小奈三问卡（有装置的页面才配）── */
+/* ── 可播放动画流程：逐拍出现，每拍自带字幕 ── */
+.anim-stage{display:grid;gap:10px;margin:4px 0 16px}
+.anim-step{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:var(--card);border:1.5px solid var(--hairline);padding:12px 14px}
+.anim-step .anim-node{width:30px;height:30px;line-height:30px;text-align:center;background:var(--ink);color:var(--bg);font-weight:800;font-size:var(--fs-note)}
+.anim-step b{display:block;font-size:var(--fs-body);margin-bottom:2px}
+.anim-step p{margin:0;font-size:var(--fs-table);line-height:1.7;color:var(--muted)}
+.anim-step.hot{border-color:var(--accent);background:var(--accent-soft)}
+.anim-verdict{margin-top:4px;padding:12px 14px;background:var(--ink);color:var(--bg);font-weight:800;font-size:var(--fs-body);line-height:1.7}
+html.js .anim-step{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .5s ease}
+html.js .anim-step.show{opacity:1;transform:none}
+html.js .anim-verdict[hidden]{display:none}
+@media (prefers-reduced-motion:reduce){
+  .anim-step{transition:none!important;transform:none!important;opacity:1!important}
+}
+
+/* ── 小奈三问卡（有可播放动画流程的页面才配）── */
 .coach{margin-top:clamp(20px,3vw,34px);background:var(--surface);padding:clamp(18px,2.6vw,30px)}
 .coach-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px}
 .coach-avatar{
@@ -166,60 +181,6 @@ button{font-family:inherit}
   transition:border-color .18s ease,background .18s ease;
 }
 .coach-copy:hover{border-color:var(--accent);background:rgba(var(--accent-rgb),.06)}
-
-/* ── 原理：一条方块带（散 → 收 → 齐）＋ 三栏说明 ── */
-.how{padding:var(--gap-sec) 0 0}
-.how-head{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(18px,3vw,44px);align-items:end;margin-bottom:clamp(22px,3.4vw,40px)}
-.how-head .lead{margin:0}
-.flow{display:block;width:100%;height:auto;margin:0 auto clamp(22px,3vw,38px)}
-.flow rect{fill:var(--diagram-1)}
-.flow rect.pale2{fill:var(--diagram-2)}
-.flow rect.band{fill:var(--ink)}
-.flow rect.order{fill:var(--accent)}
-.how-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:clamp(18px,3vw,44px)}
-.how-cols h3{font-size:var(--fs-lead);font-weight:800;margin:0 0 8px}
-.how-cols p{font-size:var(--fs-table);line-height:1.7;margin:0;max-width:26em}
-
-/* ── 生活化举例（可选块：整页不加时，这段 CSS 可留可删）──
-   三拍小剧场（贴近 → 卡住 → 换法），场景图一次性入场 ──
-   位置固定在「原理」之后、「诚实提醒」之前；每页都要有，写法见 references/03 §十二。 */
-.life{padding:var(--gap-sec) 0 0}
-.life-head{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(18px,3vw,44px);align-items:end;margin-bottom:clamp(22px,3.4vw,40px)}
-.life-head .lead{margin:0}
-.life-anim{margin:0}
-.life-scene{display:block;width:100%;height:auto;margin:0 auto clamp(20px,3vw,36px)}
-.life-scene text{font-family:var(--font);fill:var(--ink);text-anchor:middle}
-.life-scene .ls-panel{fill:var(--surface);stroke:var(--ink);stroke-width:3}
-.life-scene .ls-card{fill:var(--card);stroke:var(--ink);stroke-width:3}
-.life-scene .ls-ink{fill:var(--ink)}
-.life-scene .ls-box{fill:var(--diagram-1)}
-.life-scene .ls-box2{fill:var(--diagram-2)}
-.life-scene .ls-core{fill:var(--accent)}
-.life-scene .ls-cap{font-size:30px;font-weight:800}
-.life-scene .ls-lab{font-size:22px;fill:var(--muted)}
-.life-scene .ls-stamp{font-size:92px;font-weight:800}
-.life-scene .ls-fail{fill:var(--ink)}
-.life-scene .ls-ok{fill:var(--accent)}
-.life-beats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:clamp(18px,3vw,44px)}
-.life-beats h3{font-size:var(--fs-lead);font-weight:800;margin:0 0 8px}
-.life-beats .life-n{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;background:var(--ink);color:var(--bg);font-size:var(--fs-note);margin-right:8px}
-.life-beats p{margin:0;font-size:var(--fs-table);line-height:1.7;max-width:26em}
-.life-map{position:relative;margin:clamp(20px,3vw,32px) 0 0;padding-left:26px;font-size:var(--fs-body);line-height:1.7;max-width:58em}
-.life-map::before{content:'';position:absolute;left:0;top:.62em;width:9px;height:9px;background:var(--accent)}
-.life-map b{font-weight:800}
-@media (max-width:600px){
-  .life-scene .ls-cap,.life-scene .ls-lab{display:none}
-}
-@media (prefers-reduced-motion: no-preference){
-  html.js .life-scene .la-cap,html.js .life-scene .la-row,html.js .life-scene .la-item,
-  html.js .life-scene .la-stamp,html.js .life-scene .la-chunk,html.js .life-scene .la-core,
-  html.js .life-scene .la-out{opacity:0;transition:opacity .5s ease,transform .7s cubic-bezier(.2,.8,.2,1);transition-delay:var(--ld,0ms)}
-  html.js .life-scene .la-cap,html.js .life-scene .la-row{transform:translateY(10px)}
-  html.js .life-scene .la-item,html.js .life-scene .la-chunk{transform:translateX(-28px)}
-  html.js .life-scene .la-core{transform:translateY(14px)}
-  html.js .life-scene .la-stamp,html.js .life-scene .la-out{transform:translateY(12px)}
-  html.js .life-anim.in :is(.la-cap,.la-row,.la-item,.la-stamp,.la-chunk,.la-core,.la-out){opacity:1;transform:none}
-}
 
 /* ── 诚实提醒：两栏连续阅读 ── */
 .edge{padding:var(--gap-sec) 0 0}
@@ -301,8 +262,6 @@ button{font-family:inherit}
   html.js [data-rv]{opacity:0;transform:translateY(20px)}
   html.js [data-rv].in{opacity:1;transform:none;transition:opacity .55s ease,transform .7s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0ms)}
   html.js .ai-facts{clip-path:inset(0 0 0 100%);animation:shutter 1.1s cubic-bezier(.2,.8,.2,1) .08s forwards}
-  html.js .flow rect{opacity:0;transform:translate(var(--dx,0px),var(--dy,0px));transition:opacity .5s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
-  html.js .flow.in rect{opacity:1;transform:translate(0,0)}
 }
 @keyframes shutter{to{clip-path:inset(0 0 0 0)}}
 @media (prefers-reduced-motion:reduce){
@@ -356,7 +315,7 @@ button{font-family:inherit}
               <p>{{第 3 段：后果或边界——短答删掉本段，长答保留}}</p>
             </div>
           </div>
-          <p class="hero-cta"><button type="button" class="btn blue" id="goDemo">{{开始动手：装置名}}</button></p>
+          <p class="hero-cta"><button type="button" class="btn blue" id="goDemo">{{开始播放：动画名}}</button></p>
         </div>
         <aside class="ai-facts" aria-labelledby="factsTitle">
           <div class="facts-head">
@@ -402,38 +361,53 @@ button{font-family:inherit}
     </div>
   </header>
 
-  <!-- ══ 装置（在原理之前）＋ 小奈三问卡 ══
-       装置实现按题型取 assets/patterns/ 里对应的那份，整块替换下面的示例。
-       示例是「点选 + 计数器」（最常用题型）；换题型时 HTML 块与脚本里的装置段一起换。 -->
+  <!-- ══ 可播放动画流程（核心块）＋ 小奈三问卡 ══
+       动画实现按叙事结构取 assets/patterns/06 / 14 / 15 的骨架，整块替换下面的示例。
+       要求：每拍有字幕 / 标注；播放 / 暂停 / ↻ 再看一遍；进入视野自动播一次；可打断。
+       不再另放原理 / 清单卡，也不再放生活化举例。 -->
   <section class="demo-sec">
     <div class="shell">
-      <h2 class="sec-h" data-rv>{{装置的祈使句标题，如「亲手切一句话」}}</h2>
-      <p class="lead" data-rv style="--d:80ms">{{一句引导：告诉读者点什么 / 拖什么，会看到什么}}</p>
+      <h2 class="sec-h" data-rv>{{动画标题：一句祈使句，如「点播放，看这句话怎么变成回答」}}</h2>
+      <p class="lead" data-rv style="--d:80ms">{{一句引导：点播放，你会看到哪几步；每一步说明了什么}}</p>
 
-      <!-- ══════════ PATTERN SLOT：把 assets/patterns/ 里选定的装置粘在这里 ══════════ -->
+      <!-- ══════════ PATTERN SLOT：把 assets/patterns/06 / 14 / 15 的动画骨架粘在这里 ══════════ -->
       <div class="demo" id="demo">
         <div class="demo-head">
-          <span>{{装置名}}</span>
-          <span class="prog" id="demoProgress">{{进度 / 提示}}</span>
+          <span>{{动画名}}</span>
+          <span class="prog" id="animProgress" role="status" aria-live="polite">准备播放</span>
         </div>
 
-        <!-- ↓↓↓ 本示例为「点选 + 计数器」，替换时整块换掉 ↓↓↓ -->
-        <div class="pick-list" id="pickList" role="group" aria-label="选择一句话"></div>
-        <div class="stage" id="stage"><span class="demo-hint" id="stageHint">点上面任意一句，看它被切成一颗颗单位</span></div>
-        <div class="counters">
-          <div class="counter"><div class="n" id="cA" aria-live="polite">0</div><div class="k">{{计数器 1 名称}}</div></div>
-          <div class="counter"><div class="n" id="cB" aria-live="polite">0</div><div class="k">{{计数器 2 名称}}</div></div>
-          <div class="counter"><div class="n" id="cC" aria-live="polite">0</div><div class="k">{{计数器 3 名称}}</div></div>
+        <div class="anim-stage" id="animStage" aria-live="polite">
+          <div class="anim-step" data-hold="900">
+            <div class="anim-node">1</div>
+            <div><b>{{第 1 拍标题：输入}}</b><p>{{第 1 拍字幕：这一步发生了什么，为什么重要。}}</p></div>
+          </div>
+          <div class="anim-step" data-hold="700">
+            <div class="anim-node">2</div>
+            <div><b>{{第 2 拍标题：处理}}</b><p>{{第 2 拍字幕：中间发生了什么变化；把机制解释写在这里。}}</p></div>
+          </div>
+          <div class="anim-step hot" data-hold="1200">
+            <div class="anim-node">3</div>
+            <div><b>{{第 3 拍标题：代价 / 后果}}</b><p>{{第 3 拍字幕：最关键的一步；代价帧放慢，让读者看清。}}</p></div>
+          </div>
+          <div class="anim-step" data-hold="500">
+            <div class="anim-node">4</div>
+            <div><b>{{第 4 拍标题：结果}}</b><p>{{第 4 拍字幕：最后得到什么；用一句话收住。}}</p></div>
+          </div>
+          <div class="anim-verdict" id="animVerdict" hidden>{{收尾判词：所以呢？把「看到了什么」翻译成「所以怎样」。}}</div>
         </div>
-        <p class="demo-note">{{数据来源声明 + 近似值声明。例：切分为 <b>真实数据</b>（GPT-4o 家族 o200k 词表实测）；
-          费率为<b>演示值</b>，只用来感受量级，换别的模型会不同。}}</p>
-        <!-- ↑↑↑ 示例结束 ↑↑↑ -->
+
+        <div class="btn-row">
+          <button type="button" class="btn blue" id="animPlay" aria-label="播放动画">▶ 播放</button>
+        </div>
+
+        <p class="demo-note">{{数据来源 / 近似值声明：这个数不是你的数；例：演示费率为教学值，不对应某个产品的真实输出。}}</p>
       </div>
       <!-- ══════════ /PATTERN SLOT ══════════ -->
 
       <!-- ══════════ 小奈三问卡（条件块）══════════
-           ⚠ 只有带互动装置的页面才用它，贴在装置正下方。
-           本页若是纯知识页（只有阅读内容、没有可玩装置）→ 把这一整块 section.coach
+           ⚠ 只有带可播放动画流程的页面才用它，贴在动画正下方。
+           本页若是纯知识页（只有阅读内容、没有动画）→ 把这一整块 section.coach
            连同脚本里的 COACH 复用段、buildPrompt 及三个问题按钮监听一起删掉。
            判据见 references/04-小奈三问卡接入.md §0。
 
@@ -460,95 +434,6 @@ button{font-family:inherit}
         <textarea id="coachInput" hidden aria-hidden="true"></textarea>
         <p class="coach-status" id="coachStatus" role="status" aria-live="polite"></p>
       </section>
-    </div>
-  </section>
-
-  <!-- ══ 原理：一条方块带（散 → 收 → 齐）＋ 三栏说明 ══
-       .flow 是方块母题的第二次出现；脚本自动生成三段方块（左散 / 中带 / 右阵）。
-       改成别的图解时，替换 #flowSvg 的 aria-label 与脚本里的「方块带」生成段。 -->
-  <section class="how">
-    <div class="shell">
-      <div class="how-head">
-        <h2 class="sec-h" data-rv>{{原理标题}}</h2>
-        <p class="lead" data-rv style="--d:80ms">{{一句引导：这张图从左到右在讲什么}}</p>
-      </div>
-      <svg class="flow" id="flowSvg" viewBox="0 0 1200 320" role="img" aria-label="示意图：{{左边散落、中间收成一条带、右边排成方阵}}" data-rv></svg>
-      <div class="how-cols">
-        <div data-rv><h3>{{卡 1}}</h3><p>{{…}}</p></div>
-        <div data-rv style="--d:90ms"><h3>{{卡 2}}</h3><p>{{…}}</p></div>
-        <div data-rv style="--d:180ms"><h3>{{卡 3}}</h3><p>{{…}}</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ 生活化举例（可选块：没有合适场景就整段删 · 加了才放在原理之后、诚实提醒之前）══
-       可选：只有这页有一个具体、家常、能三拍讲清原理的场景才加；没有就整段删除（含 section.life；
-       相关 CSS 可留可删），不要硬编一个鸡汤。
-       三拍小剧场：贴近 → 卡住 → 换法；收尾必须有一句「场景 → 本页术语」的映射（.life-map）。
-       故事只讲一个原理：三拍各优先 1 句、整块 60–100 字；人物用姓名或普通身份，不写「你爸 / 你妈」。
-       场景图沿用「两格对照」骨架（左格照老办法翻车 / 右格换新办法成功）；
-       图形与标签按内容重画，但保持：方块母题、✓✗ 结论符号、la-* 入场动画类名与一次性播完的时序。
-       写法与好例坏例见 references/03-页面骨架与文案.md §十二。 -->
-  <section class="life">
-    <div class="shell">
-      <div class="life-head">
-        <h2 class="sec-h" data-rv>{{生活化举例标题，如：AI小故事：小林认猫记；人物用姓名或普通身份，不写「你爸 / 你妈」}}</h2>
-        <p class="lead" data-rv style="--d:80ms">{{一句引导：写……看着靠谱，遇到没见过的就会翻车；翻车之后换的那个办法，就是本页的原理}}</p>
-      </div>
-      <figure class="life-anim" data-rv style="--d:120ms">
-        <svg class="life-scene" viewBox="0 0 1200 440" role="img" aria-label="示意图：{{左格照老办法翻车；右格换成看例子之后一眼认出}}">
-          <!-- 左格：照老办法（翻车） -->
-          <rect class="ls-panel" x="36" y="36" width="540" height="368"/>
-          <text class="ls-cap la-cap" style="--ld:100ms" x="306" y="84" text-anchor="middle">{{左格小标题，≤6 字}}</text>
-          <rect class="ls-card" x="72" y="112" width="140" height="216"/>
-          <g class="la-row ls-ink" style="--ld:200ms"><rect x="88" y="136" width="14" height="14"/><rect x="112" y="139" width="84" height="8"/></g>
-          <g class="la-row ls-ink" style="--ld:300ms"><rect x="88" y="184" width="14" height="14"/><rect x="112" y="187" width="84" height="8"/></g>
-          <g class="la-row ls-ink" style="--ld:400ms"><rect x="88" y="232" width="14" height="14"/><rect x="112" y="235" width="84" height="8"/></g>
-          <g class="la-row ls-ink" style="--ld:500ms"><rect x="88" y="280" width="14" height="14"/><rect x="112" y="283" width="84" height="8"/></g>
-          <g class="la-item" style="--ld:640ms">
-            <rect class="ls-box" x="268" y="128" width="64" height="64"/>
-            <rect class="ls-box2" x="272" y="116" width="14" height="14"/>
-            <rect class="ls-box2" x="318" y="116" width="14" height="14"/>
-            <rect class="ls-box2" x="332" y="172" width="14" height="14"/>
-            <text class="ls-lab" x="302" y="230" text-anchor="middle">{{物件一，≤5 字}}</text>
-          </g>
-          <g class="la-stamp" style="--ld:900ms"><text class="ls-stamp ls-fail" x="452" y="196" text-anchor="middle">✗</text></g>
-          <g class="la-item" style="--ld:1180ms">
-            <rect class="ls-box" x="286" y="252" width="40" height="40"/>
-            <rect class="ls-box2" x="288" y="240" width="14" height="14"/>
-            <rect class="ls-box2" x="310" y="240" width="14" height="14"/>
-            <rect class="ls-box" x="268" y="292" width="64" height="46"/>
-            <rect class="ls-ink" x="244" y="268" width="36" height="6"/>
-            <rect class="ls-ink" x="244" y="284" width="36" height="6"/>
-            <rect class="ls-ink" x="330" y="268" width="36" height="6"/>
-            <rect class="ls-ink" x="330" y="284" width="36" height="6"/>
-            <rect class="ls-box2" x="334" y="306" width="14" height="14"/>
-            <text class="ls-lab" x="302" y="372" text-anchor="middle">{{物件二，≤5 字}}</text>
-          </g>
-          <g class="la-stamp" style="--ld:1420ms"><text class="ls-stamp ls-fail" x="452" y="318" text-anchor="middle">✗</text></g>
-          <!-- 右格：换新办法（成功） -->
-          <rect class="ls-panel" x="624" y="36" width="540" height="368"/>
-          <text class="ls-cap la-cap" style="--ld:760ms" x="894" y="84" text-anchor="middle">{{右格小标题，≤6 字}}</text>
-          <text class="ls-lab la-cap" style="--ld:940ms" x="790" y="164" text-anchor="middle">{{例子的量词短语}}</text>
-          <rect class="ls-core la-core" style="--ld:1120ms" x="944" y="104" width="150" height="150"/>
-          <rect class="la-chunk ls-box" style="--ld:1360ms" x="664" y="196" width="30" height="30"/>
-          <rect class="la-chunk ls-box2" style="--ld:1480ms" x="712" y="178" width="26" height="26"/>
-          <rect class="la-chunk ls-box" style="--ld:1600ms" x="756" y="210" width="28" height="28"/>
-          <rect class="la-chunk ls-box2" style="--ld:1720ms" x="802" y="182" width="30" height="30"/>
-          <rect class="la-chunk ls-box" style="--ld:1840ms" x="846" y="206" width="26" height="26"/>
-          <rect class="la-chunk ls-box2" style="--ld:1960ms" x="890" y="186" width="28" height="28"/>
-          <g class="la-out" style="--ld:2220ms">
-            <text class="ls-stamp ls-ok" x="1019" y="352" text-anchor="middle">✓</text>
-            <text class="ls-lab" x="1019" y="398" text-anchor="middle">{{结果，≤5 字}}</text>
-          </g>
-        </svg>
-      </figure>
-      <div class="life-beats">
-        <div data-rv><h3><span class="life-n">1</span>{{第一拍：贴近}}</h3><p>{{场景开头：人物 + 具体物件或数字，一句到两句。}}</p></div>
-        <div data-rv style="--d:90ms"><h3><span class="life-n">2</span>{{第二拍：卡住}}</h3><p>{{翻车瞬间：老办法在哪儿对不上，具体到某个东西、某个数字。}}</p></div>
-        <div data-rv style="--d:180ms"><h3><span class="life-n">3</span>{{第三拍：换法}}</h3><p>{{改变发生：换了什么，结果怎么不一样。}}</p></div>
-      </div>
-      <p class="life-map" data-rv><b>{{场景元素 → 本页术语}}</b>：{{一句映射：场景里的两样东西分别对应正文哪个词；要点着本页的具体内容，别写成通用鸡汤。}}</p>
     </div>
   </section>
 
@@ -633,8 +518,8 @@ button{font-family:inherit}
     reveal.forEach(function (el) { io.observe(el); });
   }
 
-  /* 首屏 / 页脚两个按钮：把读者带到装置 / 教练卡。
-     纯知识页（无装置）→ 删掉对应按钮后，这两行监听也一起删。 */
+  /* 首屏 / 页脚两个按钮：把读者带到动画 / 教练卡。
+     纯知识页（无动画）→ 删掉对应按钮后，这两行监听也一起删。 */
   function jump(id) {
     var el = $(id);
     if (el && el.scrollIntoView) el.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
@@ -645,103 +530,98 @@ button{font-family:inherit}
   if (goCoach) goCoach.addEventListener('click', function () { jump('coach'); });
 
   /* ════════════════════════════════════════════════════════════
-     方块带（原理图解）：散（左）→ 收成一条带（中）→ 整齐方阵（右）
-     三段的位置 / 数量 / 节奏都可按内容改；整块不需要时删掉本段与 HTML 里的 #flowSvg。
+     可播放动画流程（示例实现：逐拍播放 + 字幕 + 暂停 / 重播）
+     换叙事结构时整段替换；动画数据必须内联硬编码。
      ════════════════════════════════════════════════════════════ */
-  (function () {
-    var svg = $('flowSvg');
-    if (!svg || svg.dataset.built) return;
-    var NS = 'http://www.w3.org/2000/svg';
-    var seed = 20261020;
-    function rnd() { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
-    function block(x, y, s, cls, delay, dx, dy) {
-      var r = document.createElementNS(NS, 'rect');
-      r.setAttribute('x', x.toFixed(1)); r.setAttribute('y', y.toFixed(1));
-      r.setAttribute('width', s.toFixed(1)); r.setAttribute('height', s.toFixed(1));
-      if (cls) r.setAttribute('class', cls);
-      if (delay != null) r.style.transitionDelay = delay + 'ms';
-      if (dx != null) r.style.setProperty('--dx', dx + 'px');
-      if (dy != null) r.style.setProperty('--dy', dy + 'px');
-      svg.appendChild(r);
-    }
-    var i, r, c;
-    /* 左：散落的小方块（两个淡灰层次） */
-    for (i = 0; i < 60; i++) block(8 + rnd() * 348, 12 + rnd() * 292, 10 + rnd() * 6, rnd() > .5 ? 'pale' : 'pale2', Math.round(rnd() * 240));
-    /* 中：收成一条密实的带 */
-    for (r = 0; r < 3; r++) for (c = 0; c < 10; c++) block(430 + c * 30, 128 + r * 30, 26, 'band', Math.round(120 + c * 14), Math.round(rnd() * 280 - 140), Math.round(rnd() * 130 - 65));
-    /* 右：排成整齐方阵 */
-    for (r = 0; r < 5; r++) for (c = 0; c < 8; c++) block(830 + c * 46, 42 + r * 46, 34, 'order', Math.round(250 + (c + r) * 10));
-    svg.dataset.built = '1';
-  })();
+  var animSteps = Array.prototype.slice.call(document.querySelectorAll('#animStage .anim-step'));
+  var animVerdict = $('animVerdict');
+  var animPlay = $('animPlay');
+  var animProgress = $('animProgress');
+  var animTimers = [];
+  var animState = 'idle';   /* idle | playing | paused | ended */
+  var animIndex = 0;        /* 下一个要出现的步骤下标 */
 
-  /* ════════════════════════════════════════════════════════════
-     装置：点选 + 计数器（示例实现，换题型时整段替换）
-     ════════════════════════════════════════════════════════════ */
-  var RATE_PER_K = 2;   /* 演示费率：每千单位约 2 厘 */
+  function clearAnimTimers() { animTimers.forEach(clearTimeout); animTimers = []; }
 
-  /* 演示数据必须内联硬编码。真数据标来源，近似值标用途。 */
-  var ITEMS = [
-    { label: '中文短句',  text: '今天天气真不错',      units: ['今','天天','气','真','不错'] },
-    { label: '中文长句',  text: '麻烦帮我把这份会议纪要整理成三条重点',
-      units: ['麻','烦','帮','我','把','这','份','会议','纪','要','整理','成','三','条','重点'] },
-    { label: '英文句',    text: 'The weather is nice today',
-      units: ['The',' weather',' is',' nice',' today'] }
-  ];
-
-  var timers = [];
-  var buttons = [];
-  var currentIdx = -1;
-
-  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
-  function fmt(n) { return '≈ ' + (n * RATE_PER_K / 1000).toFixed(3) + ' 厘'; }
-
-  function play(i) {
-    clearTimers();
-    currentIdx = i;
-    buttons.forEach(function (b, k) {
-      b.classList.toggle('on', k === i);
-      b.setAttribute('aria-pressed', k === i ? 'true' : 'false');
-    });
-
-    var it = ITEMS[i];
-    $('cA').textContent = it.text.length;
-    $('cB').textContent = '0';
-    $('cC').textContent = fmt(0);
-    $('stageHint') && ($('stageHint').hidden = true);
-
-    var stage = $('stage');
-    stage.innerHTML = it.units.map(function () {
-      return '<span class="unit"></span>';
-    }).join('');
-    /* 用 textContent 填内容，避免任何注入 */
-    stage.querySelectorAll('.unit').forEach(function (el, k) {
-      el.textContent = it.units[k];
-    });
-
-    var chips = stage.querySelectorAll('.unit');
-    chips.forEach(function (chip, k) {
-      timers.push(setTimeout(function () {
-        chip.classList.add('show');
-        $('cB').textContent = k + 1;
-        $('cC').textContent = fmt(k + 1);
-      }, R(160 * (k + 1))));
-    });
+  function setAnimButton(text, label) {
+    animPlay.textContent = text;
+    animPlay.setAttribute('aria-label', label || text);
   }
 
-  ITEMS.forEach(function (it, i) {
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'pick';
-    b.textContent = it.label + '：' + it.text;
-    b.setAttribute('aria-pressed', 'false');
-    b.addEventListener('click', function () { play(i); });
-    $('pickList').appendChild(b);
-    buttons.push(b);
-  });
+  function showStep(i) {
+    if (i < 0 || i >= animSteps.length) return;
+    animSteps[i].classList.add('show');
+    animProgress.textContent = '第 ' + (i + 1) + ' / ' + animSteps.length + ' 拍';
+  }
+
+  function showAllSteps() {
+    clearAnimTimers();
+    animSteps.forEach(function (s) { s.classList.add('show'); });
+    animVerdict.hidden = false;
+    animProgress.textContent = '播放完毕';
+    animState = 'ended';
+    setAnimButton('↻ 再看一遍', '再看一遍动画');
+  }
+
+  function resetAnim() {
+    clearAnimTimers();
+    animSteps.forEach(function (s) { s.classList.remove('show'); });
+    animVerdict.hidden = true;
+    animIndex = 0;
+    animProgress.textContent = '准备播放';
+    animState = 'idle';
+    setAnimButton('▶ 播放', '播放动画');
+  }
+
+  function scheduleNext() {
+    if (animIndex >= animSteps.length) { showAllSteps(); return; }
+    var step = animSteps[animIndex];
+    var hold = parseInt(step.getAttribute('data-hold'), 10) || 550;
+    animTimers.push(setTimeout(function () {
+      showStep(animIndex);
+      animIndex++;
+      scheduleNext();
+    }, R(hold)));
+  }
+
+  function playAnim() {
+    if (animState === 'ended') resetAnim();
+    if (animState === 'playing') {
+      clearAnimTimers();
+      animState = 'paused';
+      setAnimButton('▶ 继续', '继续播放动画');
+      return;
+    }
+    if (animState === 'idle' || animState === 'paused') {
+      animState = 'playing';
+      setAnimButton('⏸ 暂停', '暂停动画');
+      scheduleNext();
+    }
+  }
+
+  animPlay.addEventListener('click', playAnim);
+
+  if (REDUCED) {
+    showAllSteps();                       /* 动效敏感：直接显示终态 */
+  } else if (!window.IntersectionObserver) {
+    playAnim();                           /* 没有 IO：退化为加载即播 */
+  } else {
+    var animPlayed = false;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting && !animPlayed) {
+          animPlayed = true;
+          io.disconnect();
+          playAnim();
+        }
+      });
+    }, { threshold: 0.35 });
+    io.observe($('demo'));
+  }
 
   /* ════════════════════════════════════════════════════════════
      小奈教练 iframe 通信（复用段：换页时整段照搬，不要改）
-     ⚠ 纯知识页（无装置）→ 本段 + 下面的 buildPrompt
+     ⚠ 纯知识页（无动画）→ 本段 + 下面的 buildPrompt
        以及三个问题按钮的监听**整段删除**，页面不含任何 postMessage。
      ════════════════════════════════════════════════════════════ */
   /* ═══ 小奈教练 iframe 通信：复用代码开始 ═══
