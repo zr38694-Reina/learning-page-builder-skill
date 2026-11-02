@@ -180,7 +180,8 @@ button{font-family:inherit}
 .how-cols h3{font-size:var(--fs-lead);font-weight:800;margin:0 0 8px}
 .how-cols p{font-size:var(--fs-table);line-height:1.7;margin:0;max-width:26em}
 
-/* ── 生活化举例：三拍小剧场（贴近 → 卡住 → 换法），场景图一次性入场 ──
+/* ── 生活化举例（可选块：整页不加时，这段 CSS 可留可删）──
+   三拍小剧场（贴近 → 卡住 → 换法），场景图一次性入场 ──
    位置固定在「原理」之后、「诚实提醒」之前；每页都要有，写法见 references/03 §十二。 */
 .life{padding:var(--gap-sec) 0 0}
 .life-head{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(18px,3vw,44px);align-items:end;margin-bottom:clamp(22px,3.4vw,40px)}
@@ -480,7 +481,9 @@ button{font-family:inherit}
     </div>
   </section>
 
-  <!-- ══ 生活化举例（每页都有 · 位置固定在原理之后、诚实提醒之前）══
+  <!-- ══ 生活化举例（可选块：没有合适场景就整段删 · 加了才放在原理之后、诚实提醒之前）══
+       可选：只有这页有一个具体、家常、能三拍讲清原理的场景才加；没有就整段删除（含 section.life；
+       相关 CSS 可留可删），不要硬编一个鸡汤。
        三拍小剧场：贴近 → 卡住 → 换法；收尾必须有一句「场景 → 本页术语」的映射（.life-map）。
        故事只讲一个原理：三拍各优先 1 句、整块 60–100 字；人物用姓名或普通身份，不写「你爸 / 你妈」。
        场景图沿用「两格对照」骨架（左格照老办法翻车 / 右格换新办法成功）；
