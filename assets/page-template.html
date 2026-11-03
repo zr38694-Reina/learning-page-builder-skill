@@ -189,7 +189,7 @@ button{font-family:inherit}
 .anim-step{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:var(--card);border:1.5px solid var(--hairline);padding:12px 14px;border-radius:var(--r-sm)}
 .anim-step>div{min-width:0}
 .anim-step .anim-node{width:30px;height:30px;line-height:30px;text-align:center;background:var(--ink);color:var(--bg);font-weight:800;font-size:var(--fs-note);border-radius:8px}
-.anim-step b{display:block;font-size:var(--fs-body);margin-bottom:2px}
+.anim-step>div>b{display:block;font-size:var(--fs-body);margin-bottom:2px}  /* 只断直接子级；引用块里的 b 要留 inline，见 references/09 坑 6 */
 .anim-step p{margin:0;font-size:var(--fs-table);line-height:1.7;color:var(--muted)}
 .anim-step.hot{border-color:var(--accent);background:rgba(var(--accent-rgb),.09)}
 html.js .anim-stage{gap:0}
