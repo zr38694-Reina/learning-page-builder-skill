@@ -259,18 +259,16 @@ html.js .anim-verdict[hidden]{display:none}
 .note li:last-child{border-bottom:0;padding-bottom:0}
 .note li::before{content:'';position:absolute;left:0;top:20px;width:9px;height:9px;background:var(--ink)}
 .note li b{font-weight:800}
-/* ── 知识总结：先划清边界（提醒段）→ 再带走 4 句 ──
-   提醒段用灰色字 + 空心方块，带走段保持黑字 + 实心方块，
-   两段之间用一行 .note-next 小标题隔开（前缀短横线）。 ── */
-.note .note-edge{margin:0}
+/* ── 知识总结：先带走 4 句 → 再用 2 条边界收尾 ──
+   上段黑字 + 实心方块，下段灰字 + 空心方块，
+   两段之间只留 18px 留白，不写小标题（旧 .note-next 已废）。 ── */
+.note .note-edge{margin:18px 0 0}
 .note .note-edge li{color:var(--muted)}
 .note .note-edge li::before{background:transparent;box-shadow:inset 0 0 0 2px var(--ink)}
-.note-next{margin:20px 0 4px;font-size:var(--fs-note);font-weight:800;letter-spacing:.02em;color:var(--ink)}
-.note-next::before{content:'';display:inline-block;width:16px;height:3px;background:var(--ink);margin-right:8px;vertical-align:middle}
 .nw{white-space:nowrap}
 @media (min-width:900px){
   .note ul{display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(24px,3vw,44px)}
-  /* 带走段两列并排省一屏；提醒段保持单列顺读——3 条挤两列会剩一条孤行 */
+  /* 带走段两列并排省一屏；边界段 2 条保持单列顺读，收尾更稳 */
   .note .note-edge{grid-template-columns:1fr}
   .note ul:not(.note-edge) li:nth-last-child(-n+2){border-bottom:0;padding-bottom:0}
   .note .note-edge li:last-child{border-bottom:0;padding-bottom:0}
@@ -504,10 +502,9 @@ html.js .anim-verdict[hidden]{display:none}
     </div>
   </section>
 
-  <!-- ══ 知识总结：先划清边界，再带走 4 句（收在全页最后）══
-       两块内容合在一张便签里：上半段是「诚实提醒」3 条（灰字 + 空心方块，
-       见 §六），下半段是 takeaway 恰好 4 条（黑字 + 实心方块，见 §五），
-       中间用一行 .note-next 小标题隔开。
+  <!-- ══ 知识总结：先带走 4 句，再用 2 条边界收尾（收在全页最后）══
+       一张便签两段：上段是 takeaway 恰好 4 条（黑字 + 实心方块，见 §五），
+       下段是 2 条边界（灰字 + 空心方块），两段之间只留 18px 留白、不写小标题。
        为什么不拆成两块：读者走到这里已经读完，再开一块新模块会打断收尾节奏；
        而且两块都是「临走前的话」，拆开就变成两个尾部了。
        不放链接、不写「下一站」（红线 9 / references/01 §2.3）。 -->
@@ -515,17 +512,15 @@ html.js .anim-verdict[hidden]{display:none}
     <div class="shell">
       <div class="note" data-rv>
         <h2 class="sec-h">知识总结</h2>
-        <ul class="note-edge">
-          <li><b>{{误区澄清}}</b>{{说明}}</li>
-          <li><b>{{主动给软肋}}</b>{{说明}}</li>
-          <li><b>{{给使用边界（不下链接）}}</b>{{说明}}</li>
-        </ul>
-        <p class="note-next">{{中间小标题：这四句记下来就行}}</p>
         <ul>
           <li><b>{{是什么}}</b>：{{一句人话}}</li>
           <li><b>{{代价 / 边界}}</b>：{{…}}</li>
           <li><b>{{常见误区}}</b>：{{…}}</li>
           <li><b>{{我能做什么}}</b>：{{一条今天就能用的动作}}</li>
+        </ul>
+        <ul class="note-edge">
+          <li><b>{{它只是其中一层}}</b>：{{别把整段推理都算在它头上}}</li>
+          <li><b>{{本页不讲什么}}</b>：{{那是另一件事，这里不展开}}</li>
         </ul>
       </div>
     </div>
