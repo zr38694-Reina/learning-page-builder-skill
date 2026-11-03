@@ -23,6 +23,14 @@
   --hairline:#e6e6e6;
   --diagram-1:#d9d9d9; --diagram-2:#c2c2c2;
   --note-bg:#efefef; --note-line:#ffffff;
+  /* 卡片五色：同一色相按明度分层（06 §1.2），变量名不带颜色名 */
+  --c1:#1a4be0; --c1-rgb:26,75,224;
+  --c2:#12348f; --c2-rgb:18,52,143;
+  --c3:#3f6ea8; --c3-rgb:63,110,168;
+  --c4:#6b7280; --c4-rgb:107,114,128;
+  --c5:#111111; --c5-rgb:17,17,17;
+  /* 圆角只从这几档取（06 §1.1）：外大内小 14 → 10 → 8 */
+  --r-card:14px; --r-sm:10px; --r-ctl:12px; --r-chip:8px; --r-thumb:6px;
   --fs-hero:clamp(38px,6.4vw,96px);
   --fs-h2:clamp(26px,3.2vw,44px);
   --fs-statement:clamp(23px,2.4vw,32px);
@@ -43,6 +51,11 @@
     --hairline:#2a3242;
     --diagram-1:#2b3444; --diagram-2:#3b4760;
     --note-bg:#1a1f2a; --note-line:#0f131b;
+    --c1:#7d97ff; --c1-rgb:125,151,255;
+    --c2:#5b7cff; --c2-rgb:91,124,255;
+    --c3:#8fa9d8; --c3-rgb:143,169,216;
+    --c4:#b6c0d1; --c4-rgb:182,192,209;
+    --c5:#dbe2ec; --c5-rgb:219,226,236;
   }
 }
 [data-theme="dark"]{
@@ -53,6 +66,11 @@
   --hairline:#2a3242;
   --diagram-1:#2b3444; --diagram-2:#3b4760;
   --note-bg:#1a1f2a; --note-line:#0f131b;
+  --c1:#7d97ff; --c1-rgb:125,151,255;
+  --c2:#5b7cff; --c2-rgb:91,124,255;
+  --c3:#8fa9d8; --c3-rgb:143,169,216;
+  --c4:#b6c0d1; --c4-rgb:182,192,209;
+  --c5:#dbe2ec; --c5-rgb:219,226,236;
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -72,7 +90,7 @@ button{font-family:inherit}
 .sec-h{font-size:var(--fs-h2);line-height:1.08;letter-spacing:-.02em;font-weight:800;margin:0 0 clamp(12px,1.6vw,18px);max-width:22ch}
 .lead{font-size:var(--fs-lead);color:var(--ink);line-height:1.6;margin:0 0 clamp(20px,3vw,32px);max-width:30em}
 .btn{
-  appearance:none;border:0;border-radius:0;background:var(--ink);color:var(--bg);
+  appearance:none;border:0;border-radius:var(--r-ctl);background:var(--ink);color:var(--bg);
   font:inherit;font-weight:700;font-size:var(--fs-body);padding:14px 22px;min-height:52px;
   cursor:pointer;transition:transform .18s ease,background .18s ease,color .18s ease;
 }
@@ -88,9 +106,7 @@ button{font-family:inherit}
 .hero .shell{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;
   padding-top:clamp(26px,4.6vw,62px);padding-bottom:clamp(22px,3vw,40px)}
 .hero h1{font-size:var(--fs-hero);line-height:1.02;letter-spacing:-.025em;font-weight:800;margin:0 0 clamp(18px,2.6vw,34px);max-width:9.6em}
-.hero-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(22px,3.6vw,56px);align-items:start}
 .hero-sub{font-size:clamp(18px,1.5vw,20px);line-height:1.6;margin:0 0 clamp(22px,3vw,34px);max-width:36em}
-.hero-copy{display:flex;flex-direction:column;align-items:flex-start}
 .hero-answer{width:100%}
 /* ── 一句话回答：三层递进（结论 → 原因 → 出路）──
    三层不是三段排版，是三种内容：第 1 层给结论，第 2 层讲为什么会这样，
@@ -115,7 +131,10 @@ button{font-family:inherit}
   --f-ink:#e6ecf6; --f-muted:#98a2b3; --f-c1:#7d97ff; --f-c2:#8fa9d8;
   --f-tint1:#1a2742; --f-tint2:#1a2231; --f-note:#1e2531;
 }
-.ans-stack{ display:flex;flex-direction:column;gap:clamp(15px,1.8vw,22px) }
+.ans-stack{ display:grid;gap:clamp(18px,2.2vw,26px);align-items:start }
+@media (min-width:1000px){
+  .ans-stack{ grid-template-columns:repeat(3,1fr);gap:clamp(24px,2.8vw,44px) }
+}
 .ans-layer{ padding-left:clamp(13px,1.3vw,17px);border-left:3px solid var(--f-line) }
 .ans-tag{ display:inline-block;font-size:var(--fs-note);font-weight:700;letter-spacing:.02em;
   border-radius:999px;padding:3px 10px;margin:0 0 7px;border:1px solid var(--f-line-soft) }
@@ -133,11 +152,12 @@ button{font-family:inherit}
 .fix-col p{ font-size:var(--fs-sub);line-height:1.62;color:var(--f-ink) }
 .fix-skill{ background:var(--f-tint1);border-color:var(--f-line) }
 .fix-skill .fix-hd{ color:var(--f-c1) }
-.hero-copy .hero-cta{margin:clamp(20px,2.7vw,30px) 0 0}
+.hero-cta{margin:clamp(20px,2.7vw,30px) 0 0}
 .hero-credit{margin:clamp(20px,3vw,34px) 0 0;font-size:var(--fs-note);line-height:1.65;color:var(--muted);max-width:32em}
 
 /* ── 一句话回答：大字陈述 + 行内小图（全页唯一一处配图位，1–3 张）── */
 .statement{font-size:var(--fs-statement);line-height:1.32;letter-spacing:-.01em;font-weight:700;margin:0;max-width:34em}
+@media (min-width:1000px){.hero-answer .statement{max-width:none}}
 .statement p{margin:0}
 .statement p + p{margin-top:clamp(10px,1.2vw,16px)}
 .inline-thumb{display:inline-block;width:1.45em;height:1em;vertical-align:-.12em;object-fit:cover;margin:0 .06em;background:var(--surface);border:1px solid var(--hairline)}
@@ -156,7 +176,7 @@ button{font-family:inherit}
 /* ══ PATTERN 示例：点选 + 计数器（换题型时样式可整块替换，见 assets/patterns/）══ */
 .pick-list{display:grid;gap:8px;margin:0 0 clamp(14px,2vw,20px)}
 .pick{
-  appearance:none;border:0;border-radius:0;background:var(--card);color:var(--ink);
+  appearance:none;border:0;border-radius:var(--r-ctl);background:var(--card);color:var(--ink);
   font:inherit;font-size:var(--fs-table);font-weight:700;text-align:left;
   padding:14px 16px;min-height:50px;cursor:pointer;
   transition:background .18s ease,color .18s ease,transform .18s ease;
@@ -221,7 +241,7 @@ html.js .anim-verdict[hidden]{display:none}
 .coach-desc b{color:var(--ink)}
 .coach-asks{display:grid;gap:8px;margin:0 0 4px}
 .coach-ask{
-  appearance:none;border:2px solid var(--hairline);border-radius:0;
+  appearance:none;border:2px solid var(--hairline);border-radius:var(--r-ctl);
   background:var(--card);color:var(--ink);text-align:left;
   display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;
   width:100%;font:inherit;padding:14px 16px;cursor:pointer;
@@ -233,26 +253,64 @@ html.js .anim-verdict[hidden]{display:none}
 .coach-status{font-size:var(--fs-note);color:var(--muted);margin:12px 0 0}
 .coach-status:empty{display:none}
 .coach-copy{
-  appearance:none;border:2px solid var(--hairline);border-radius:0;background:var(--card);
+  appearance:none;border:2px solid var(--hairline);border-radius:var(--r-ctl);background:var(--card);
   color:var(--ink);font:inherit;font-size:var(--fs-note);padding:8px 12px;margin-top:8px;cursor:pointer;
   transition:border-color .18s ease,background .18s ease;
 }
 .coach-copy:hover{border-color:var(--accent);background:rgba(var(--accent-rgb),.06)}
 
-/* ── 知识卡片：首屏右侧的概念清单（本页 AI 概念全收，常见 3–5 条；纯文字 + 方块项目符号）── */
-.ai-facts{background:var(--surface);padding:clamp(18px,2.4vw,30px)}
-.facts-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:clamp(14px,1.8vw,22px)}
+/* ── 知识卡片：一概念一卡 + 矢量示意图，整块在动画模块上方做全幅带（03 §1.3）── */
+.facts-band{padding:clamp(20px,2.6vw,34px) 0 0}
+.ai-facts{background:none;padding:0}
+.facts-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:clamp(16px,2vw,24px)}
 .facts-head h2{margin:0;font-size:var(--fs-lead)}
 .facts-head span{font-size:var(--fs-sub);color:var(--muted)}
-.ai-facts ul{list-style:none;margin:0;padding:0;display:grid;gap:clamp(12px,1.6vw,18px)}
-.ai-facts li{position:relative;padding-left:22px;font-size:var(--fs-table);line-height:1.65}
-.ai-facts li::before{content:'';position:absolute;left:0;top:.55em;width:9px;height:9px;background:var(--accent)}
-.ai-facts li b{font-weight:800}
+.ai-facts ul{list-style:none;margin:0;padding:0;display:grid;gap:clamp(12px,1.4vw,16px)}
+.fact-card{
+  --fc:var(--c1); --fc-rgb:var(--c1-rgb);
+  position:relative;display:grid;grid-template-columns:auto 1fr;
+  gap:clamp(12px,1.4vw,18px);align-items:center;
+  background:var(--card);border:1.5px solid rgba(var(--fc-rgb),.22);border-radius:var(--r-card);
+  padding:clamp(16px,1.8vw,20px);padding-top:calc(clamp(16px,1.8vw,20px) + 4px);
+  box-shadow:0 6px 20px rgba(17,17,17,.05);overflow:hidden;
+}
+.fact-card::before{content:'';position:absolute;left:0;right:0;top:0;height:4px;background:var(--fc)}
+.fact-card.c1{--fc:var(--c1);--fc-rgb:var(--c1-rgb)}
+.fact-card.c2{--fc:var(--c2);--fc-rgb:var(--c2-rgb)}
+.fact-card.c3{--fc:var(--c3);--fc-rgb:var(--c3-rgb)}
+.fact-card.c4{--fc:var(--c4);--fc-rgb:var(--c4-rgb)}
+.fact-card.c5{--fc:var(--c5);--fc-rgb:var(--c5-rgb)}
+.fc-fig{
+  width:clamp(76px,9vw,104px);height:clamp(76px,9vw,104px);
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(var(--fc-rgb),.075);border-radius:var(--r-sm);color:var(--fc);
+}
+.fc-fig svg{width:84%;height:84%;display:block}
+.fc-body{min-width:0}
+.fc-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.fc-num{
+  flex:none;width:30px;height:30px;border-radius:9px;background:var(--fc);color:#fff;
+  font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;
+  font-variant-numeric:tabular-nums;
+}
+.fact-card b{font-size:var(--fs-table);font-weight:800;line-height:1.3}
+.fc-def{margin:0;font-size:14.5px;line-height:1.72;color:var(--ink);text-wrap:pretty}
+/* 宽屏 2 列、第 5 张拉通收尾；窄屏单列 */
+@media (min-width:900px){
+  .ai-facts ul{grid-template-columns:1fr 1fr}
+  .fact-card:last-child{grid-column:1 / -1}
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .fact-card{box-shadow:0 6px 20px rgba(0,0,0,.35)}
+  :root:not([data-theme="light"]) .fc-num{color:#0b0e14}
+}
+[data-theme="dark"] .fact-card{box-shadow:0 6px 20px rgba(0,0,0,.35)}
+[data-theme="dark"] .fc-num{color:#0b0e14}
 /* 长卡（条目 ≥6 条，或单张卡高超过首屏约 60%）：切两张，横向滑动看。
    短卡（≤5 条）不套这层、保持单张静态；骨架见本文件首屏「长卡版式」注释。 */
 .facts-nav{display:flex;gap:6px;margin-left:auto}
 .facts-tab{
-  appearance:none;border:0;border-radius:0;background:var(--hairline);color:var(--ink);
+  appearance:none;border:0;border-radius:var(--r-ctl);background:var(--hairline);color:var(--ink);
   font:inherit;font-size:var(--fs-note);font-weight:800;letter-spacing:.06em;
   min-width:40px;min-height:32px;padding:0 10px;cursor:pointer;
   transition:background .18s ease,color .18s ease;
@@ -348,78 +406,118 @@ html.js .anim-verdict[hidden]{display:none}
 <body data-page-id="{{PAGE_ID}}" data-coach-origin="">
 <main>
 
-  <!-- ══ 首屏：H1 之下左栏「一句话回答」＋右栏「知识卡片」══
+  <!-- ══ 首屏：H1 ＋ 副标题 ＋ 三层答案（结论 / 原因 / 出路）══
        H1 必须是一个真问句：展示 AI 核心知识点 · 口语 · 主体 6–14 字（双问句 ≤20 字）。
        起名法见 references/03-页面骨架与文案.md §二。
-      副标题放在 H1 下方、两栏之上；一句话回答固定在左栏，右栏是同层的知识卡片。
-      一句话回答固定做成**三层递进**：① 结论（一句话回答）② 原因（为什么会这样）
-      ③ 出路（两栏对照：常见做法 vs 本页主张的做法）。三层各带一枚圆角标签，
-      错峰入场 0 / 90 / 180ms；标签文案可自拟，但第 1 层固定写「一句话回答」。
-      每层的正文仍守「平均 ≤25 字、超 35 字就拆」与「一段 ≤3 句」（红线 13）。
-      行内小图 .inline-thumb 绑在词后（<span class="nb">词<svg…></svg></span>），放 1–3 张。
-      右侧是「知识卡片」：把**本页出现的 AI 概念**都写上（常见 3–5 条，数量不限），
-      每条「概念名：1–2 句定义 + 一句类比/边界」，定义取自 scripts/ai_concepts.json。
-      排序：主题概念（H1 讲的那个）放第一条，其余按正文首现顺序；条数多时压到每条 1 句。
-      条目 ≥6 条（长卡）→ 换成下面注释里的「长卡版式」：切两张、横向滑动，首屏不被拉长。
-      首屏不再配图——卡片就是首屏的视觉主体。写法见 references/03 §1.3。 -->
+       副标题放在 H1 下方、三层之上；**首屏不放知识卡片、不配图**（卡片见下面的 facts-band）。
+       三层递进：① 结论（一句话回答）② 原因（为什么会这样）③ 出路（两栏对照：
+       常见做法 vs 本页主张的做法）。三层各带一枚圆角标签，错峰入场 0 / 90 / 180ms；
+       标签文案可自拟，但第 1 层固定写「一句话回答」。宽屏三栏并列、窄屏纵向。
+       每层的正文仍守「平均 ≤25 字、超 35 字就拆」与「一段 ≤3 句」（红线 13）。
+       行内小图 .inline-thumb 绑在词后（<span class="nb">词<svg…></svg></span>），放 1–3 张。 -->
   <header class="hero">
     <div class="shell">
       <h1>{{H1}}</h1>
       <p class="hero-sub">{{副标题：首句固定「我们将学习 ……」，后接复述困惑 / 术语祛魅 / 畏难→反转→追加价值}}</p>
-      <div class="hero-row">
-        <div class="hero-copy">
-          <div class="hero-answer">
-            <div class="statement ans-stack" data-rv>
-              <!-- 第 1 层 · 结论：定义 + 类比 + 后果，加粗 3 处。
-                   标题里带 AI 术语时，第一句先用人话解释它（§4.1）。 -->
-              <div class="ans-layer ans-lead" data-rv style="--d:0ms">
-                <span class="ans-tag">一句话回答</span>
-                <p><b>{{结论：定义 + 类比 + 后果}}。关键名词后面可以像这样嵌小图：<span class="nb">关键词<svg class="inline-thumb" viewBox="0 0 580 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意图：一个小方块连向一个大方块"><rect width="580" height="400" fill="#f6f7f9"/><rect x="90" y="150" width="100" height="100" fill="#111"/><path d="M210 200H330" stroke="#111" stroke-width="14"/><path d="M330 176L366 200L330 224Z" fill="#111"/><rect x="386" y="130" width="140" height="140" fill="#1a4be0"/></svg></span></b></p>
+      <div class="hero-answer">
+        <div class="statement ans-stack" data-rv>
+          <!-- 第 1 层 · 结论：定义 + 类比 + 后果，加粗 3 处。
+               标题里带 AI 术语时，第一句先用人话解释它（§4.1）。 -->
+          <div class="ans-layer ans-lead" data-rv style="--d:0ms">
+            <span class="ans-tag">一句话回答</span>
+            <p><b>{{结论：定义 + 类比 + 后果}}。关键名词后面可以像这样嵌小图：<span class="nb">关键词<svg class="inline-thumb" viewBox="0 0 580 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意图：一个小方块连向一个大方块"><rect width="580" height="400" fill="#f6f7f9"/><rect x="90" y="150" width="100" height="100" fill="#111"/><path d="M210 200H330" stroke="#111" stroke-width="14"/><path d="M330 176L366 200L330 224Z" fill="#111"/><rect x="386" y="130" width="140" height="140" fill="#1a4be0"/></svg></span></b></p>
+          </div>
+          <!-- 第 2 层 · 原因：为什么会这样，一段讲完 -->
+          <div class="ans-layer ans-why" data-rv style="--d:90ms">
+            <span class="ans-tag">{{第 2 层标签：它为什么… · 6–10 字}}</span>
+            <p>{{原因：机制或类比，讲清「为什么会这样」}}</p>
+          </div>
+          <!-- 第 3 层 · 出路：默认两栏对照，右栏是本页主张的做法 -->
+          <div class="ans-layer ans-fix" data-rv style="--d:180ms">
+            <span class="ans-tag">{{第 3 层标签：想留住，就两条路 · 6–10 字}}</span>
+            <div class="fix-cmp">
+              <div class="fix-col fix-mem">
+                <span class="fix-hd">{{对照 A 小标题：常见做法}}</span>
+                <p>{{对照 A：多数人怎么做，代价是什么}}</p>
               </div>
-              <!-- 第 2 层 · 原因：为什么会这样，一段讲完 -->
-              <div class="ans-layer ans-why" data-rv style="--d:90ms">
-                <span class="ans-tag">{{第 2 层标签：它为什么… · 6–10 字}}</span>
-                <p>{{原因：机制或类比，讲清「为什么会这样」}}</p>
-              </div>
-              <!-- 第 3 层 · 出路：默认两栏对照，右栏是本页主张的做法 -->
-              <div class="ans-layer ans-fix" data-rv style="--d:180ms">
-                <span class="ans-tag">{{第 3 层标签：想留住，就两条路 · 6–10 字}}</span>
-                <div class="fix-cmp">
-                  <div class="fix-col fix-mem">
-                    <span class="fix-hd">{{对照 A 小标题：常见做法}}</span>
-                    <p>{{对照 A：多数人怎么做，代价是什么}}</p>
-                  </div>
-                  <div class="fix-col fix-skill">
-                    <span class="fix-hd">{{对照 B 小标题：本页主张的做法}}</span>
-                    <p>{{对照 B：它好在哪，落到什么具体动作}}</p>
-                </div>
-                </div>
+              <div class="fix-col fix-skill">
+                <span class="fix-hd">{{对照 B 小标题：本页主张的做法}}</span>
+                <p>{{对照 B：它好在哪，落到什么具体动作}}</p>
               </div>
             </div>
           </div>
-          <p class="hero-cta"><button type="button" class="btn blue" id="goDemo">{{开始播放：动画名}}</button></p>
         </div>
-        <aside class="ai-facts" aria-labelledby="factsTitle">
-          <div class="facts-head">
-            <h2 class="sec-h" id="factsTitle">知识卡片</h2><span>{{N}} 个概念，先过一遍</span>
-          </div>
-          <ul>
-            <li data-rv><b data-term="{{概念 1 在正文里的词形，别名用 | 分隔}}">{{概念 1}}</b>：{{1–2 句：一句定义 + 一句类比/边界，取自词典}}</li>
-            <li data-rv style="--d:80ms"><b data-term="{{概念 2 在正文里的词形}}">{{概念 2}}</b>：{{1–2 句，取自词典}}</li>
-            <li data-rv style="--d:160ms"><b data-term="{{概念 3 在正文里的词形}}">{{概念 3}}</b>：{{1–2 句，取自词典}}</li>
-            <!-- 本页还有概念就继续复制 <li>（4 条、5 条……数量不限，常见 3–5 条）；
-                 只收「本页出现的 AI 概念」，不塞动作、步骤、操作建议。
-                 条目 ≥6 条（或单张卡高超过首屏约 60%）→ 把整个 <aside> 换成下面注释里的
-                 「长卡版式」：两张卡横向滑动，首屏不会被长清单拉长。规则见 references/03 §1.3。 -->
-          </ul>
-        </aside>
+      </div>
+      <p class="hero-cta"><button type="button" class="btn blue" id="goDemo">{{开始播放：动画名}}</button></p>
+      <p class="hero-credit">{{配图声明（可整句删）：页内插画均为方块母题矢量，仅作教学示意}}</p>
+    </div>
+  </header>
 
-        <!-- ══ 知识卡片·长卡版式（条目 ≥6 条时用它，整块替换上面的 <aside class="ai-facts">）══
-             与短卡的区别只有三处：① 容器加 data-facts-switch；② facts-head 里加方形页码 01 / 02；
-             ③ 清单外套 .facts-track（横向滑动容器），切成两张 .facts-page，每张 3–4 条。
+  <!-- ══ 知识卡片：一概念一卡 + 矢量示意图（5 张单页；整块在动画模块上方）══
+       本页出现的 AI 概念**全都要进卡**（常见 3–5 条；不足 3 条按 03 §1.6 的三层阶梯补），
+       定义取自 scripts/ai_concepts.json。排序：主题概念（H1 讲的那个）放第一条，其余按正文首现顺序。
+       每张卡四段：.fc-num 序号（01–05）→ b[data-term] 概念名 → .fc-fig 内联 SVG → .fc-def 一两句。
+       颜色按 c1…c5 走（同一色相明度分层），示意图只画一个关系、图里不写字、不写死颜色。
+       **每页 5 条**：超过 5 条先把两条同族概念并成一条（data-term="甲|乙"），
+       压不下来才用下面注释里的「两张卡版式」。规则见 references/03 §1.3。 -->
+  <section class="facts-band">
+    <div class="shell">
+      <aside class="ai-facts" aria-labelledby="factsTitle">
+        <div class="facts-head">
+          <h2 class="sec-h" id="factsTitle">知识卡片</h2><span>{{N}} 个概念，先过一遍</span>
+        </div>
+        <ul>
+          <li class="fact-card c1" data-rv>
+            <div class="fc-fig"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="8" y="40" width="22" height="22" rx="4"/><rect x="44" y="16" width="22" height="22" rx="4"/><rect x="44" y="62" width="22" height="22" rx="4"/><rect x="80" y="40" width="14" height="22" rx="4"/>
+              <path d="M30 51h14M66 27l14 14M66 73l14-14"/></svg></div>
+            <div class="fc-body">
+              <div class="fc-head"><span class="fc-num">01</span><b data-term="{{概念 1 在正文里的词形，别名用 | 分隔}}">{{概念 1}}</b></div>
+              <p class="fc-def">{{1–2 句：一句定义 + 一句类比 / 边界，取自词典}}</p>
+            </div>
+          </li>
+          <li class="fact-card c2" data-rv style="--d:70ms">
+            <div class="fc-fig"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="14" y="18" width="30" height="16" rx="4"/><rect x="14" y="42" width="52" height="16" rx="4"/><rect x="14" y="66" width="40" height="16" rx="4"/><path d="M74 26h10M84 50h10M68 74h10"/></svg></div>
+            <div class="fc-body">
+              <div class="fc-head"><span class="fc-num">02</span><b data-term="{{概念 2 在正文里的词形}}">{{概念 2}}</b></div>
+              <p class="fc-def">{{1–2 句，取自词典}}</p>
+            </div>
+          </li>
+          <li class="fact-card c3" data-rv style="--d:140ms">
+            <div class="fc-fig"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="10" y="40" width="20" height="20" rx="4"/><rect x="40" y="40" width="20" height="20" rx="4"/><rect x="70" y="40" width="20" height="20" rx="4"/><path d="M30 50h10M60 50h10"/></svg></div>
+            <div class="fc-body">
+              <div class="fc-head"><span class="fc-num">03</span><b data-term="{{概念 3 在正文里的词形}}">{{概念 3}}</b></div>
+              <p class="fc-def">{{1–2 句，取自词典}}</p>
+            </div>
+          </li>
+          <li class="fact-card c4" data-rv style="--d:210ms">
+            <div class="fc-fig"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="14" y="14" width="72" height="72" rx="6" stroke-dasharray="6 6"/><rect x="30" y="30" width="18" height="18" rx="3"/><rect x="54" y="30" width="18" height="18" rx="3"/><rect x="30" y="54" width="18" height="18" rx="3"/><rect x="54" y="54" width="18" height="18" rx="3"/></svg></div>
+            <div class="fc-body">
+              <div class="fc-head"><span class="fc-num">04</span><b data-term="{{概念 4 在正文里的词形}}">{{概念 4}}</b></div>
+              <p class="fc-def">{{1–2 句，取自词典}}</p>
+            </div>
+          </li>
+          <li class="fact-card c5" data-rv style="--d:280ms">
+            <div class="fc-fig"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 22v-6h60v6M20 78v6h60v-6"/><rect x="30" y="30" width="40" height="40" rx="4"/><path d="M40 50h20"/></svg></div>
+            <div class="fc-body">
+              <div class="fc-head"><span class="fc-num">05</span><b data-term="{{概念 5 在正文里的词形}}">{{概念 5}}</b></div>
+              <p class="fc-def">{{1–2 句，取自词典}}</p>
+            </div>
+          </li>
+          <!-- 本页只有 3–4 个概念时，删掉多余的 li；第 5 张（c5）宽屏会自动拉通整行。
+               本页命中超过 5 个概念：先按「同族并一条」压到 5 条，压不下来才切两张（见下）。 -->
+        </ul>
+
+        <!-- ══ 知识卡片·两张卡版式（压不到 5 条时用它，整块替换上面的 <aside class="ai-facts">）══
+             与单页的差别只有三处：① 容器加 data-facts-switch；② facts-head 里加方形页码 01 / 02；
+             ③ 清单外套 .facts-track（横向滑动容器），每张 .facts-page 里放 5 张 .fact-card。
              计数文字写成「N 个概念，两张卡翻看」（N 换成实际条数）。
-             每条 <li> 仍按短卡那样写（data-rv 的 --d 在每张卡里从 0 重新数）；
-             每条的 <b data-term> 一条都不能少——下划线脚本会从两张卡一起读词。
+             每张卡照上面那样写（data-rv 的 --d 在每张卡里从 0 重新数：0 / 70 / 140 / 210 / 280ms）；
+             每张卡的 <b data-term> 一张都不能少——下划线脚本会从两张卡一起读词。
              <aside class="ai-facts" data-facts-switch aria-labelledby="factsTitle">
                <div class="facts-head">
                  <h2 class="sec-h" id="factsTitle">知识卡片</h2><span>N 个概念，两张卡翻看</span>
@@ -430,18 +528,17 @@ html.js .anim-verdict[hidden]{display:none}
                </div>
                <div class="facts-track">
                  <div class="facts-page" id="factsPage1" role="tabpanel" aria-labelledby="factsTab1" tabindex="0">
-                   <ul>…前 3–4 条（主题词在第一条）…</ul>
+                   <ul>…前 5 张卡（主题词在第一张）…</ul>
                  </div>
                  <div class="facts-page" id="factsPage2" role="tabpanel" aria-labelledby="factsTab2" tabindex="0">
-                   <ul>…其余条目…</ul>
+                   <ul>…其余 5 张卡…</ul>
                  </div>
                </div>
              </aside>
-             页底的「知识卡片翻页（复用段）」会自动接管滑动；短卡页里它不生效，可整段删。 ══ -->
-      </div>
-      <p class="hero-credit">{{配图声明（可整句删）：页内插画均为方块母题矢量，仅作教学示意}}</p>
+             页底的「知识卡片翻页（复用段）」会自动接管滑动；单页卡（≤5 条）用不到它，整段删。 ══ -->
+      </aside>
     </div>
-  </header>
+  </section>
 
   <!-- ══ 可播放动画流程（核心块）＋ 小奈三问卡 ══
        动画实现按叙事结构取 assets/patterns/06 / 14 / 15 的骨架，整块替换下面的示例。
@@ -914,7 +1011,7 @@ html.js .anim-verdict[hidden]{display:none}
    做一件事：把「知识卡片」里的词，在**正文第一个出现的位置**加下划线，
    悬浮 / 键盘聚焦 / 触屏点按都显示该词的解析；Esc、滚动、点空白处收起。
 
-   词表与解析**全部来自那张卡**（<b data-term="词形">＋该条 li 的文字），
+   词表与解析**全部来自那张卡**（<b data-term="词形">＋该卡 .fc-def 的文字），
    这里不重复维护一份——卡改了，下划线自动跟着改，两边不会不同步。
    卡片被整块删掉时（本页与 AI 无交集），本段自动不生效，无需清理。
    不新增任何依赖、不发网络请求、不读时间。
@@ -934,8 +1031,13 @@ html.js .anim-verdict[hidden]{display:none}
       var guess = (b.textContent || '').replace(/[（(][^）)]*[）)]/g, '').trim();
       if (guess && guess.length <= 14 && !/[，。、；：？！,.;:?!]/.test(guess)) raw = guess;
     }
-    var li = b.parentElement;
-    var def = li ? (li.textContent || '').replace(b.textContent || '', '').replace(/^[\s：:]+/, '').trim() : '';
+    /* 定位所属卡片：一概念一卡用 .fact-card；兼容旧的 li 结构 */
+    var li = b.closest('.fact-card') || b.closest('li') || b.parentElement;
+    /* 解析优先取 .fc-def（卡里还有序号「01」与图，整卡取文字会把它们混进来） */
+    var defEl = li && li.querySelector('.fc-def');
+    var def = defEl
+      ? (defEl.textContent || '').trim()
+      : (li ? (li.textContent || '').replace(b.textContent || '', '').replace(/^[\s：:]+/, '').trim() : '');
     if (!raw || !def) return;
     raw.split('|').forEach(function (t) {
       t = t.trim();
