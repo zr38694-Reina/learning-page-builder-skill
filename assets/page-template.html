@@ -81,11 +81,15 @@ button{font-family:inherit}
 .btn.blue{background:var(--accent);color:var(--accent-ink)}
 .btn.small{font-size:var(--fs-sub);padding:11px 16px;min-height:46px}
 
-/* ── 首屏：H1 之下左栏「一句话回答」＋右栏「知识卡片」── */
-.hero{overflow:clip;padding-top:clamp(26px,4.6vw,62px)}
+/* ── 首屏：占满第一屏；H1 + 副标题在上，下方左「一句话回答」右「知识卡片」──
+   首屏是一个整屏模块：min-height 撑满视口、内容纵向居中，
+   不许挤在左上角留半屏空白（版式硬约束，见 SKILL.md 红线 16）。 ── */
+.hero{overflow:clip}
+.hero .shell{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  padding-top:clamp(26px,4.6vw,62px);padding-bottom:clamp(22px,3vw,40px)}
 .hero h1{font-size:var(--fs-hero);line-height:1.02;letter-spacing:-.025em;font-weight:800;margin:0 0 clamp(18px,2.6vw,34px);max-width:9.6em}
 .hero-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(22px,3.6vw,56px);align-items:start}
-.hero-sub{font-size:clamp(18px,1.5vw,20px);line-height:1.6;margin:0 0 clamp(22px,3vw,34px);max-width:30em}
+.hero-sub{font-size:clamp(18px,1.5vw,20px);line-height:1.6;margin:0 0 clamp(22px,3vw,34px);max-width:36em}
 .hero-copy{display:flex;flex-direction:column;align-items:flex-start}
 .hero-answer{width:100%}
 /* ── 一句话回答：三层递进（结论 → 原因 → 出路）──
@@ -95,40 +99,40 @@ button{font-family:inherit}
    右边是本页主张的做法（右栏薄荷底）。内容只有一条出路时，
    去掉 .fix-cmp / .fix-col，直接放一个 <p> 即可。 ── */
 .hero-answer .statement{
-  --f-wash:#f7fbf9; --f-line:#d7e6e0; --f-line-soft:#e6f1ec;
-  --f-ink:#22403a; --f-muted:#7d918b; --f-teal:#2fae95; --f-sky:#4b9fe3;
-  --f-tint-teal:#eaf8f4; --f-tint-sky:#eef6fd; --f-note:#f2f6f4;
+  --f-wash:#f2f5fa; --f-line:#cfd9ea; --f-line-soft:#e3eaf6;
+  --f-ink:#1b2430; --f-muted:#6b7280; --f-c1:#1a4be0; --f-c2:#3f6ea8;
+  --f-tint1:#e9effc; --f-tint2:#eaeff7; --f-note:#f0f3f8;
   font-size:var(--fs-body);line-height:1.65;max-width:36em;font-weight:500 }
 @media (prefers-color-scheme:dark){
   html:not([data-theme="light"]) .hero-answer .statement{
-    --f-wash:#151d25; --f-line:#2e3d47; --f-line-soft:#23303a;
-    --f-ink:#e7f0ed; --f-muted:#96a8a3; --f-teal:#5fd0b6; --f-sky:#7cb8ee;
-    --f-tint-teal:#15302a; --f-tint-sky:#17283a; --f-note:#1d252e;
+    --f-wash:#161c27; --f-line:#2b364a; --f-line-soft:#222c3e;
+    --f-ink:#e6ecf6; --f-muted:#98a2b3; --f-c1:#7d97ff; --f-c2:#8fa9d8;
+    --f-tint1:#1a2742; --f-tint2:#1a2231; --f-note:#1e2531;
   }
 }
 [data-theme="dark"] .hero-answer .statement{
-  --f-wash:#151d25; --f-line:#2e3d47; --f-line-soft:#23303a;
-  --f-ink:#e7f0ed; --f-muted:#96a8a3; --f-teal:#5fd0b6; --f-sky:#7cb8ee;
-  --f-tint-teal:#15302a; --f-tint-sky:#17283a; --f-note:#1d252e;
+  --f-wash:#161c27; --f-line:#2b364a; --f-line-soft:#222c3e;
+  --f-ink:#e6ecf6; --f-muted:#98a2b3; --f-c1:#7d97ff; --f-c2:#8fa9d8;
+  --f-tint1:#1a2742; --f-tint2:#1a2231; --f-note:#1e2531;
 }
 .ans-stack{ display:flex;flex-direction:column;gap:clamp(15px,1.8vw,22px) }
 .ans-layer{ padding-left:clamp(13px,1.3vw,17px);border-left:3px solid var(--f-line) }
 .ans-tag{ display:inline-block;font-size:var(--fs-note);font-weight:700;letter-spacing:.02em;
   border-radius:999px;padding:3px 10px;margin:0 0 7px;border:1px solid var(--f-line-soft) }
 .ans-layer p{ margin:0 }
-.ans-lead{ border-left-color:var(--f-teal) }
-.ans-lead .ans-tag{ color:var(--f-teal);background:var(--f-tint-teal) }
+.ans-lead{ border-left-color:var(--f-c1) }
+.ans-lead .ans-tag{ color:var(--f-c1);background:var(--f-tint1) }
 .ans-lead p{ font-size:clamp(20px,1.8vw,26px);line-height:1.5;font-weight:700;letter-spacing:-.01em;color:var(--ink) }
-.ans-why{ border-left-color:var(--f-sky) }
-.ans-why .ans-tag{ color:var(--f-sky);background:var(--f-tint-sky) }
+.ans-why{ border-left-color:var(--f-c2) }
+.ans-why .ans-tag{ color:var(--f-c2);background:var(--f-tint2) }
 .ans-why p{ font-size:var(--fs-body);line-height:1.72;color:var(--ink) }
 .ans-fix .ans-tag{ color:var(--f-muted);background:var(--f-note) }
 .fix-cmp{ display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:10px }
-.fix-col{ background:var(--f-wash);border:1px solid var(--f-line-soft);border-radius:14px;padding:11px 13px }
+.fix-col{ background:var(--f-wash);border:1px solid var(--f-line-soft);border-radius:var(--r-card);padding:11px 13px }
 .fix-hd{ display:block;font-size:var(--fs-note);font-weight:700;margin-bottom:4px;color:var(--f-muted) }
 .fix-col p{ font-size:var(--fs-sub);line-height:1.62;color:var(--f-ink) }
-.fix-skill{ background:var(--f-tint-teal);border-color:var(--f-line) }
-.fix-skill .fix-hd{ color:var(--f-teal) }
+.fix-skill{ background:var(--f-tint1);border-color:var(--f-line) }
+.fix-skill .fix-hd{ color:var(--f-c1) }
 .hero-copy .hero-cta{margin:clamp(20px,2.7vw,30px) 0 0}
 .hero-credit{margin:clamp(20px,3vw,34px) 0 0;font-size:var(--fs-note);line-height:1.65;color:var(--muted);max-width:32em}
 
@@ -177,19 +181,32 @@ button{font-family:inherit}
 .counter .k{font-size:var(--fs-note);color:var(--muted);margin-top:6px}
 .demo-note{margin:16px 0 0;font-size:var(--fs-note);color:var(--muted);line-height:1.7;max-width:52em}
 
-/* ── 可播放动画流程：逐拍出现，每拍自带字幕 ── */
-.anim-stage{display:grid;gap:10px;margin:4px 0 16px}
-.anim-step{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:var(--card);border:1.5px solid var(--hairline);padding:12px 14px}
-.anim-step .anim-node{width:30px;height:30px;line-height:30px;text-align:center;background:var(--ink);color:var(--bg);font-weight:800;font-size:var(--fs-note)}
+/* ── 可播放动画流程：一次只显示一拍（切换式，版式硬约束见 SKILL.md 红线 16）──
+   各拍叠在同一个网格单元：容器高度取最高一拍，切换不跳版；
+   没有 JS 时退化成按行排开。 ── */
+.demo{border-radius:var(--r-card)}
+.anim-stage{display:grid;gap:10px;margin:4px 0 0}
+.anim-step{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:var(--card);border:1.5px solid var(--hairline);padding:12px 14px;border-radius:var(--r-sm)}
+.anim-step>div{min-width:0}
+.anim-step .anim-node{width:30px;height:30px;line-height:30px;text-align:center;background:var(--ink);color:var(--bg);font-weight:800;font-size:var(--fs-note);border-radius:8px}
 .anim-step b{display:block;font-size:var(--fs-body);margin-bottom:2px}
 .anim-step p{margin:0;font-size:var(--fs-table);line-height:1.7;color:var(--muted)}
 .anim-step.hot{border-color:var(--accent);background:rgba(var(--accent-rgb),.09)}
-.anim-verdict{margin-top:4px;padding:12px 14px;background:var(--ink);color:var(--bg);font-weight:800;font-size:var(--fs-body);line-height:1.7}
-html.js .anim-step{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .5s ease}
-html.js .anim-step.show{opacity:1;transform:none}
+html.js .anim-stage{gap:0}
+html.js .anim-step{grid-area:1/1;opacity:0;visibility:hidden;transform:translateY(8px);
+  transition:opacity .3s ease,transform .34s ease}
+html.js .anim-step.show{opacity:1;visibility:visible;transform:none}
+html.js .anim-step:not(.show){transition:none}   /* 退场瞬间消失，不留两拍同屏 */
+/* 分拍进度：一条小方块链，点哪拍就切到哪拍 */
+.anim-dots{display:flex;gap:6px;margin:14px 0 0;padding:8px 0}
+.anim-dot{appearance:none;border:0;background:none;padding:0;width:30px;height:8px;cursor:pointer;position:relative}
+.anim-dot::before{content:'';position:absolute;inset:0;border-radius:999px;background:var(--hairline);transition:background .2s ease}
+.anim-dot:hover::before{background:var(--muted)}
+.anim-dot[aria-current="step"]::before{background:var(--accent)}
+.anim-verdict{margin-top:8px;padding:12px 14px;background:var(--ink);color:var(--bg);font-weight:800;font-size:var(--fs-body);line-height:1.7;border-radius:12px}
 html.js .anim-verdict[hidden]{display:none}
 @media (prefers-reduced-motion:reduce){
-  .anim-step{transition:none!important;transform:none!important;opacity:1!important}
+  html.js .anim-step{transition:none!important;transform:none!important}
 }
 
 /* ── 小奈三问卡（有可播放动画流程的页面才配）── */
@@ -348,7 +365,7 @@ html.js .anim-verdict[hidden]{display:none}
   <header class="hero">
     <div class="shell">
       <h1>{{H1}}</h1>
-      <p class="hero-sub">{{副标题：复述困惑 / 术语祛魅 / 畏难→反转→追加价值}}</p>
+      <p class="hero-sub">{{副标题：首句固定「我们将学习 ……」，后接复述困惑 / 术语祛魅 / 畏难→反转→追加价值}}</p>
       <div class="hero-row">
         <div class="hero-copy">
           <div class="hero-answer">
@@ -459,8 +476,9 @@ html.js .anim-verdict[hidden]{display:none}
             <div class="anim-node">4</div>
             <div><b>{{第 4 拍标题：结果}}</b><p>{{第 4 拍字幕：最后得到什么；用一句话收住。}}</p></div>
           </div>
-          <div class="anim-verdict" id="animVerdict" hidden>{{收尾判词：所以呢？把「看到了什么」翻译成「所以怎样」。}}</div>
         </div>
+        <div class="anim-dots" id="animDots" role="group" aria-label="换到某一拍"></div>
+        <div class="anim-verdict" id="animVerdict" hidden>{{收尾判词：所以呢？把「看到了什么」翻译成「所以怎样」。}}</div>
 
         <div class="btn-row">
           <button type="button" class="btn blue" id="animPlay" aria-label="播放动画">▶ 播放</button>
@@ -590,16 +608,18 @@ html.js .anim-verdict[hidden]{display:none}
   if (goCoach) goCoach.addEventListener('click', function () { jump('coach'); });
 
   /* ════════════════════════════════════════════════════════════
-     可播放动画流程（示例实现：逐拍播放 + 字幕 + 暂停 / 重播）
+     可播放动画流程（示例实现：一拍一拍切换 + 字幕 + 暂停 / 重播）
      换叙事结构时整段替换；动画数据必须内联硬编码。
      ════════════════════════════════════════════════════════════ */
   var animSteps = Array.prototype.slice.call(document.querySelectorAll('#animStage .anim-step'));
+  var animDotsWrap = $('animDots');
   var animVerdict = $('animVerdict');
   var animPlay = $('animPlay');
   var animProgress = $('animProgress');
+  var animDots = [];
   var animTimers = [];
   var animState = 'idle';   /* idle | playing | paused | ended */
-  var animIndex = 0;        /* 下一个要出现的步骤下标 */
+  var animIndex = 0;        /* 下一个要显示的步骤下标（当前拍 = animIndex - 1） */
 
   function clearAnimTimers() { animTimers.forEach(clearTimeout); animTimers = []; }
 
@@ -608,15 +628,20 @@ html.js .anim-verdict[hidden]{display:none}
     animPlay.setAttribute('aria-label', label || text);
   }
 
+  /* 切换式：显示第 i 拍时，其余拍全部撤掉 —— 同屏永远只有一拍 */
   function showStep(i) {
     if (i < 0 || i >= animSteps.length) return;
-    animSteps[i].classList.add('show');
+    animSteps.forEach(function (st, k) { st.classList.toggle('show', k === i); });
+    animDots.forEach(function (d, k) {
+      if (k === i) d.setAttribute('aria-current', 'step');
+      else d.removeAttribute('aria-current');
+    });
     animProgress.textContent = '第 ' + (i + 1) + ' / ' + animSteps.length + ' 拍';
   }
 
-  function showAllSteps() {
+  function showEnd() {
     clearAnimTimers();
-    animSteps.forEach(function (s) { s.classList.add('show'); });
+    showStep(animSteps.length - 1);
     animVerdict.hidden = false;
     animProgress.textContent = '播放完毕';
     animState = 'ended';
@@ -625,7 +650,8 @@ html.js .anim-verdict[hidden]{display:none}
 
   function resetAnim() {
     clearAnimTimers();
-    animSteps.forEach(function (s) { s.classList.remove('show'); });
+    animSteps.forEach(function (st) { st.classList.remove('show'); });
+    animDots.forEach(function (d) { d.removeAttribute('aria-current'); });
     animVerdict.hidden = true;
     animIndex = 0;
     animProgress.textContent = '准备播放';
@@ -633,10 +659,11 @@ html.js .anim-verdict[hidden]{display:none}
     setAnimButton('▶ 播放', '播放动画');
   }
 
+  /* 停留时间挂在「上一拍」身上：切上来 → 等它的 data-hold → 换下一拍 */
   function scheduleNext() {
-    if (animIndex >= animSteps.length) { showAllSteps(); return; }
-    var step = animSteps[animIndex];
-    var hold = parseInt(step.getAttribute('data-hold'), 10) || 550;
+    if (animIndex >= animSteps.length) { showEnd(); return; }
+    var prev = animSteps[Math.max(animIndex - 1, 0)];
+    var hold = parseInt(prev.getAttribute('data-hold'), 10) || 550;
     animTimers.push(setTimeout(function () {
       showStep(animIndex);
       animIndex++;
@@ -652,17 +679,40 @@ html.js .anim-verdict[hidden]{display:none}
       setAnimButton('▶ 继续', '继续播放动画');
       return;
     }
-    if (animState === 'idle' || animState === 'paused') {
-      animState = 'playing';
-      setAnimButton('⏸ 暂停', '暂停动画');
-      scheduleNext();
-    }
+    animState = 'playing';
+    setAnimButton('⏸ 暂停', '暂停动画');
+    animVerdict.hidden = true;
+    if (animIndex === 0) { showStep(0); animIndex = 1; }   /* 第一拍立刻出来，不空等 */
+    scheduleNext();
+  }
+
+  /* 点进度点：切到那一拍停住，再点播放从下一拍接着走 */
+  function jumpTo(i) {
+    if (i < 0 || i >= animSteps.length) return;
+    clearAnimTimers();
+    animVerdict.hidden = true;
+    showStep(i);
+    animIndex = i + 1;
+    animState = 'paused';
+    setAnimButton('▶ 继续', '继续播放动画');
+  }
+
+  if (animDotsWrap) {
+    animSteps.forEach(function (st, i) {
+      var d = document.createElement('button');
+      d.type = 'button';
+      d.className = 'anim-dot';
+      d.setAttribute('aria-label', '第 ' + (i + 1) + ' 拍');
+      d.addEventListener('click', function () { jumpTo(i); });
+      animDotsWrap.appendChild(d);
+      animDots.push(d);
+    });
   }
 
   animPlay.addEventListener('click', playAnim);
 
   if (REDUCED) {
-    showAllSteps();                       /* 动效敏感：直接显示终态 */
+    showEnd();                            /* 动效敏感：直接停在终态（最后一拍 + 判词） */
   } else if (!window.IntersectionObserver) {
     playAnim();                           /* 没有 IO：退化为加载即播 */
   } else {
@@ -672,7 +722,7 @@ html.js .anim-verdict[hidden]{display:none}
         if (en.isIntersecting && !animPlayed) {
           animPlayed = true;
           io.disconnect();
-          playAnim();
+          if (animState === 'idle') playAnim();   /* 用户已先点播放 → 别再触发（会变成暂停） */
         }
       });
     }, { threshold: 0.35 });
