@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 220" font-family="PingFang SC, sans-serif">
+  <rect x="0" y="0" width="680" height="220" rx="14" fill="#f7f7fb"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#26263a">diff 高亮对照 · 行对行，先亮问题隔拍亮解法</text>
+  <!-- 左列：问题 -->
+  <text x="40" y="60" font-size="12" font-weight="700" fill="#d64545">✗ 没有 skill</text>
+  <rect x="40" y="72" width="250" height="22" rx="4" fill="#d64545" opacity="0.12"/>
+  <rect x="40" y="100" width="250" height="22" rx="4" fill="none"/>
+  <rect x="40" y="128" width="250" height="22" rx="4" fill="#d64545" opacity="0.12"/>
+  <rect x="40" y="156" width="250" height="22" rx="4" fill="none"/>
+  <!-- 右列：解法 -->
+  <text x="390" y="60" font-size="12" font-weight="700" fill="#2e9e6b">✓ 有 skill</text>
+  <rect x="390" y="72" width="250" height="22" rx="4" fill="#2e9e6b" opacity="0.14"/>
+  <rect x="390" y="100" width="250" height="22" rx="4" fill="none"/>
+  <rect x="390" y="128" width="250" height="22" rx="4" fill="#2e9e6b" opacity="0.14"/>
+  <rect x="390" y="156" width="250" height="22" rx="4" fill="none"/>
+  <!-- 行文字 -->
+  <text x="50" y="87" font-size="11" fill="#26263a">格式自己随便定的</text>
+  <text x="50" y="143" font-size="11" fill="#26263a">李娜是我替你指派的</text>
+  <text x="400" y="87" font-size="11" fill="#26263a">五块固定结构</text>
+  <text x="400" y="143" font-size="11" fill="#26263a">待确认区 → 拿不准的列出来</text>
+  <!-- 中间映射箭头 -->
+  <path d="M296,83 L384,83 M296,139 L384,139" stroke="#8a8aa0" stroke-width="1.5" stroke-dasharray="4 3"/>
+</svg>

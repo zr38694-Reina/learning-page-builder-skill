@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 220" font-family="PingFang SC, sans-serif">
+  <rect x="0" y="0" width="680" height="220" rx="14" fill="#f7f7fb"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#26263a">时间条退避 · 条长严格按倍率</text>
+  <!-- 1s -->
+  <text x="72" y="86" font-size="12" fill="#26263a" text-anchor="end">第 1 次</text>
+  <rect x="84" y="72" width="96" height="20" rx="6" fill="#5b5bd6" opacity="0.9"/>
+  <text x="188" y="86" font-size="12" fill="#26263a">1s</text>
+  <!-- 2s -->
+  <text x="72" y="126" font-size="12" fill="#26263a" text-anchor="end">第 2 次</text>
+  <rect x="84" y="112" width="192" height="20" rx="6" fill="#5b5bd6" opacity="0.7"/>
+  <text x="284" y="126" font-size="12" fill="#26263a">2s</text>
+  <!-- 4s -->
+  <text x="72" y="166" font-size="12" fill="#26263a" text-anchor="end">第 3 次</text>
+  <rect x="84" y="152" width="384" height="20" rx="6" fill="#5b5bd6" opacity="0.5"/>
+  <text x="476" y="166" font-size="12" fill="#26263a">4s</text>
+  <text x="84" y="200" font-size="12" fill="#8a8aa0">间隔 ×2 依次长出（transform 逐条延迟）：给对方喘息，也给自己止损</text>
+</svg>

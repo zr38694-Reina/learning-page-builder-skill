@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 220" font-family="PingFang SC, sans-serif">
+  <rect x="0" y="0" width="680" height="220" rx="14" fill="#f7f7fb"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#26263a">状态机跳转 · 有回路，圆点间跳转</text>
+  <!-- 节点 -->
+  <circle cx="120" cy="110" r="30" fill="#ffffff" stroke="#5b5bd6" stroke-width="2"/>
+  <text x="120" y="115" font-size="12" fill="#26263a" text-anchor="middle">发送</text>
+  <circle cx="330" cy="110" r="30" fill="#e08a3a" opacity="0.16"/>
+  <circle cx="330" cy="110" r="30" fill="none" stroke="#e08a3a" stroke-width="2"/>
+  <text x="330" y="115" font-size="12" fill="#26263a" text-anchor="middle">429 限流</text>
+  <circle cx="540" cy="110" r="30" fill="#2e9e6b" opacity="0.16"/>
+  <circle cx="540" cy="110" r="30" fill="none" stroke="#2e9e6b" stroke-width="2"/>
+  <text x="540" y="115" font-size="12" fill="#26263a" text-anchor="middle">2xx 成功</text>
+  <!-- 正向箭头 -->
+  <path d="M154,110 L296,110" stroke="#5b5bd6" stroke-width="2"/>
+  <path d="M296,110 L286,104 M296,110 L286,116" stroke="#5b5bd6" stroke-width="2" fill="none"/>
+  <path d="M364,110 L506,110" stroke="#2e9e6b" stroke-width="2"/>
+  <path d="M506,110 L496,104 M506,110 L496,116" stroke="#2e9e6b" stroke-width="2" fill="none"/>
+  <!-- 回边 ↺ -->
+  <path d="M330,76 C330,40 200,40 150,80" stroke="#e08a3a" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+  <path d="M150,80 L152,68 M150,80 L162,76" stroke="#e08a3a" stroke-width="2" fill="none"/>
+  <text x="245" y="52" font-size="12" fill="#e08a3a" text-anchor="middle">退避后重试 ↺</text>
+  <text x="340" y="196" font-size="12" fill="#8a8aa0" text-anchor="middle">圆点间跳转 + 回边：agent 循环 / 报错分诊 / 任何会「转回去」的状态</text>
+</svg>

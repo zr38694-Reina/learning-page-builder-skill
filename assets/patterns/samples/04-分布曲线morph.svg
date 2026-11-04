@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 220" font-family="PingFang SC, sans-serif">
+  <rect x="0" y="0" width="680" height="220" rx="14" fill="#f7f7fb"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#26263a">分布曲线 morph · 旋钮一转，形状就变</text>
+  <!-- 左：低温尖峰 -->
+  <rect x="40" y="56" width="250" height="120" rx="8" fill="#ffffff" stroke="#d8d8e6"/>
+  <path d="M50,164 C90,162 115,160 145,158 C160,70 172,70 186,158 C216,160 240,162 280,164 L280,168 L50,168 Z" fill="#5b5bd6" opacity="0.75"/>
+  <text x="165" y="192" font-size="12" fill="#26263a" text-anchor="middle">温度 0.2 · 尖峰（稳）</text>
+  <!-- 中箭头 -->
+  <path d="M300,116 L360,116" stroke="#e08a3a" stroke-width="3"/>
+  <path d="M360,116 L350,110 M360,116 L350,122" stroke="#e08a3a" stroke-width="3" fill="none"/>
+  <text x="330" y="104" font-size="12" fill="#e08a3a" text-anchor="middle">温度 →</text>
+  <!-- 右：高温拉平 -->
+  <rect x="390" y="56" width="250" height="120" rx="8" fill="#ffffff" stroke="#d8d8e6"/>
+  <path d="M400,164 C440,150 470,138 515,132 C560,138 590,150 630,164 L630,168 L400,168 Z" fill="#2e9e6b" opacity="0.65"/>
+  <text x="515" y="192" font-size="12" fill="#26263a" text-anchor="middle">温度 1.2 · 拉平（野）</text>
+  <text x="340" y="212" font-size="12" fill="#8a8aa0" text-anchor="middle">同一池候选词，只动一个旋钮，d:path() 补间</text>
+</svg>

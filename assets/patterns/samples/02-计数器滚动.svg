@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 220" font-family="PingFang SC, sans-serif">
+  <rect x="0" y="0" width="680" height="220" rx="14" fill="#f7f7fb"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#26263a">计数器滚动 · 数字从 0 滚到目标</text>
+  <!-- 残影 -->
+  <text x="340" y="130" font-size="52" font-weight="800" fill="#5b5bd6" opacity="0.12" text-anchor="middle">¥ 486</text>
+  <text x="340" y="126" font-size="52" font-weight="800" fill="#5b5bd6" opacity="0.25" text-anchor="middle">¥ 986</text>
+  <!-- 当前值 -->
+  <text x="340" y="122" font-size="56" font-weight="800" fill="#5b5bd6" text-anchor="middle">¥ 1,286</text>
+  <!-- 刻度点 -->
+  <circle cx="238" cy="150" r="3" fill="#8a8aa0"/>
+  <circle cx="289" cy="150" r="3" fill="#8a8aa0"/>
+  <circle cx="340" cy="150" r="4" fill="#5b5bd6"/>
+  <circle cx="391" cy="150" r="3" fill="#8a8aa0"/>
+  <circle cx="442" cy="150" r="3" fill="#8a8aa0"/>
+  <line x1="238" y1="150" x2="442" y2="150" stroke="#d8d8e6" stroke-width="1.5"/>
+  <text x="340" y="182" font-size="12" fill="#8a8aa0" text-anchor="middle">补间数字 + 一句「为什么停不下来」：429 烧钱 / Token 计费 / agent 循环成本</text>
+</svg>
