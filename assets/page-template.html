@@ -223,7 +223,7 @@ html.js .anim-step:not(.show){transition:none}   /* 退场瞬间消失，不留�
 .anim-dot::before{content:'';position:absolute;inset:0;border-radius:999px;background:var(--hairline);transition:background .2s ease}
 .anim-dot:hover::before{background:var(--muted)}
 .anim-dot[aria-current="step"]::before{background:var(--accent)}
-.anim-verdict{margin-top:8px;padding:12px 14px;background:var(--ink);color:var(--bg);font-weight:800;font-size:var(--fs-body);line-height:1.7;border-radius:12px}
+.anim-verdict{margin-top:8px;margin-bottom:clamp(16px,2vw,24px);padding:12px 14px;background:var(--ink);color:var(--bg);font-weight:800;font-size:var(--fs-body);line-height:1.7;border-radius:12px}
 html.js .anim-verdict[hidden]{display:none}
 @media (prefers-reduced-motion:reduce){
   html.js .anim-step{transition:none!important;transform:none!important}
@@ -326,7 +326,7 @@ html.js .anim-verdict[hidden]{display:none}
 
 /* ── takeaway：便签（恰好 4 条，收在全页最后）── */
 .take{padding:var(--gap-sec) 0 0}
-.note{position:relative;background:var(--note-bg);padding:clamp(30px,3.6vw,48px) clamp(20px,3vw,42px);max-width:980px}
+.note{position:relative;background:var(--note-bg);padding:clamp(30px,3.6vw,48px) clamp(20px,3vw,42px);max-width:980px;margin:0 auto}
 .note::before{content:'';position:absolute;top:-10px;left:clamp(20px,3vw,42px);width:104px;height:20px;background:var(--ink)}
 .note h2{margin:0 0 clamp(14px,2vw,20px)}
 .note ul{list-style:none;margin:0;padding:0}
