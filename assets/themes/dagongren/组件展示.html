@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>课件组件展示 · 视频同款</title>
+<link rel="stylesheet" href="skin.css">
+<style>
+/* 本页自己的排版（展示用，不属于规范） */
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 120px}
+.top{padding:clamp(28px,5vw,64px) 0 clamp(20px,3vw,36px)}
+.top h1{font-size:clamp(36px,5.6vw,76px);font-weight:900;line-height:1.12;margin:0 0 16px}
+.top p{max-width:46em;color:var(--kv-ink-2);margin:0}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.toc a{text-decoration:none}
+.sec{padding-top:clamp(48px,6vw,84px)}
+.sec>h2{font-size:clamp(26px,3vw,38px);font-weight:900;margin:0 0 6px}
+.sec>.why{color:var(--kv-muted);margin:0 0 22px;max-width:52em}
+.ex{background:var(--kv-card);border:2px dashed #CFC8BA;border-radius:var(--kv-r-card);padding:clamp(16px,2.4vw,30px);overflow:hidden}
+.ex.flush{padding:0}
+.code{margin:10px 0 0;background:#1E1F22;color:#DCDFE4;border-radius:12px;padding:14px 16px;font:13px/1.6 var(--kv-mono);white-space:pre-wrap;word-break:break-all;max-height:260px;overflow:auto}
+details{margin-top:10px}
+summary{cursor:pointer;font-weight:700;color:var(--kv-muted);font-size:14px}
+.sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.sw div{border-radius:14px;border:2px solid var(--kv-line);overflow:hidden;background:var(--kv-card)}
+.sw i{display:block;height:74px}
+.sw span{display:block;padding:8px 12px 10px;font-size:13px;line-height:1.5;color:var(--kv-ink-2)}
+.sw b{display:block;font-family:var(--kv-num);font-size:14px;color:var(--ink)}
+.type-row{display:grid;grid-template-columns:180px 1fr;gap:16px;align-items:baseline;padding:12px 0;border-bottom:2px solid var(--kv-grid)}
+.type-row small{color:var(--kv-muted);font-weight:700;font-size:13px;line-height:1.5}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.mode{border-radius:var(--kv-r-card);padding:24px;min-height:220px;position:relative;overflow:hidden}
+.mode h3{margin:0 0 6px;font-weight:900;font-size:24px}
+.mode p{margin:0;font-size:15px;max-width:68%}
+.props{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:12px}
+.props figure{margin:0;background:var(--kv-card);border:2px solid var(--kv-line);border-radius:14px;padding:12px 8px 8px;text-align:center}
+.props img{width:84px;height:84px;object-fit:contain;filter:var(--kv-prop-shadow)}
+.props figcaption{font-size:12px;line-height:1.4;color:var(--kv-ink-2);margin-top:6px}
+.props figcaption code{display:block;font:11px var(--kv-mono);color:var(--kv-dim)}
+.dd{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="hud"><div class="hud-ep">第<b>00</b>/ 规范<i class="hud-sep"></i>做给打工人的AI入门系列 · Skill 入门到毕业</div></div>
+    <h1>课件组件展示 · <span class="hl">视频同款</span></h1>
+    <p>这一页把视频里的颜色、字、卡片、色块、黑金页和道具都摆出来了。每个组件下面点「看代码」就能复制，样式都来自同目录的 <b>skin.css</b>。规则和理由写在 <b>视觉规范.md</b>。</p>
+    <div class="toc">
+      <a href="#modes" class="pill">三种底</a><a href="#color" class="pill is-soft">配色</a><a href="#type" class="pill is-soft">字体字号</a>
+      <a href="#accent" class="pill is-soft">强调</a><a href="#hud" class="pill is-soft">页眉角标</a><a href="#band" class="pill is-soft">色块章节条</a>
+      <a href="#gold" class="pill is-soft">黑金金句</a><a href="#card" class="pill is-soft">卡片</a><a href="#cmp" class="pill is-soft">对错对比</a>
+      <a href="#road" class="pill is-soft">步骤条</a><a href="#win" class="pill is-soft">窗口和终端</a><a href="#pill" class="pill is-soft">胶囊和按钮</a>
+      <a href="#props" class="pill is-acc">道具图库</a><a href="#dont" class="pill is-soft">别这样做</a>
+    </div>
+  </header>
+
+  <!-- 三种底 -->
+  <section class="sec" id="modes">
+    <h2>三种底：A 纸白 / C 色块 / B 黑金</h2>
+    <p class="why">视频里画面跟着内容的角色换底：讲解用纸白，开场、章节、清单用整屏色块，金句和总结用黑金。网页也一样，纸白占大头，色块和黑金只在关键位置出现。</p>
+    <div class="modes">
+      <div class="mode" style="background:#F2EEE5;background-image:linear-gradient(#E4DED2 1px,transparent 1px),linear-gradient(90deg,#E4DED2 1px,transparent 1px);background-size:22px 22px;border:2px solid #D6CFC1;color:#141416">
+        <h3>A 纸白课件</h3><p>讲解、知识卡、演示、练习。<br>暖白方格纸 + 白卡 + 墨黑字 + 橙色焦点。<br><b>约占全页 75%</b></p>
+        <img class="prop is-sm" src="assets/props/pencil.webp" alt="" style="position:absolute;right:18px;bottom:14px">
+      </div>
+      <div class="mode" style="background:#FF6A2B;background-image:radial-gradient(rgba(255,255,255,.18) 2.5px,transparent 2.5px);background-size:30px 30px;color:#111">
+        <h3>C 整屏色块</h3><p>开场、章节过渡、清单、练习。<br>每次换一种底色，白波点，大字。<br><b>每 1 个大部分 1 条</b></p>
+        <img class="prop is-sm" src="assets/props/megaphone.webp" alt="" style="position:absolute;right:18px;bottom:14px">
+      </div>
+      <div class="mode" style="background:#0B0B0C;background-image:radial-gradient(ellipse 70% 70% at 60% 35%,rgba(100,76,34,.45),transparent 70%);color:#EFE8D8">
+        <h3>B 黑金暗场</h3><p style="color:#8C8576">金句、结论、全页总结、页脚。<br>近黑底 + 象牙白大字 + 金色短横。<br><b style="color:#D4B26A">每页最多 2 处</b></p>
+        <img class="prop is-sm" src="assets/props/trophy.webp" alt="" style="position:absolute;right:18px;bottom:14px">
+      </div>
+    </div>
+  </section>
+
+  <!-- 配色 -->
+  <section class="sec" id="color">
+    <h2>配色</h2>
+    <p class="why">橙是唯一的「焦点色」：当前这一步、重点词、主按钮。其他彩色只做色块底色和分类，不抢焦点。绿 = 对，红 = 错。</p>
+    <div class="sw" id="swatches"></div>
+  </section>
+
+  <!-- 字体字号 -->
+  <section class="sec" id="type">
+    <h2>字体和字号</h2>
+    <p class="why">只用一套黑体（思源黑体 / Noto Sans SC），标题用最粗的 900，数字用 Inter。字重只有三档：500 正文、700 标签、900 标题。</p>
+    <div class="ex">
+      <div class="type-row"><small>章节大字<br>clamp 34–76 / 900</small><div style="font-weight:900;font-size:clamp(34px,5.2vw,76px);line-height:1.15">同一句话，两代 AI</div></div>
+      <div class="type-row"><small>页面主标题 H1<br>clamp 38–96 / 900</small><div style="font-weight:900;font-size:clamp(30px,4.4vw,60px);line-height:1.12">AI 以前只会判断？</div></div>
+      <div class="type-row"><small>小节标题 H2<br>clamp 26–44 / 900</small><div style="font-weight:900;font-size:clamp(26px,3.2vw,40px)">真用起来，卡在这两个问题</div></div>
+      <div class="type-row"><small>卡片标题 H3<br>18–22 / 900</small><div style="font-weight:900;font-size:20px">哪件值得做成 Skill？</div></div>
+      <div class="type-row"><small>导语 lead<br>17–20 / 500</small><div style="font-size:19px;color:var(--kv-ink-2)">四拍看完：老 AI 只回一个字，新 AI 交出一份稿子。</div></div>
+      <div class="type-row"><small>正文<br>17 / 500 / 行高 1.7</small><div style="font-size:17px;line-height:1.7;color:var(--kv-ink-2)">把一段乱糟糟的会议记录丢给 AI，让它整理成决策、待办、负责人三栏。</div></div>
+      <div class="type-row"><small>标签 / 说明<br>13–15 / 700 / 灰</small><div style="font-size:14px;font-weight:700;color:var(--kv-muted);letter-spacing:.04em">材料文件夹：3 单工单 + 公司的退款政策</div></div>
+      <div class="type-row"><small>数字<br>Inter 800–900</small><div><span style="font-family:var(--kv-num);font-weight:900;font-size:64px;color:var(--kv-acc);line-height:1">14</span> <span style="font-weight:900;font-size:24px">集</span>　<span style="font-family:var(--kv-num);font-weight:900;font-size:40px;line-height:1">2022</span></div></div>
+    </div>
+  </section>
+
+  <!-- 强调 -->
+  <section class="sec" id="accent">
+    <h2>强调：一处橙字 + 一处马克笔</h2>
+    <p class="why">视频字幕里重读的词变橙；标题里最想让人记住的词刷一道黄色马克笔。一句话里最多一个橙字、一个高光，多了就等于没强调。</p>
+    <div class="ex" data-code>
+<h3 style="font-weight:900;font-size:30px;margin:0 0 10px">答案是：<span class="hl">先定任务</span>，再挑工具</h3>
+<p style="margin:0;font-size:18px">传统 AI 只会做判断题，生成式 AI 开始<em class="acc">写作文</em>了。</p>
+    </div>
+  </section>
+
+  <!-- 页眉角标 -->
+  <section class="sec" id="hud">
+    <h2>页眉角标</h2>
+    <p class="why">和视频左上角一样：「第 01 / 14 集 ｜ 系列名」。放在首屏最上面，机构 logo 可放右侧。</p>
+    <div class="ex" data-code>
+<div class="hud">
+  <div class="hud-ep">第<b>04</b>/ 04 集<i class="hud-sep"></i>4节课带你从Skill从入门到毕业</div>
+  <!-- 可选：<img class="hud-logo" src="logo.png" alt="奈势AI"> -->
+</div>
+    </div>
+  </section>
+
+  <!-- 色块章节条 -->
+  <section class="sec" id="band">
+    <h2>色块章节条（C）</h2>
+    <p class="why">对应视频的章节过渡卡：整条色块、小字「第 N 部分」、大字标题、黄色下划线、右边一个漂浮道具、背后一个巨大的半透明数字。每条换一种底色，按 橙 → 紫 → 青 → 黄 → 黑 → 蓝 轮换。</p>
+    <div class="ex flush" data-code>
+<section class="ch-band is-blue" style="margin:0">
+  <span class="ch-glyph" aria-hidden="true">3</span>
+  <div class="shell">
+    <span class="ch-no">第 3 部分</span>
+    <h2 class="ch-title">真跑一遍</h2>
+  </div>
+  <img class="ch-prop" src="assets/props/robot_detective.webp" alt="" aria-hidden="true">
+</section>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <span class="pill" style="background:#FF6A2B;color:#111">is-orange</span><span class="pill" style="background:#7B5CFA">is-purple</span><span class="pill" style="background:#23B89A;color:#0E1A17">is-teal</span><span class="pill" style="background:#FFE14D;color:#141416">is-yellow</span><span class="pill">is-ink</span><span class="pill is-blue">is-blue</span>
+    </div>
+  </section>
+
+  <!-- 黑金金句 -->
+  <section class="sec" id="gold">
+    <h2>黑金金句（B）</h2>
+    <p class="why">对应视频的黑金页：小字引子 → 象牙白大字 → 金色短横 → 金色补充。只给一页里最重要的那句话，或者全页总结。</p>
+    <div class="ex flush" data-code>
+<section class="gold">
+  <p class="gold-small">最后，记住一句话</p>
+  <p class="gold-big">AI 不是学会的，是用会的</p>
+  <p class="gold-sub">今天下班前，拿一件真实的活试一次</p>
+</section>
+    </div>
+  </section>
+
+  <!-- 卡片 -->
+  <section class="sec" id="card">
+    <h2>卡片：白卡 / 当前卡 / 占位卡</h2>
+    <p class="why">视频里一组卡片是逐个亮起的：讲到的那张加橙框（当前），还没讲到的是虚线占位。网页里用来做「三件事」「两个问题」这类并列内容。</p>
+    <div class="ex" data-code>
+<div class="g3">
+  <div class="kv-card is-now"><div class="num">1</div><h3>哪件值得做成 Skill？</h3><p>手上那么多事，先挑经常做、做法不常变的。</p></div>
+  <div class="kv-card"><div class="num">2</div><h3>经验怎么弄出来？</h3><p>在你自己脑子里，或者在同事脑子里。</p></div>
+  <div class="kv-card is-ghost"><div class="num" style="color:inherit">3</div><h3>做成、装好、养起来</h3><p>下一节再讲。</p></div>
+</div>
+    </div>
+  </section>
+
+  <!-- 对比 -->
+  <section class="sec" id="cmp">
+    <h2>对错对比</h2>
+    <p class="why">左边常见做法（红叉、灰底），右边推荐做法（绿勾、绿框）。用于「误区 vs 正解」「改前 vs 改后」。</p>
+    <div class="ex" data-code>
+<div class="cmp">
+  <div class="is-bad"><h4><span class="chk no"></span>直接选整个桌面</h4><p>它能看到你所有文件，改错了很难撤回。</p></div>
+  <div class="is-good"><h4><span class="chk ok"></span>只给一个文件夹</h4><p>把这个月的单据复制进去，原件留在别处。</p></div>
+</div>
+    </div>
+  </section>
+
+  <!-- 步骤条 -->
+  <section class="sec" id="road">
+    <h2>步骤路线图</h2>
+    <p class="why">视频里常驻在顶部的「挑-拆-做-装-测-养」。做过的浅橙，当前的实心橙，没到的白底灰字。</p>
+    <div class="ex" data-code>
+<ol class="road">
+  <li class="is-done"><span class="dot">挑</span></li>
+  <li class="is-done"><span class="dot">拆</span></li>
+  <li class="is-now"><span class="dot">做</span></li>
+  <li><span class="dot">装</span></li>
+  <li><span class="dot">测</span></li>
+  <li><span class="dot">养</span></li>
+</ol>
+    </div>
+  </section>
+
+  <!-- 窗口 -->
+  <section class="sec" id="win">
+    <h2>窗口和终端</h2>
+    <p class="why">截图、示例文件、界面演示一律装进带红黄绿三点的窗口；提示词、命令、代码装进深色终端窗，重点那一行用黄色高亮。</p>
+    <div class="ex" data-code>
+<div class="g3">
+  <div class="win">
+    <div class="win-bar">费用报销单 · 10 月</div>
+    <div class="win-body">把截图 &lt;img&gt; 放这里，或者放一张小表格。</div>
+  </div>
+  <div class="win is-term">
+    <div class="win-bar">提示词 · 复制就能用</div>
+<pre class="win-body">请把下面的会议记录整理成三栏：
+<span class="hi">决策 | 待办 | 负责人</span>
+看不清的地方标「待确认」，不要自己补。</pre>
+  </div>
+</div>
+    </div>
+  </section>
+
+  <!-- 胶囊按钮 -->
+  <section class="sec" id="pill">
+    <h2>胶囊、按钮、对错勾、印章</h2>
+    <p class="why">按钮和标签都是全圆角胶囊。主按钮橙色，只放一个；印章一页最多一个，只给「退回 / 通过」这种结论。</p>
+    <div class="ex" data-code>
+<div class="row">
+  <button class="btn blue" type="button">▶ 看两代 AI 对照</button>
+  <button class="btn ghost" type="button">再看一遍</button>
+  <span class="pill">这一集：真试一次</span>
+  <span class="pill is-acc">一句话回答</span>
+  <span class="pill is-green">✓ 先要照片或视频</span>
+  <span class="pill is-soft">第 12 集那张格子图</span>
+  <span class="chk ok"></span><span class="chk no"></span>
+  <span class="stamp">退回</span>
+</div>
+    </div>
+  </section>
+
+  <!-- 道具 -->
+  <section class="sec" id="props">
+    <h2>道具图库（60 张）</h2>
+    <p class="why">视频里所有比喻都用这种 3D 黏土质感的道具图（暖色、柔光、带投影）。课件里的配图优先从这里挑，放在色块章节条右侧、卡片角落或标题旁边；加 <code>class="prop is-float"</code> 会轻轻漂浮。不要换成扁平图标、emoji 或照片。</p>
+    <div class="props" id="propGrid"></div>
+  </section>
+
+  <!-- 别这样做 -->
+  <section class="sec" id="dont">
+    <h2>别这样做</h2>
+    <p class="why">这些是和视频「割裂」最常见的来源。</p>
+    <div class="dd">
+      <div class="cmp"><div class="is-bad"><h4><span class="chk no"></span>纯白底、直角、无阴影</h4><p>那是原模板的方块科技风。换成方格纸底 + 18px 圆角白卡 + 柔和投影。</p></div></div>
+      <div class="cmp"><div class="is-bad"><h4><span class="chk no"></span>科技蓝当主色</h4><p>主色是橙 #FF4D1A；蓝只做色块章节条的底色之一。</p></div></div>
+      <div class="cmp"><div class="is-bad"><h4><span class="chk no"></span>细字、苹方 Regular 标题</h4><p>标题一律 900 粗黑体；没有粗体会「不像」视频。</p></div></div>
+      <div class="cmp"><div class="is-bad"><h4><span class="chk no"></span>渐变、玻璃拟态、霓虹发光</h4><p>只允许黑金页那一团暖金色光晕。</p></div></div>
+      <div class="cmp"><div class="is-bad"><h4><span class="chk no"></span>一屏三四个橙色重点</h4><p>一个区块只亮一个焦点；其他用墨黑或灰。</p></div></div>
+      <div class="cmp"><div class="is-bad"><h4><span class="chk no"></span>emoji / 线性图标当主配图</h4><p>用道具图库；小图标只在胶囊里点缀。写实大脑、纸币图案不用。</p></div></div>
+    </div>
+  </section>
+</div>
+
+<script>
+// 色板
+const SW=[
+ ['#F2EEE5','纸白 paper','页面底色'],['#E4DED2','方格线 grid','底纹'],['#FFFFFF','白卡 card','卡片、窗口'],['#D6CFC1','描边 line','卡片 2px 描边'],
+ ['#141416','墨黑 ink','标题、正文'],['#3A3A40','深灰 ink-2','正文次级'],['#8A857A','灰 dim','标签、说明'],
+ ['#FF4D1A','焦点橙 acc','重点词、当前项、主按钮'],['#FFF1EA','浅橙 acc-soft','当前项底'],['#FFE14D','马克笔黄 yellow','高光、下划线'],
+ ['#1FA35B','绿 green','对、完成'],['#E5243B','红 red','错、退回'],['#E0A100','芥末 mustard','注意、警示框'],
+ ['#FF6A2B','色块橙','章节条 / 开场'],['#7B5CFA','色块紫','章节条'],['#23B89A','色块青','章节条'],['#2F6BFF','色块蓝','章节条'],
+ ['#0B0B0C','黑金底 b-bg','金句、页脚'],['#EFE8D8','象牙白 b-ink','黑金页文字'],['#D4B26A','金 b-gold','黑金页强调'],['#8C8576','暖灰 b-dim','黑金页说明']];
+document.getElementById('swatches').innerHTML=SW.map(([c,n,u])=>`<div><i style="background:${c}"></i><span><b>${c}</b>${n}<br>${u}</span></div>`).join('');
+// 道具
+const P={balance_scale:'天平·权衡',box_open:'打开的箱子',bubbles:'对话气泡',calculator:'计算器',calendar:'日历',chart_board:'图表板',chat_bubble:'聊天气泡',classic_books:'一摞书',clipboard:'清单板',coins:'金币·成本',conveyor:'传送带·流程',database:'数据库',envelope:'信封·邮件',file_cabinet:'档案柜',folder:'文件夹',gears:'齿轮·原理',handbook:'手册·规范',hourglass:'沙漏·时间',key_small:'钥匙·权限',laptop_code:'电脑写代码',link_chain:'链条·连接',magnifier:'放大镜·检查',megaphone:'喇叭·通知',microphone:'话筒·访谈',open_book:'打开的书',padlock:'锁·安全',paper_stack:'一叠纸',pencil:'铅笔·写',plug:'插头·接入',price_tag:'价签·价格',puzzle:'拼图·组合',receipt_pile:'一堆小票',relay_baton:'接力棒·交接',robot_ask:'机器人·提问',robot_detective:'机器人·侦探',robot_graduate:'机器人·毕业',robot_mentor:'机器人·讲解',robot_ok:'机器人·点赞',robot_oops:'机器人·出错',robot_question:'机器人·疑问',robot_read:'机器人·阅读',robot_think:'机器人·思考',robot_tired:'机器人·累了',robot_type:'机器人·打字',robot_wave:'机器人·挥手',robot_wrench:'机器人·修理',safe_box:'保险箱·数据',server_cloud:'云服务器',sieve:'筛子·挑选',smartphone_chat:'手机聊天',stairs:'台阶·进阶',stamp:'图章·审批',stopwatch:'秒表·效率',target:'靶子·目标',toolbox:'工具箱',traffic_light:'红绿灯·规则',trash_bin:'垃圾桶·删除',trophy:'奖杯·成果',typec_cable:'Type-C 线·接口',watering_can:'浇水壶·维护'};
+document.getElementById('propGrid').innerHTML=Object.entries(P).map(([k,v])=>`<figure><img src="assets/props/${k}.webp" alt="${v}" loading="lazy"><figcaption>${v}<code>${k}.webp</code></figcaption></figure>`).join('');
+// 每个示例下面自动生成「看代码」
+document.querySelectorAll('[data-code]').forEach(el=>{
+  const d=document.createElement('details');d.innerHTML='<summary>看代码</summary>';
+  const pre=document.createElement('pre');pre.className='code';pre.textContent=el.innerHTML.trim();
+  d.appendChild(pre);el.after(d);
+});
+</script>
+</body>
+</html>
